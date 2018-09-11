@@ -1,5 +1,5 @@
 <style>
-@import './servicemanager.css';
+@import "./servicemanager.css";
 .name {
   font-size: 60px;
   background-color: #123;
@@ -8,10 +8,11 @@
 
 <template>
   <div class="service">
-    <Table border :columns="columns7" :data="data6" @on-row-click="getRowData"></Table>
+    <Table border :columns="columns7" :data="data6" @on-row-click="getRowData" ></Table>
      <Modal  v-model="modal12" title="日志详情"  cancel-text class="popup">
                <popup :num="ceshi" ></popup>   
         </Modal>
+            <Page :total="100" :current="1" @on-change="changePage"></Page>
   </div>
 </template>
 <script>
@@ -22,7 +23,7 @@ import $ from "jquery";
 export default {
   data() {
     return {
-      ceshi:[],
+      ceshi: [],
       modal12: false,
       columns7: [
         {
@@ -61,7 +62,7 @@ export default {
                   props: {
                     type: "default",
                     size: "small",
-                    className:"lubin"
+                    className: "lubin"
                   },
                   style: {
                     marginRight: "5px"
@@ -80,7 +81,7 @@ export default {
                   props: {
                     type: "primary",
                     size: "small",
-                    className: 'sysdesc'
+                    className: "sysdesc"
                   },
                   style: {
                     marginRight: "5px"
@@ -92,7 +93,8 @@ export default {
                   }
                 },
                 "停用"
-              ),h(
+              ),
+              h(
                 "Button",
                 {
                   props: {
@@ -138,8 +140,8 @@ export default {
   methods: {
     getRowData(row, index) {
       console.log(row, index);
-     this.ceshi=row;
-      console.log(this.ceshi.address)
+      this.ceshi = row;
+      console.log(this.ceshi.address);
     },
     remove(index) {
       this.data6.splice(index, 1);

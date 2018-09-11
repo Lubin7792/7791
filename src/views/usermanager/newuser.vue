@@ -153,7 +153,7 @@ export default {
     call: function(obj) {
       var array = new Array()
       for (let i = 0; i < obj.data.length; i++) {
-        array.push({
+        array.push({ 
           name: obj.data[i].name,
           period: obj.data[i].pwdperiod,
           ip: obj.data[i].ip,
@@ -165,7 +165,7 @@ export default {
     },
     refresh: function() {
       util.restfullCall('rest-ful/v3.0/syslogs', null, 'get', this.call)
-      console.log(this.call)
+      console.log(this.call.obj,1)
     }
   }
 }

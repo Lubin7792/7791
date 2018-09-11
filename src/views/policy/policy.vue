@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Table border :columns="policyColumns" :data="data5"></Table>
+		<Table border :columns="policyColumns" ></Table>
 		<Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
 		<Button type="error" style="margin-top:15px;">删除策略</Button>
 		<Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>

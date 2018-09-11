@@ -3,4 +3,9 @@
     border-color:blue; 
 
 
+}.service .ivu-table-wrapper{
+    margin-bottom: 30px;
+}
+.service .ivu-page{
+    text-align: center;
 }

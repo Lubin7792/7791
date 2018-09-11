@@ -58,7 +58,7 @@ background-color: #f9efe9;
 .sysdesc .ivu-table-cell {
   width: 300px;
   height: 20px;
-  white-space: nowrap;
+  white-space: nowrap;	
   text-overflow: ellipsis;
   overflow: hidden;
 }
