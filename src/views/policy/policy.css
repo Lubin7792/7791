@@ -1,0 +1,17 @@
+.policy .lubin .run{
+    background: url(../../images/run.svg)  no-repeat center center;
+    background-size: 20px;
+}
+.policy .lubin .stop{
+    background: url(../../images/stop.svg)  no-repeat center center;
+
+}
+.policy .lubin .icon:hover{
+     background-size: 22px;
+}
+.policy .lubin .icon{
+    height: 20px;
+    width: 20px;
+    background-size: 20px;
+    display: inline-block;
+}

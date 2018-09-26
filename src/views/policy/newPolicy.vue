@@ -1,7 +1,6 @@
 
 <template>
 	<Modal v-model="modal" title="新建策略" @on-ok="ok" @on-cancel="cancel" class-name="vertical-center-modal">
-
 	</Modal>
 </template>
 <script>

@@ -72,6 +72,9 @@ export default {
   props: {
     show: {
       type: String
+    },
+    model1:{
+      type:[String,Object]
     }
   },
   data() {
@@ -82,6 +85,7 @@ export default {
         client: '',
         state: ''
       },
+      plan:{},
       resources: {
         pool: '',
         equipment: ''

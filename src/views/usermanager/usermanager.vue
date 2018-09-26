@@ -100,7 +100,7 @@ export default {
               [
                 h('Icon', {
                   props: {
-                    type: unlocked,
+                    type: 'unlocked',
                     size: 20
                   },
                   nativeOn: {
@@ -117,7 +117,7 @@ export default {
                 }),
                 h('Icon', {
                   props: {
-                    type: upload,
+                    type: 'upload',
                     size: 20
                   },
                   style: {
@@ -132,7 +132,7 @@ export default {
                 }),
                 h('Icon', {
                   props: {
-                    type: edit,
+                    type: 'edit',
                     size: 20
                   },
                   style: {
