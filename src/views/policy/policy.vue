@@ -97,7 +97,7 @@ export default {
         }
       ],
 
-      newModal: false,
+      newModal: true,
       data56: [
         {
           name: "John Brown",
@@ -132,7 +132,7 @@ export default {
     },
     close: function(modal) {
       this.modal = modal;
-    },
+    },  
     newPolicy: function() {
       this.newModal = true;
     },
