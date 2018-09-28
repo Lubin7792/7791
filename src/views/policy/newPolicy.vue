@@ -10,7 +10,7 @@
 }
 </style>
 <template>
-	<Modal v-model="modal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="关闭" class-name="vertical-center-modal">
+	<Modal v-model="modal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
 <Tabs type="card" :animated="false" @on-click="click">
      	<TabPane v-for="tab in tabList" :label="tab.title" :name="tab.title">
       <NewContent :show="show" ></NewContent>
@@ -32,9 +32,6 @@ export default {
         },
         {
           title: "备份选项"
-        },
-        {
-          title: "调度计划"
         }
       ],
       show: "基本信息"

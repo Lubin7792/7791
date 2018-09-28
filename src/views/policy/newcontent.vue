@@ -1,6 +1,10 @@
+<style>
+@import "./policy.css";
+</style>
+
 <template>
-	<div>
-		<div v-show="show==='基本信息'">
+	<div class="newconten">
+		<div v-show="show==='基本信息'"  class="basicinfo">
 			<Form ref="basic" :model="basic" :label-width="80">
 				<FormItem label="策略名称">
 					<Input v-model="basic.name"></Input>
@@ -8,23 +12,38 @@
 				<FormItem label="策略类型">
 					<Input v-model="basic.type"></Input>
 				</FormItem>
-				<FormItem label="客户端">
+				<FormItem label="储存设备">
 					<Input v-model="basic.client"></Input>
 				</FormItem>
-				<FormItem label="状态">
+				<FormItem label="介质池">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="优先级">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="策略最大调度任务">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="启用压缩">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="启用加密">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="加密算法">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="数据保留周期">
 					<Input v-model="basic.state"></Input>
 				</FormItem>
 			</Form>
 		</div>
 		<div v-show="show==='备份资源'">
-			<Form ref="resources" :model="resources" :label-width="80">
-				<FormItem label="介质池">
-					<Input v-model="resources.pool"></Input>
-				</FormItem>
-				<FormItem label="备份设备">
-					<Input v-model="resources.equipment"></Input>
-				</FormItem>
-			</Form>
+      <Tabs type="card" :animated="false" @on-click="click2">
+     	<TabPane v-for="tab in tabList" :label="tab.title" :name="tab.title">
+         <backupoption :show="show2"></backupoption> 
+      </TabPane>
+    </Tabs>  
 		</div>
 		<div v-show="show==='备份选项'">
 			<Form ref="option" :model="option" :label-width="80">
@@ -68,6 +87,7 @@
 	</div>
 </template>
 <script>
+import backupoption from './backupoption'
 export default {
   props: {
     show: {
@@ -77,8 +97,26 @@ export default {
       type:[String,Object]
     }
   },
+  components: {
+    backupoption
+  },
   data() {
     return {
+      tabList: [
+        {
+          title: "文件备份选项"
+        },
+        {
+          title: "RAOLE备份选项"
+        },
+        {
+          title: "SQLSERVER备份选项"
+        },
+        {
+          title: "VMWARE备份选项"
+        }
+      ],
+      show2: "文件备份选项",
       basic: {
         name: '',
         type: '',
@@ -154,6 +192,13 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    click2: function(name){
+      console.log(name);
+      this.show2=name;
+    }
   }
+
 }
 </script>
