@@ -195,8 +195,9 @@ export default {
   },
   methods: {
     click2: function(name){
-      console.log(name);
       this.show2=name;
+      console.log(this.show2);
+
     }
   }
 
