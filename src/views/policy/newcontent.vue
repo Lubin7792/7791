@@ -39,9 +39,9 @@
 			</Form>
 		</div>
 		<div v-show="show==='备份资源'">
-      <Tabs type="card" :animated="false" @on-click="click2">
+      <Tabs type="card" :animated="false"   @on-click="click2">
      	<TabPane v-for="tab in tabList" :label="tab.title" :name="tab.title">
-         <backupoption :show="show2"></backupoption> 
+         <backupoption :show2="show2"></backupoption> 
       </TabPane>
     </Tabs>  
 		</div>
@@ -196,9 +196,8 @@ export default {
   methods: {
     click2: function(name){
       this.show2=name;
-      console.log(this.show2);
-
     }
+   
   }
 
 }

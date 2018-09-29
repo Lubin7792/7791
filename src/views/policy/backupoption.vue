@@ -4,7 +4,74 @@
 <template>
 	<div>
     <div v-show="show2 === '文件备份选项'">
-      <p>aaa</p>  
+     	<Form ref="basic" :model="basic" :label-width="120">
+        	<FormItem label="时候打开文件备份">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="过滤指定文件">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="备份指定类型的文件">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="跳过备份失败的文件">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+			</Form>
+    </div>
+    <div v-show="show2 === 'RAOLE备份选项'">
+    	<Form ref="basic" :model="basic" :label-width="120">
+        	<FormItem label="使用多通道">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="开启ORACLE压缩">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="数据片中文件个数">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="全库备份时备份归档">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="归档备份范围">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="删除已经备份的归档">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+			</Form>
+    </div>
+    <div v-show="show2 === 'SQLSERVER备份选项'">
+    	<Form ref="basic" :model="basic" :label-width="120">
+        	<FormItem label="备份前一致性检查">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="备份后一致性检查"> 
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="启用SQLSERVER压缩  ">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="事务日志截断">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="归档备份范围">
+					<Input v-model="basic.state"></Input>
+          </FormItem>
+        	<FormItem label="删除已经备份的归档">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+			</Form>
+    </div>
+    <div v-show="show2 === 'VMWARE备份选项'">
+    	<Form ref="basic" :model="basic" :label-width="120">
+        	<FormItem label="跳过失败的虚拟机">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="跳过关机的虚拟机"> 
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+			</Form>
     </div>
   </div>
 </template>
@@ -17,6 +84,14 @@ export default {
     model1:{
       type:[String,Object]
     }
+  },
+  methods:{
+    show3() {
+      console.log(11)
+      console.log(this.show2)
+    }
+
+    
   },
   data() {
     return {
@@ -97,4 +172,4 @@ export default {
     }
   }
 }
-</script>
+</script> 

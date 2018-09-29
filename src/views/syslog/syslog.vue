@@ -19,7 +19,7 @@
         <Button type="warning" @click="refresh">刷新</Button>
       </div>
     </div>
-    <syscontent ref="syscontent"></syscontent>
+    <syscontent ref="syscontents"></syscontent>
   </div>
 
 </template>
@@ -49,7 +49,7 @@ export default {
     //     console.log(obj)})
     // }
     refresh() {
-      this.$refs.syscontent.logfile()
+      this.$refs.syscontents.logfile()
     }
   },
   components: {
