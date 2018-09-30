@@ -38,14 +38,14 @@
 				</FormItem>
 			</Form>
 		</div>
-		<div v-show="show==='备份资源'">
+		<div v-show="show==='备份选项'">
       <Tabs type="card" :animated="false"   @on-click="click2">
      	<TabPane v-for="tab in tabList" :label="tab.title" :name="tab.title">
          <backupoption :show2="show2"></backupoption> 
       </TabPane>
     </Tabs>  
 		</div>
-		<div v-show="show==='备份选项'">
+		<div v-show="show==='备份资源列表'">
 			<Form ref="option" :model="option" :label-width="80">
 				<FormItem label="备份内容">
 					<Input v-model="option.content"></Input>

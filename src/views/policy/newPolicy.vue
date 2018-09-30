@@ -28,10 +28,13 @@ export default {
           title: "基本信息"
         },
         {
-          title: "备份资源"
+          title: "备份选项"
         },
         {
-          title: "备份选项"
+          title: "备份资源列表"
+        },
+         {
+          title: "调度计划"
         }
       ],
       show: "基本信息"
