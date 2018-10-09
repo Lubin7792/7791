@@ -10,7 +10,7 @@
 </style>
 <template>
 
-	<Modal v-model="modals" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
+	<Modal v-model="InfoModal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
 <Tabs type="card" :animated="false" @on-click="click">
      	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
       <NewContent :show="show" ></NewContent>
@@ -23,6 +23,7 @@ import NewContent from "./newcontent.vue";
 export default {
   data() {
     return {
+      InfoModal: this.modals,
       tabList: [
         {
           title: "基本信息"
@@ -50,6 +51,7 @@ export default {
   },
   methods: {
     ok: function() {
+      console.log(this.modals)
       this.$emit("closePolicy", false);
     },
     cancel: function() {
@@ -58,6 +60,12 @@ export default {
     click: function(name) {
       this.show = name;
     }
+  },
+  watch: {
+  modals (val) {
+    this.InfoModal = val
+    console.log(val,'val')
   }
+}
 }
 </script>
