@@ -1,6 +1,6 @@
 <template>
 	<Tabs :animated="false" @on-click="recallName" on-tab-remove="close" value="tabName" v-model="tabName">
-		<TabPane :label="list.title" v-for="list in clientList" :name="list.name">
+		<TabPane :label="list.title" v-for="(list,index) in clientList" :name="list.name" :key="index">
 			<Content></Content>
 		</TabPane>
 	</Tabs>

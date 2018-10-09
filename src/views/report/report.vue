@@ -4,7 +4,7 @@
   <div>
     <Col span="24" class="demo-tabs-style1" style="background: #e3e8ee;padding:16px;">
         <Tabs type="card" :animated="false" @on-click="click">
-            <TabPane v-for="tab in tabList" :label="tab.title" :name="tab.title">
+            <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
               <Content  :columns="columns" :show="show"></Content>
             </TabPane>
         </Tabs>

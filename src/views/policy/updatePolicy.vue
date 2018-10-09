@@ -12,7 +12,7 @@
 <template>
 	<Modal title="修改配置" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="关闭">
 		<Tabs type="card" :animated="false" @on-click="click">
-			<TabPane v-for="tab in tabList" :label="tab.title" :name="tab.title">
+			<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
 				<Content :show="show" ></Content>
 			</TabPane>
 		</Tabs>

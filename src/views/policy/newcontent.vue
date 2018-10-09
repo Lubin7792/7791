@@ -40,7 +40,7 @@
 		</div>
 		<div v-show="show==='备份选项'">
       <Tabs type="card" :animated="false"   @on-click="click2">
-     	<TabPane v-for="tab in tabList" :label="tab.title" :name="tab.title">
+     	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
          <backupoption :show2="show2"></backupoption> 
       </TabPane>
     </Tabs>  
