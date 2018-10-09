@@ -8,7 +8,7 @@
 		<Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
 		<Button type="error" style="margin-top:15px;">删除策略</Button>
 		<Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
-		<newPolicy :newmodal="newmodal" @closePolicy="closePolicy"></newPolicy>
+		<newPolicy :modals="modals" @closePolicy="closePolicy"></newPolicy>
 		<updatePolicy :modal="modal" @close="close"></updatePolicy>
 	</div>
 </template>
@@ -18,7 +18,7 @@ import newPolicy from "./newPolicy.vue";
 export default {
   data() {
     return {
-       newmodal: true,
+       modals: true,
       modal: false,
       policyColumns: [
         {
@@ -133,10 +133,10 @@ export default {
       this.modal = modal;
     },  
     newPolicy: function() {
-      this.newmodal = true;
+      this.modals = true;
     },
-    closePolicy: function(newmodal) {
-      this.newmodal = newmodal;
+    closePolicy: function(modals) {
+      this.modals = modals;
     }
   }
 };
