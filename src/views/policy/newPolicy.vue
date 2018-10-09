@@ -3,14 +3,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   .ivu-modal {
     top: 0;
   }
 }
 </style>
 <template>
-	<Modal v-model="modal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
+
+	<Modal v-model="newmodal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
 <Tabs type="card" :animated="false" @on-click="click">
      	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
       <NewContent :show="show" ></NewContent>
@@ -44,7 +44,7 @@ export default {
     NewContent
   },
   props: {
-    modal: {
+    newmodal: {
       type: Boolean
     }
   },
