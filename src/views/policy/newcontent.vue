@@ -3,88 +3,94 @@
 </style>
 
 <template>
-	<div class="newconten">
-		<div v-show="show==='基本信息'"  class="basicinfo">
-			<Form ref="basic" :model="basic" :label-width="80">
-				<FormItem label="策略名称">
-					<Input v-model="basic.name"></Input>
-				</FormItem>
-				<FormItem label="策略类型">
-					<Input v-model="basic.type"></Input>
-				</FormItem>
-				<FormItem label="储存设备">
-					<Input v-model="basic.client"></Input>
-				</FormItem>
-				<FormItem label="介质池">
-					<Input v-model="basic.state"></Input>
-				</FormItem>
-        	<FormItem label="优先级">
-					<Input v-model="basic.state"></Input>
-				</FormItem>
-        	<FormItem label="策略最大调度任务">
-					<Input v-model="basic.state"></Input>
-				</FormItem>
-        	<FormItem label="启用压缩">
-					<Input v-model="basic.state"></Input>
-				</FormItem>
-        	<FormItem label="启用加密">
-					<Input v-model="basic.state"></Input>
-				</FormItem>
-        	<FormItem label="加密算法">
-					<Input v-model="basic.state"></Input>
-				</FormItem>
-        	<FormItem label="数据保留周期">
-					<Input v-model="basic.state"></Input>
-				</FormItem>
-			</Form>
-		</div>
-		<div v-show="show==='备份选项'">
-      <Tabs type="card" :animated="false"   @on-click="click2">
-     	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
-         <backupoption :show2="show2"></backupoption> 
-      </TabPane>
-    </Tabs>  
-		</div>
-		<div v-show="show==='备份资源列表'">
-			<Form ref="option" :model="option" :label-width="80">
-				<FormItem label="备份内容">
-					<Input v-model="option.content"></Input>
-				</FormItem>
-				<FormItem label="启用加密">
-					<Input v-model="option.encryption"></Input>
-				</FormItem>
-				<FormItem label="启用压缩">
-					<Input v-model="option.compress"></Input>
-				</FormItem>
-			</Form>
-		</div>
-		<div v-show="show==='调度计划'">
-			<Form ref="plan" :model="plan" :label-width="80">
-				<FormItem label="开始时间">
-					<TimePicker format="HH:mm" placeholder="Select time" style="width: 112px"></TimePicker>
-				</FormItem>
-				<FormItem label="备份频率">
-					<Select v-model="model1" style="width:200px">
-						<Option v-for="item in frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
-					</Select>
-				</FormItem>
-				<FormItem label="备份级别">
-					<Select v-model="model1" style="width:200px">
-						<Option v-for="item in level" :value="item.value" :key="item.value">{{ item.label }}</Option>
-					</Select>
-				</FormItem>
-				<FormItem label="保留周期" style="height:140px">
-					<Select v-model="model1" style="width:200px">
-						<Option v-for="item in cycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
-					</Select>
-				</FormItem>
-			</Form>
-		</div>
-		<Button type="warning">保存修改</Button>
-		<Button type="warning">禁用</Button>
-		<Button type="warning">启用</Button>
-		<Button type="warning">立即调度</Button>
-	</div>
+  <div class="newconten">
+    <div v-show="show==='基本信息'" class="basicinfo">
+      <Form ref="basic" :model="basic" :label-width="80">
+        <FormItem label="策略名称">
+          <Input v-model="basic.name"></Input>
+        </FormItem>
+        <FormItem label="策略类型">
+          <Input v-model="basic.type"></Input>
+        </FormItem>
+        <FormItem label="储存设备">
+          <Input v-model="basic.client"></Input>
+        </FormItem>
+        <FormItem label="介质池">
+          <Input v-model="basic.state"></Input>
+        </FormItem>
+        <FormItem label="优先级">
+          <Input v-model="basic.state"></Input>
+        </FormItem>
+        <FormItem label="策略最大调度任务">
+          <Input v-model="basic.state"></Input>
+        </FormItem>
+        <FormItem label="启用压缩">
+          <Input v-model="basic.state"></Input>
+        </FormItem>
+        <FormItem label="启用加密">
+          <Input v-model="basic.state"></Input>
+        </FormItem>
+        <FormItem label="加密算法">
+          <Input v-model="basic.state"></Input>
+        </FormItem>
+        <FormItem label="数据保留周期">
+          <Input v-model="basic.state"></Input>
+        </FormItem>
+      </Form>
+    </div>
+    <div v-show="show==='备份选项'">
+      <Tabs type="card" :animated="false" @on-click="click2">
+        <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
+          <backupoption :show2="show2"></backupoption>
+        </TabPane>
+      </Tabs>
+    </div>
+    <div v-show="show==='备份资源列表'">
+      <Form ref="option" :model="option" :label-width="80">
+        <FormItem label="备份内容" label-with="50%">
+          <Input v-model="option.content"></Input>
+        </FormItem>
+        <FormItem label="启用加密">
+          <Input v-model="option.encryption"></Input>
+        </FormItem>
+        <FormItem label="启用压缩">
+          <Input v-model="option.compress"></Input>
+        </FormItem>
+      </Form>
+    </div>
+    <div v-show="show==='调度计划'">
+      <Form ref="plan" :model="plan" :label-width="80">
+        <FormItem label="调度类型">
+          <Input v-model="option.compress"></Input>
+        </FormItem>
+        <FormItem label="调度时间">
+          <Input v-model="option.compress"></Input>
+        </FormItem>
+        <FormItem label="开始时间">
+          <TimePicker format="HH:mm" placeholder="Select time" style="width: 112px"></TimePicker>
+        </FormItem>
+        <FormItem label="备份频率">
+          <Select v-model="model1" style="width:200px">
+            <Option v-for="item in frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="备份级别">
+          <Select v-model="model1" style="width:200px">
+            <Option v-for="item in level" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="保留周期" style="height:140px">
+          <Select v-model="model1" style="width:200px">
+            <Option v-for="item in cycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+      </Form>
+    </div>
+    <Button type="warning">保存修改</Button>
+    <Button type="warning">禁用</Button>
+    <Button type="warning">启用</Button>
+    <Button type="warning">立即调度</Button>
+  </div>
 </template>
 <script>
 import backupoption from './backupoption'
