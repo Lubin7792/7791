@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     ok: function() {
+      console.log(this.modals)
       this.$emit("closePolicy", false);
     },
     cancel: function() {
