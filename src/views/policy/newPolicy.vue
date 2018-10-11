@@ -10,8 +10,8 @@
 </style>
 <template>
 
-	<Modal v-model="modals" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
-<Tabs type="card" :animated="false" @on-click="click">
+	<Modal v-model="InfoModal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
+<Tabs type="card" :animated="false" @on-click="click" value="调度计划">
      	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
       <NewContent :show="show" ></NewContent>
       </TabPane>
@@ -23,6 +23,7 @@ import NewContent from "./newcontent.vue";
 export default {
   data() {
     return {
+     InfoModal: this.modals,
       tabList: [
         {
           title: "基本信息"
@@ -37,7 +38,7 @@ export default {
           title: "调度计划"
         }
       ],
-      show: "基本信息"
+      show: "调度计划"
     };
   },
   components: {
@@ -48,6 +49,9 @@ export default {
       type: Boolean
     }
   },
+  beforeCreate() {
+    this.name = "调度计划"
+  },
   methods: {
     ok: function() {
       this.$emit("closePolicy", false);
@@ -57,7 +61,14 @@ export default {
     },
     click: function(name) {
       this.show = name;
+    
+
     }
+  },
+  watch: {
+  modals (modals) {
+    this.InfoModal = modals
   }
+}
 }
 </script>

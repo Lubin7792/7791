@@ -52,8 +52,6 @@ export default {
           data: ["直接访问", "邮件营销", "联盟广告", "视频广告", "搜索引擎"]
         },
         color: ["#fd7549", "#e3e3e3"],
-        
-         
         series: [
           {
             name: "访问来源",

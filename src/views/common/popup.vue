@@ -1,8 +1,8 @@
 <style >
 @import "./popup.css";
+
 </style>
 <template>
-
     <div>
         <ul>
             <li>
@@ -36,4 +36,6 @@ export default {
     }
   }
 };
+
+
 </script>

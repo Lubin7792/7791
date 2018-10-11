@@ -10,7 +10,7 @@
 }
 </style>
 <template>
-	<Modal title="修改配置" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="关闭">
+	<Modal title="修改配置" v-model="InfoModal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="关闭">
 		<Tabs type="card" :animated="false" @on-click="click">
 			<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
 				<Content :show="show" ></Content>
@@ -23,6 +23,7 @@ import Content from './content.vue'
 export default {
   data() {
     return {
+      InfoModal: this.upmodal,
       tabList: [
         {
           title: '基本信息'
@@ -44,7 +45,7 @@ export default {
     Content
   },
   props: {
-    modal: {
+    upmodal: {
       type: Boolean
     }
   },
@@ -58,6 +59,11 @@ export default {
     click: function(name) {
       this.show = name
     }
+  },
+  watch: {
+  upmodal (upmodal) {
+    this.InfoModal = upmodal
   }
+}
 }
 </script>
