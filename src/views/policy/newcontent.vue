@@ -60,22 +60,21 @@
 		</div>
 		<div v-show="show==='调度计划'">
 			<Form ref="plan" :model="plan" :label-width="80">
+        	<FormItem label="调度类型">
+					<Input v-model="option.compress"></Input>
+				</FormItem>
+        	<FormItem label="备份类型">
+					<Input v-model="option.compress"></Input>
+				</FormItem>
 				<FormItem label="开始时间">
 					<TimePicker format="HH:mm" placeholder="Select time" style="width: 112px"></TimePicker>
 				</FormItem>
-				<FormItem label="备份频率">
+        		<FormItem label="结束时间">
+					<TimePicker format="HH:mm" placeholder="Select time" style="width: 112px"></TimePicker>
+				</FormItem>
+				<FormItem label="间隔时间">
 					<Select v-model="model1" style="width:200px">
 						<Option v-for="item in frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
-					</Select>
-				</FormItem>
-				<FormItem label="备份级别">
-					<Select v-model="model1" style="width:200px">
-						<Option v-for="item in level" :value="item.value" :key="item.value">{{ item.label }}</Option>
-					</Select>
-				</FormItem>
-				<FormItem label="保留周期" style="height:140px">
-					<Select v-model="model1" style="width:200px">
-						<Option v-for="item in cycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
 					</Select>
 				</FormItem>
 			</Form>
