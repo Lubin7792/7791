@@ -20,3 +20,8 @@
     float: left;
     margin-bottom: 12px;
 }
+
+/* 新建策略 */
+.policy .newconten {
+ border: 1px saddlebrown solid !important;
+}   

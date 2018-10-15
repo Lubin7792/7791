@@ -1,5 +1,5 @@
-<style>
-@import "./policy.css";
+  <style>
+@import "./newcontent.css";
 </style>
 
 <template>
@@ -58,15 +58,20 @@
 				</FormItem>
 			</Form>
 		</div>
-		<div v-show="show==='调度计划'">
+		<div v-show="show==='调度计划'" class="planinfo">
 			<Form ref="plan" :model="plan" :label-width="80">
-        	<FormItem label="调度类型">
-					<Input v-model="option.compress"></Input>
+          	<FormItem label="调度类型">
+					<Select v-model="plan1" style="width:120px" @on-change="plantype">
+						<Option v-for="item in planty" :value="item.value" :key="item.value"></Option>
+					</Select>
 				</FormItem>
         	<FormItem label="备份类型">
-					<Input v-model="option.compress"></Input>
+					<Select v-model="plan1" style="width:120px" @on-change="plantype">
+						<Option v-for="item in planty" :value="item.value" :key="item.value"></Option>
+					</Select>
 				</FormItem>
-				<FormItem label="开始时间">
+			<div  v-show="show3==='月份'">
+        	<FormItem label="开始时间">
 					<TimePicker format="HH:mm" placeholder="Select time" style="width: 112px"></TimePicker>
 				</FormItem>
         		<FormItem label="结束时间">
@@ -77,23 +82,46 @@
 						<Option v-for="item in frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
 					</Select>
 				</FormItem>
+      </div>
+      	<div  v-show="show3==='周份'">
+        	<FormItem label="开始时间">
+					<TimePicker format="HH:mm" placeholder="Select time" style="width: 112px"></TimePicker>
+				</FormItem>
+      </div>
+      <div  v-show="show3==='小时'">
+        	<FormItem label="开始时间">
+					<TimePicker format="HH:mm" placeholder="Select time" style="width: 112px"></TimePicker>
+				</FormItem>
+        		<FormItem label="结束时间">
+					<TimePicker format="HH:mm" placeholder="Select time" style="width: 112px"></TimePicker>
+				</FormItem>
+				<FormItem label="间隔时间">
+					<Select v-model="model1" style="width:200px">
+						<Option v-for="item in frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
+					</Select>
+				</FormItem>
+      </div>
 			</Form>
+      <div class="button">
+        <Button type="warning">添加计划</Button>
+        <Button type="warning">保存计划</Button>
+        <Button type="warning">删除计划</Button>
+      </div>
+      <div class="planlist">
+       <Table border :columns="planlist" :data="planlistcon" ></Table>
+      </div>
 		</div>
-		<Button type="warning">保存修改</Button>
-		<Button type="warning">禁用</Button>
-		<Button type="warning">启用</Button>
-		<Button type="warning">立即调度</Button>
 	</div>
 </template>
 <script>
-import backupoption from './backupoption'
+import backupoption from "./backupoption";
 export default {
   props: {
     show: {
       type: String
     },
-    model1:{
-      type:[String,Object]
+    model1: {
+      type: [String, Object]
     }
   },
   components: {
@@ -101,6 +129,21 @@ export default {
   },
   data() {
     return {
+      plan1:'',
+      planty:[
+        {
+        value:"月份"
+      },
+        {
+        value:"周份"
+      },
+        {
+        value:"天"
+      },
+        {
+        value:"小时"
+      }
+      ],
       tabList: [
         {
           title: "文件备份选项"
@@ -115,89 +158,121 @@ export default {
           title: "VMWARE备份选项"
         }
       ],
+      planlist: [
+        {
+          title: "调度类型",
+          key:"plantype"
+        },
+        {
+          title: "备份类型"
+        },
+        {
+          title: "开始时间"
+        },
+        {
+          title: "结束时间"
+        },
+          {
+          title: "间隔时间"
+        }
+        
+      ],
+      planlistcon:[
+        {
+          plantype:"时间",
+        },
+        {
+          plantype:"月份",
+        },
+        {
+          plantype:"周",
+        }
+      ],
       show2: "文件备份选项",
+       show3: "月份",
       basic: {
-        name: '',
-        type: '',
-        client: '',
-        state: ''
+        name: "",
+        type: "",
+        client: "",
+        state: ""
       },
-      plan:{},
+      plan: {},
       resources: {
-        pool: '',
-        equipment: ''
+        pool: "",
+        equipment: ""
       },
       option: {
-        content: '',
-        encryption: '',
-        compress: ''
+        content: "",
+        encryption: "",
+        compress: ""
       },
       frequency: [
         {
-          value: '天',
-          label: '天'
+          value: "天",
+          label: "天"
         },
         {
-          value: '周',
-          label: '周'
+          value: "周",
+          label: "周"
         },
         {
-          value: '月',
-          label: '月'
+          value: "月",
+          label: "月"
         },
         {
-          value: '季度',
-          label: '季度'
+          value: "季度",
+          label: "季度"
         },
         {
-          value: '年',
-          label: '年'
+          value: "年",
+          label: "年"
         }
       ],
       level: [
         {
-          value: '全量',
-          label: '全量'
+          value: "全量",
+          label: "全量"
         },
         {
-          value: '增量',
-          label: '增量'
+          value: "增量",
+          label: "增量"
         },
         {
-          value: '差量',
-          label: '差量'
+          value: "差量",
+          label: "差量"
         }
       ],
       cycle: [
         {
-          value: '天',
-          label: '天'
+          value: "天",
+          label: "天"
         },
         {
-          value: '周',
-          label: '周'
+          value: "周",
+          label: "周"
         },
         {
-          value: '月',
-          label: '月'
+          value: "月",
+          label: "月"
         },
         {
-          value: '季度',
-          label: '季度'
+          value: "季度",
+          label: "季度"
         },
         {
-          value: '年',
-          label: '年'
+          value: "年",
+          label: "年"
         }
       ]
-    }
+    };
   },
   methods: {
-    click2: function(name){
-      this.show2=name;
+    click2: function(name) {
+      this.show2 = name;
+    },
+    plantype:function (value) {
+         this.show3 = value;
     }
-   
   }
-
-}
+};
 </script>
