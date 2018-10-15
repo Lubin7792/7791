@@ -61,12 +61,12 @@
 		<div v-show="show==='调度计划'" class="planinfo">
 			<Form ref="plan" :model="plan" :label-width="80">
           	<FormItem label="调度类型">
-					<Select v-model="plan1" style="width:120px" @on-change="plantype">
+					<Select v-model="plan1" style="width:112px" @on-change="plantype">
 						<Option v-for="item in planty" :value="item.value" :key="item.value"></Option>
 					</Select>
 				</FormItem>
         	<FormItem label="备份类型">
-					<Select v-model="plan1" style="width:120px" @on-change="plantype">
+					<Select v-model="plan1" style="width:112px" @on-change="plantype">
 						<Option v-for="item in planty" :value="item.value" :key="item.value"></Option>
 					</Select>
 				</FormItem>
