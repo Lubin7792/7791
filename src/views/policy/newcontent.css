@@ -7,5 +7,14 @@
 width: 200px;
 display: inline-block;
 }
-.planinfo .ivu-select-selection{
+
+.newconten .plandate .ivu-date-picker-focused{
+    width: 170px;
+}
+.planweek .ivu-date-picker-focused{
+    position: fixed;
+    z-index: 1;
+}
+.planlist .ivu-table-wrapper{
+    z-index: 0;
 }
