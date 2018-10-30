@@ -18,6 +18,7 @@
 					<Input v-model="basic.state"></Input>
 				</FormItem>
 			</Form>
+      <button @click="show3">asdasd</button>
     </div>
     <div v-show="show2 === 'RAOLE备份选项'">
     	<Form ref="basic" :model="basic" :label-width="120">
@@ -88,10 +89,13 @@ export default {
   },
   methods:{
     show3() {
-      console.log(this.show2)
+       console.log(this.data)
     }
 
     
+  },
+  created() {
+   
   },
     
   data() {
