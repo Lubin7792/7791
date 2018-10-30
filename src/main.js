@@ -13,7 +13,8 @@ Vue.use(VueRouter);
 Vue.use(iView);
 // The routing configuration
 const RouterConfig = {
-    // 使用 HTML5 的 History 路由模式
+  // 使用 HTML5 的 History 路由模式
+//   mode: "history",
     routes: Routers
 };
 const router = new VueRouter(RouterConfig);

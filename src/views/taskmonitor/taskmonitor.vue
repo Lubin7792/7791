@@ -1,50 +1,106 @@
 <template>
     <div>
-        <Tabs v-model="name" value="name">
-            <TabPane label="标签一" name="name1">标签一的内容</TabPane>
-            <TabPane label="标签二" name="name2">标签二的内容</TabPane>
-            <TabPane label="标签三" name="name3">标签三的内容</TabPane>
-        </Tabs>
-        <Select v-model="model1" style="width:200px">
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
+        <Table border ref="selection" :columns="columns4" :data="data1"></Table>
+        <Button @click="handleSelectAll(true)">全选</Button>
+        <Button @click="handleSelectAll(false)">全部清除</Button>
     </div>
 </template>
-
-
 <script>
-export default {
-  data() {
-    return {
-      name: 'name2',
-      cityList: [
-        {
-          value: 'New York',
-          label: 'New York'
+    export default {
+        data () {
+            return {
+                columns4: [
+                    {
+                        type: 'selection',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        title: '任务ID',
+                        key: 'taskID'
+                    },
+                    {
+                        title: '客户端',
+                          width: 80,
+                        key: 'client'
+                    },
+                    {
+                        title: '介质服务器',
+                        key: 'mediaServer'
+                    },
+                     {
+                        title: '设备',
+                        key: 'device'
+                    },
+                    {
+                        title: '开始时间',
+                        key: 'startTime'
+                    },
+                    {
+                        title: '耗时',
+                        key: 'timeConsuming'
+                    },
+                     {
+                        title: '备份数量',
+                        key: 'backuoNum'
+                    },
+                    {
+                        title: '速率',
+                        key: 'rate'
+                    },
+                    {
+                        title: '调度策略',
+                        key: 'strategy'
+                    },
+                     {
+                        title: '状态',
+                        key: 'state'
+                    }
+
+                ],
+                data1: [
+                    {
+                        taskID: '001',
+                        client: 'mac',
+                        mediaServer: '阿里云',
+                        device: '浪潮',
+                        startTime:'2018-09-15',
+                        timeConsuming:'1年',
+                        backuoNum:'32T',
+                        rate:'10M',
+                        strategy:'随机',
+                        state:'传输数据'
+                    },
+                   {
+                        taskID: '001',
+                        client: 'mac',
+                        mediaServer: '阿里云',
+                        device: '浪潮',
+                        startTime:'2018-09-15',
+                        timeConsuming:'1年',
+                        backuoNum:'32T',
+                        rate:'10M',
+                        strategy:'随机',
+                        state:'传输数据'
+                    },{
+                        taskID: '001',
+                        client: 'mac',
+                        mediaServer: '阿里云',
+                        device: '浪潮',
+                        startTime:'2018-09-15',
+                        timeConsuming:'1年',
+                        backuoNum:'32T',
+                        rate:'10M',
+                        strategy:'随机',
+                        state:'传输数据'
+                    },
+                ]
+            }
         },
-        {
-          value: 'London',
-          label: 'London'
-        },
-        {
-          value: 'Sydney',
-          label: 'Sydney'
-        },
-        {
-          value: 'Ottawa',
-          label: 'Ottawa'
-        },
-        {
-          value: 'Paris',
-          label: 'Paris'
-        },
-        {
-          value: 'Canberra',
-          label: 'Canberra'
+        methods: {
+            handleSelectAll (status) {
+                this.$refs.selection.selectAll(status);
+            }
         }
-      ],
-      model1: ''
     }
-  }
-}
 </script>
