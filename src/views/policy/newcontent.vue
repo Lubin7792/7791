@@ -9,8 +9,10 @@
         <FormItem label="策略名称">
           <Input v-model="basic.name"></Input>
         </FormItem>
-        <FormItem label="策略类型">
-          <Input v-model="basic.type"></Input>
+        <FormItem label="策略类型"  >
+            <Select :v-model="basictype" style="width:160px" placeholder="文件备份选项" @on-change="alick">
+          <Option  v-for="item in basic.type" :value="item.value" :key="item.value" > </Option>
+          </Select>
         </FormItem>
         <FormItem label="储存设备">
           <Input v-model="basic.client"></Input>
@@ -19,7 +21,7 @@
           <Input v-model="basic.state"></Input>
         </FormItem>
         <FormItem label="优先级">
-          <Input v-model="basic.state"></Input>
+          <Input v-model="basic.state"></Input> 
         </FormItem>
         <FormItem label="策略最大调度任务">
           <Input v-model="basic.state"></Input>
@@ -38,13 +40,6 @@
         </FormItem>
       </Form>
     </div>
-    <div v-show="show==='备份选项'">
-      <Tabs type="card" :animated="false" @on-click="click2">
-        <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
-          <backupoption :show2="show2"></backupoption>
-        </TabPane>
-      </Tabs>
-    </div>
     <div v-show="show==='备份资源列表'">
       <Form ref="option" :model="option" :label-width="80">
         <FormItem label="备份内容">
@@ -57,6 +52,13 @@
           <Input v-model="option.compress"></Input>
         </FormItem>
       </Form>
+    </div>
+       <div v-show="show==='备份选项'">
+      <!-- <Tabs type="card" :animated="false" @on-click="click2"> -->
+        <!-- <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index"> -->
+          <backupoption :show2="basicty"></backupoption>
+        <!-- </TabPane> -->
+      <!-- </Tabs> -->
     </div>
     <div v-show="show==='调度计划'" class="planinfo">
       <Form ref="plan" :model="plan" :label-width="80">
@@ -117,6 +119,8 @@ export default {
   data() {
     return {
       plan1:'',
+      basictype:'',
+      basicty:'文件备份选项',
       options2: {
                     shortcuts: [
                         {
@@ -179,20 +183,6 @@ export default {
         value:"时间间隔"
       }
       ],
-      tabList: [
-        {
-          title: "文件备份选项"
-        },
-        {
-          title: "RAOLE备份选项"
-        },
-        {
-          title: "SQLSERVER备份选项"
-        },
-        {
-          title: "VMWARE备份选项"
-        }
-      ],
       planlist: [
         {
           title: "调度类型",
@@ -223,11 +213,23 @@ export default {
           plantype:"周",
         }
       ],
-      show2: "文件备份选项",
        show3: "月份",
       basic: {
         name: "",
-        type: "",
+        type:[
+         {
+           value:'文件备份选项'
+         },
+         {
+           value:'RAOLE备份选项'
+         },
+         {
+           value:'SQLSERVER备份选项'
+         },
+         {
+           value:'VMWARE备份选项'
+         }
+        ],
         client: "",
         state: ""
       },
@@ -262,48 +264,13 @@ export default {
           value: "年",
           label: "年"
         }
-      ],
-      level: [
-        {
-          value: "全量",
-          label: "全量"
-        },
-        {
-          value: "增量",
-          label: "增量"
-        },
-        {
-          value: "差量",
-          label: "差量"
-        }
-      ],
-      cycle: [
-        {
-          value: "天",
-          label: "天"
-        },
-        {
-          value: "周",
-          label: "周"
-        },
-        {
-          value: "月",
-          label: "月"
-        },
-        {
-          value: "季度",
-          label: "季度"
-        },
-        {
-          value: "年",
-          label: "年"
-        }
       ]
     };
   },
   methods: {
-    click2: function(name) {
-      this.show2 = name;
+    alick: function(value) {
+      this.basicty = value;
+      console.log( this.basicty)
     },
     onplantype:function (value) {
          this.show3 = value;

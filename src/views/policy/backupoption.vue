@@ -77,6 +77,7 @@
 </template>
 <script>
 export default {
+  // basictyp:this.show2,
   props: {
     show2: {
       type: String
@@ -87,12 +88,12 @@ export default {
   },
   methods:{
     show3() {
-      console.log(11)
       console.log(this.show2)
     }
 
     
   },
+    
   data() {
     return {
       basic: {
@@ -170,6 +171,11 @@ export default {
         }
       ]
     }
-  }
+  },
+//   watch: {
+//   show2 (show2) {
+//     this.basictyp = show2
+//   }
+// }
 }
 </script> 
