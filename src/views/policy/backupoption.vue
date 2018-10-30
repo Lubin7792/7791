@@ -3,7 +3,7 @@
 </style>
 <template>
 	<div>
-    <div v-show="show2 === '文件备份选项'">
+    <div v-if="show2 === '文件备份选项'">
      	<Form ref="basic" :model="basic" :label-width="120">
         	<FormItem label="时候打开文件备份">
 					<Input v-model="basic.state"></Input>
@@ -20,7 +20,7 @@
 			</Form>
       <button @click="show3">asdasd</button>
     </div>
-    <div v-show="show2 === 'RAOLE备份选项'">
+    <div v-if="show2 === 'RAOLE备份选项'">
     	<Form ref="basic" :model="basic" :label-width="120">
         	<FormItem label="使用多通道">
 					<Input v-model="basic.state"></Input>
@@ -42,7 +42,7 @@
 				</FormItem>
 			</Form>
     </div>
-    <div v-show="show2 === 'SQLSERVER备份选项'">
+    <div v-if="show2 === 'SQLSERVER备份选项'">
     	<Form ref="basic" :model="basic" :label-width="120">
         	<FormItem label="备份前一致性检查">
 					<Input v-model="basic.state"></Input>
@@ -64,7 +64,7 @@
 				</FormItem>
 			</Form>
     </div>
-    <div v-show="show2 === 'VMWARE备份选项'">
+    <div v-if="show2 === 'VMWARE备份选项'">
     	<Form ref="basic" :model="basic" :label-width="120">
         	<FormItem label="跳过失败的虚拟机">
 					<Input v-model="basic.state"></Input>
@@ -87,6 +87,10 @@ export default {
       type:[String,Object]
     }
   },
+  created(){
+    this.showtest = this.show2 
+    console.log(this.showtest,11111);
+  },
   methods:{
     show3() {
        console.log(this.data)
@@ -100,6 +104,7 @@ export default {
     
   data() {
     return {
+      showtest:'',
       basic: {
         name: '',
         type: '',

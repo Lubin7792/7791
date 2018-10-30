@@ -4,13 +4,13 @@
 
 <template>
   <div class="newconten">
-    <div v-show="show==='基本信息'" class="basicinfo">
+    <div v-if="show==='基本信息'" class="basicinfo">
       <Form ref="basic" :model="basic" :label-width="80">
         <FormItem label="策略名称">
           <Input v-model="basic.name"></Input>
         </FormItem>
         <FormItem label="策略类型"  >
-            <Select :v-model="basictype" style="width:160px" placeholder="文件备份选项" @on-change="alick">
+            <Select v-model="basictype" style="width:160px" :placeholder="basicty" @on-change="alick">
           <Option  v-for="item in basic.type" :value="item.value" :key="item.value" > </Option>
           </Select>
         </FormItem>
@@ -40,7 +40,7 @@
         </FormItem>
       </Form>
     </div>
-    <div v-show="show==='备份资源列表'">
+    <div v-if="show==='备份资源列表'">
       <Form ref="option" :model="option" :label-width="80">
         <FormItem label="备份内容">
           <Input v-model="option.content"></Input>
@@ -53,14 +53,14 @@
         </FormItem>
       </Form>
     </div>
-       <div v-show="show==='备份选项'">
+       <div v-if="show==='备份选项'">
       <!-- <Tabs type="card" :animated="false" @on-click="click2"> -->
         <!-- <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index"> -->
           <backupoption :show2="basicty"></backupoption>
         <!-- </TabPane> -->
       <!-- </Tabs> -->
     </div>
-    <div v-show="show==='调度计划'" class="planinfo">
+    <div v-if="show==='调度计划'" class="planinfo">
       <Form ref="plan" :model="plan" :label-width="80">
         <FormItem label="调度类型">
           <Select v-model="plan1" style="width:120px" @on-change="onplantype">
@@ -72,7 +72,7 @@
             <Option v-for="item in planbackups" :value="item.value" :key="item.value"></Option>
           </Select>
         </FormItem>
-        <div v-show="show3==='日期'">
+        <div v-if="show3==='日期'">
           <FormItem label="开始时间" class="plandate">
             <DatePicker  type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
@@ -80,12 +80,12 @@
             <DatePicker  type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
         </div>
-        <div v-show="show3==='周'">
+        <div v-if="show3==='周'">
           <FormItem label="选择时间" class="planweek">
             <DatePicker type="daterange" :options="options2" placement="bottom-end" placeholder="选择时间" style="width: 300px"></DatePicker>
             </FormItem>  
         </div>
-        <div v-show="show3==='时间间隔'">
+        <div v-if="show3==='时间间隔'">
           <FormItem label="开始时间">
             <DatePicker type="daterange" show-week-numbers placement="bottom-end" placeholder="Select date" style="width: 410px"></DatePicker>
           </FormItem>
@@ -111,16 +111,22 @@ export default {
     },
     model1: {
       type: [String, Object]
+    },
+    basicty:{
+      default:'文件备份选项'
     }
   },
   components: {
     backupoption
   },
+  beforeUpdate(){
+    //回填
+    this.basictype = this.basicty
+  },
   data() {
     return {
       plan1:'',
       basictype:'',
-      basicty:'文件备份选项',
       options2: {
                     shortcuts: [
                         {
@@ -269,8 +275,8 @@ export default {
   },
   methods: {
     alick: function(value) {
-      this.basicty = value;
-      console.log( this.basicty)
+      // 提交到父组件 用以保存
+      this.$emit('switchBasicty',value)
     },
     onplantype:function (value) {
          this.show3 = value;
