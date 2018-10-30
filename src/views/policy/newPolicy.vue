@@ -13,7 +13,7 @@
 	<Modal v-model="InfoModal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
 <Tabs type="card" :animated="false" @on-click="click" value="">
      	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
-      <NewContent :show="show" ></NewContent>
+      <NewContent :show="show" @switchBasicty="switchBasicty" :basicty = "basicty"></NewContent>
       </TabPane>
     </Tabs>  
   </Modal>
@@ -38,7 +38,8 @@ export default {
           title: "调度计划"
         }
       ],
-      show: "基本信息"
+      show: "基本信息",
+      basicty:''
     };
   },
   components: {
@@ -53,6 +54,10 @@ export default {
     this.name = "调度计划"
   },
   methods: {
+    //保存子组件里传来的select的值
+    switchBasicty(value){
+      this.basicty = value 
+    },
     ok: function() {
       console.log(this.modals)
       this.$emit("closePolicy", false);
