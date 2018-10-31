@@ -14,11 +14,12 @@
 </template>
 <script>
 import updatePolicy from "./updatePolicy.vue";
+import util from "../../libs/util.js";
 import newPolicy from "./newPolicy.vue";
 export default {
   data() {
     return {
-       modalss: true,
+      modalss: true,
       modal: false,
       policyColumns: [
         {
@@ -90,7 +91,7 @@ export default {
                   class: {
                     stop: true,
                     icon: true
-                  },
+                  }
                 })
               ]
             );
@@ -121,19 +122,24 @@ export default {
       ]
     };
   },
-  component:{
-  },
+  component: {},
   components: {
     updatePolicy,
     newPolicy
   },
+  created() {
+    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.senddata);
+  },
   methods: {
+    senddata: function(obj) {
+      console.log(obj);
+    },
     updatePolicy: function() {
       this.modal = true;
     },
     close: function(modal) {
       this.modal = modal;
-    },  
+    },
     newPolicy: function() {
       this.modalss = true;
     },

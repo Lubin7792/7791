@@ -23,7 +23,7 @@ import NewContent from "./newcontent.vue";
 export default {
   data() {
     return {
-     InfoModal: this.modals,
+      InfoModal: this.modals,
       tabList: [
         {
           title: "基本信息"
@@ -31,15 +31,15 @@ export default {
         {
           title: "备份资源列表"
         },
-         {
+        {
           title: "备份选项"
         },
-         {
+        {
           title: "调度计划"
         }
       ],
       show: "基本信息",
-      basicty:''
+      basicty: ""
     };
   },
   components: {
@@ -50,16 +50,18 @@ export default {
       type: Boolean
     }
   },
+
   beforeCreate() {
-    this.name = "调度计划"
+    this.name = "调度计划";
   },
   methods: {
+  
     //保存子组件里传来的select的值
-    switchBasicty(value){
-      this.basicty = value 
+    switchBasicty(value) {
+      this.basicty = value;
     },
     ok: function() {
-      console.log(this.modals)
+      console.log(this.modals);
       this.$emit("closePolicy", false);
     },
     cancel: function() {
@@ -67,14 +69,12 @@ export default {
     },
     click: function(name) {
       this.show = name;
-    
-
     }
   },
   watch: {
-  modals (modals) {
-    this.InfoModal = modals
+    modals(modals) {
+      this.InfoModal = modals;
+    }
   }
-}
-}
+};
 </script>

@@ -58,7 +58,10 @@ export default {
     },
     click: function(name) {
       this.show = name
-    }
+    },
+       datas(){
+     console.log(1)
+   }
   },
   watch: {
   upmodal (upmodal) {
