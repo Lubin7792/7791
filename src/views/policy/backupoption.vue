@@ -89,7 +89,7 @@ export default {
   },
   created(){
     this.showtest = this.show2 
-    console.log(this.showtest,11111);
+    // console.log(this.showtest,11111);
   },
   methods:{
     show3() {
