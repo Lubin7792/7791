@@ -12,7 +12,7 @@
 <template>
     <div>
         <Modal v-model="updateModal" class-name="vertical-center-modal" :title="title" @on-ok="ok" @on-cancel="cancel" id="modal">
-            <Tab v-model="tabName" value="tabName"></Tab>
+            <Tab   v-model="tabName" value="tabName"></Tab>
         </Modal>
     </div>
 </template>

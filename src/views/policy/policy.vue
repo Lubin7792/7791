@@ -119,7 +119,8 @@ export default {
           type: 26,
           address: "Ottawa No. 2 Lake Park"
         }
-      ]
+      ],
+      data: []
     };
   },
   component: {},
@@ -128,11 +129,22 @@ export default {
     newPolicy
   },
   created() {
-    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.senddata);
+    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
   },
   methods: {
-    senddata: function(obj) {
-      console.log(obj);
+    policyData: function(obj) {
+      let objj = obj.data;
+      for (let i = 0; i < objj.length; i++) {
+        this.data.push({
+          machine: objj[i].machine,
+          systemType: objj[i].os,
+          ip: objj[i].ip,
+          id: objj[i].id
+        });
+      }
+      this.$store.commit("savePolicyData", this.data);
+    console.log(this.$store.state.policyData,'policy')
+
     },
     updatePolicy: function() {
       this.modal = true;

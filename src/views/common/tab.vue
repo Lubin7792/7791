@@ -1,7 +1,7 @@
 <template>
-	<Tabs :animated="false" @on-click="recallName" on-tab-remove="close" value="tabName" v-model="tabName">
-		<TabPane :label="list.title" v-for="(list,index) in clientList" :name="list.name" :key="index">
-			<Content></Content>
+    <Tabs  class="lubin111" :animated="false" @on-click="recallName" on-tab-remove="close" value="tabName" v-model="tabName">
+		<TabPane   class="lubin111" :label="list.title" v-for="(list,index) in clientList" :name="list.name" :key="index">
+			<Content  class="lubin22" ></Content>
 		</TabPane>
 	</Tabs>
 </template>
