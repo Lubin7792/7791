@@ -68,9 +68,7 @@ export default {
       this.data6.splice(index, 1);
     },
     getRowData(row, index) {
-      console.log(row, index);
      this.ceshi=row;
-      console.log(this.ceshi.address)
     }
   },
   components: {

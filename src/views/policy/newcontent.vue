@@ -45,6 +45,7 @@
         <FormItem label="备份内容" class="optionconten">
           <!-- <Input v-model="option.content"></Input> -->
           <Table :columns="columns13" :data="policyData"></Table>
+          <button @click="clicks">asd</button>
            <Tree :data="data3" :load-data="loadData" show-checkbox ></Tree>
         </FormItem>
       </Form>
@@ -115,9 +116,9 @@ export default {
   components: {
     backupoption
   },
-beforeMount() {
-  console.log(this.$store.state.policyData,'newconten')
-},
+
+  
+
   beforeUpdate() {
     //回填
     this.basictype = this.basicty;
@@ -267,8 +268,11 @@ beforeMount() {
       ]
     };
   },
+  computed(){
+    console.log(this.$store.state.policyData,'newconten')
+  },
   methods: {
-    shows () {
+    clicks () {
           console.log(this.$store.state.policyData,'1ss')
     },
     alick: function(value) {
