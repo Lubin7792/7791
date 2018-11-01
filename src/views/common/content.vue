@@ -1,9 +1,10 @@
 <template>
 <div :show="show">
 	<div v-if="show==='basic'">
+		<!-- <Oracle></Oracle> -->
 		<Basic></Basic>
 	</div>
-	<div v-if="show==='ORACLE数据库'">
+	<div v-if="show==='ORACLE'">
 		<Oracle></Oracle>
 	</div>
 	<div v-if="show==='MYSQL数据库'">
@@ -34,6 +35,7 @@ import Vmware from './vmware.vue';
 		},
 		computed:{
 			show(){
+			
 				return this.$store.state.clientTitle;
 			}
 		},

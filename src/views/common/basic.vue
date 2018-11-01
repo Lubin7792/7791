@@ -1,5 +1,5 @@
 <style>
-	@import './basic.css';
+@import "./basic.css";
 </style>
 <template>
 <div>
@@ -26,20 +26,18 @@
 	</div>
 </template>
 <script>
-
-	export default{
-		
-		computed:{
-			returnMessage(){
-				return this.$store.state.returnMessage;
-			},
-		},
-                    mounted:function(){
-                        let url='rest-ful/v3.0/client/detail/';
-                        this.$store.commit('getUrl',url);
-                        this.$store.dispatch('getData',0);
-                        // this.$store.commit('getUrl','rest-ful/v3.0/client/agent/instances?cid=');
-                        // this.$store.dispatch('getData',1);
-                    }
-	}
+export default {
+  computed: {
+    returnMessage() {
+      return this.$store.state.returnMessage;
+    }
+  },
+  mounted: function() {
+    let url = "rest-ful/v3.0/client/detail/";
+    this.$store.commit("getUrl", url);
+    this.$store.dispatch("getData", 0);
+    // this.$store.commit('getUrl','rest-ful/v3.0/client/agent/instances?cid=');
+    // this.$store.dispatch('getData',1);
+  }
+};
 </script>

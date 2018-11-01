@@ -44,13 +44,8 @@
       <Form ref="option" :model="option" :label-width="80">
         <FormItem label="备份内容" class="optionconten">
           <!-- <Input v-model="option.content"></Input> -->
-           <Tree :data="data3" :load-data="loadData" show-checkbox></Tree>
-        </FormItem>
-        <FormItem label="启用加密">
-          <Input v-model="option.encryption"></Input>
-        </FormItem>
-        <FormItem label="启用压缩">
-          <Input v-model="option.compress"></Input>
+          <Table :columns="columns13" :data="policyData"></Table>
+           <Tree :data="data3" :load-data="loadData" show-checkbox ></Tree>
         </FormItem>
       </Form>
     </div>
@@ -120,7 +115,9 @@ export default {
   components: {
     backupoption
   },
-
+beforeMount() {
+  console.log(this.$store.state.policyData,'newconten')
+},
   beforeUpdate() {
     //回填
     this.basictype = this.basicty;
@@ -130,6 +127,15 @@ export default {
   data() {
     return {
       plan1: "",
+      policyData:[],
+      columns13:[
+        {
+        title: 'Name'
+      },
+      {
+        title: 'value'
+      }
+      ],
       basictype: "",
       options2: {
         shortcuts: [
@@ -262,7 +268,9 @@ export default {
     };
   },
   methods: {
-
+    shows () {
+          console.log(this.$store.state.policyData,'1ss')
+    },
     alick: function(value) {
       // 提交到父组件 用以保存
       this.$emit("switchBasicty", value);

@@ -60,7 +60,6 @@ export default {
       this.show = name
     },
        datas(){
-     console.log(1)
    }
   },
   watch: {

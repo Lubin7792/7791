@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Table class="lubin2" border :columns="columns" :data="data" @on-row-click="getRowData" @add="addFromChild"></Table>
+        <Table  border :columns="columns" :data="data" @on-row-click="getRowData" @add="addFromChild"></Table>
         <!-- 新增组件 -->
         <Add></Add>
         <!-- 修改组件 -->
