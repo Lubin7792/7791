@@ -25,3 +25,6 @@
     max-height: 300px;
     overflow: auto;
 }
+.policyModal .ivu-modal{
+    width: 800px !important;
+}

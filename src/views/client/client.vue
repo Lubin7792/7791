@@ -79,6 +79,7 @@ export default {
           state: this.state[i],
           id: obj[i].id
         });
+        console.log(this.data)
       }
     },
     filter: function(versions, state) {

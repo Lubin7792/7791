@@ -9,8 +9,7 @@
 }
 </style>
 <template>
-
-	<Modal v-model="InfoModal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
+	<Modal  class="policyModal" v-model="InfoModal" title="新建策略" @on-ok="ok" @on-cancel="cancel" ok-text="确定" class-name="vertical-center-modal">
 <Tabs type="card" :animated="false" @on-click="click" value="">
      	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
       </TabPane>
@@ -51,10 +50,6 @@ export default {
       type: Boolean
     }
   },
-beforeMount() {
-    console.log(this.$store.state.policyData,'newpolicy')
-  
-},
   beforeCreate() {
     this.name = "调度计划";
   },

@@ -10,7 +10,7 @@
 }
 </style>
 <template>
-	<Modal title="修改配置" v-model="InfoModal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="关闭">
+	<Modal   title="修改配置" v-model="InfoModal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="关闭">
 		<Tabs type="card" :animated="false" @on-click="click" name="调度计划">
 			<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
 				<Content :show="show" ></Content>
