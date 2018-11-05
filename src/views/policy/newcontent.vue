@@ -5,7 +5,7 @@
 <template>
   <div class="newconten">
     <div v-if="show==='基本信息'" class="basicinfo">
-      <Form ref="basic" :model="basic" :label-width="80">
+      <Form ref="basic" :model="basic" :label-width="120">
         <FormItem label="策略名称">
           <Input v-model="basic.name"></Input>
         </FormItem>
@@ -43,7 +43,7 @@
     <div v-if="show==='备份资源列表'">
       <Form ref="option" :model="option" :label-width="80">
         <FormItem label="备份内容" class="optionconten">
-           <Tree :data="data3" :load-data="loadData" show-checkbox ></Tree>
+           <Tree class="lubin1" :data="data3" :load-data="loadData" show-checkbox @on-toggle-expand="selectChange"></Tree>
         </FormItem>
       </Form>
     </div>
@@ -295,6 +295,9 @@ export default {
     },
     onplantype: function(value) {
       this.show3 = value;
+    },
+    selectChange (selectedList) {
+      console.log(selectedList)
     },
     loadData(item, callback) {
       setTimeout(() => {

@@ -15,6 +15,9 @@
     background-size: 20px;
     display: inline-block;
 }
+.newconten .basicinfo{
+    display: inline-block;
+}
 .newconten .basicinfo .ivu-form-item{
     width: 50%;
     float: left;

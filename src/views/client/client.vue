@@ -1,5 +1,5 @@
 <template>
-	<Table :columns="columns" :data="data" search="rest-ful/v3.0/clients" @searchFromTable="getData" @on-row-click='getId'></Table>
+	<Table :columns="columns" :data="data" search="rest-ful/v3.0/clients" @on-toggle-expand="getData" @on-row-click='getId'></Table>
 </template>
 <script>
 import Table from "../common/table.vue";

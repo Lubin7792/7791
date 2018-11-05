@@ -135,7 +135,15 @@ const Routers = [
     ]
   },
   {
-    path: "/sysset"
+    path: "/",
+    component: Navigation,
+    children: [
+      {
+        path: "sysset",
+        name: "sysset",
+        component: () => import("../views/sysset/sysset.vue")
+      }
+    ]
   },
   {
     path: "*",
