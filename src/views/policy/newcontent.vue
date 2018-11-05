@@ -9,9 +9,9 @@
         <FormItem label="策略名称">
           <Input v-model="basic.name"></Input>
         </FormItem>
-        <FormItem label="策略类型"  >
-            <Select v-model="basictype" style="width:160px" :placeholder="basicty" @on-change="alick">
-          <Option  v-for="item in basic.type" :value="item.value" :key="item.value" > </Option>
+        <FormItem label="策略类型">
+          <Select v-model="basictype" style="width:160px" :placeholder="basicty" @on-change="alick">
+            <Option v-for="item in basic.type" :value="item.value" :key="item.value"> </Option>
           </Select>
         </FormItem>
         <FormItem label="储存设备">
@@ -21,7 +21,7 @@
           <Input v-model="basic.state"></Input>
         </FormItem>
         <FormItem label="优先级">
-          <Input v-model="basic.state"></Input> 
+          <Input v-model="basic.state"></Input>
         </FormItem>
         <FormItem label="策略最大调度任务">
           <Input v-model="basic.state"></Input>
@@ -46,15 +46,15 @@
           <!-- <Input v-model="option.content"></Input> -->
           <Table :columns="columns13" :data="policyData"></Table>
           <button @click="clicks">asd</button>
-           <Tree :data="data3" :load-data="loadData" show-checkbox ></Tree>
+          <Tree :data="data3" :load-data="loadData" show-checkbox></Tree>
         </FormItem>
       </Form>
     </div>
-       <div v-if="show==='备份选项'" >
+    <div v-if="show==='备份选项'">
       <!-- <Tabs type="card" :animated="false" @on-click="click2"> -->
-        <!-- <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index"> -->
-          <backupoption :show2="basicty"></backupoption>
-        <!-- </TabPane> -->
+      <!-- <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index"> -->
+      <backupoption :show2="basicty"></backupoption>
+      <!-- </TabPane> -->
       <!-- </Tabs> -->
     </div>
     <div v-if="show==='调度计划'" class="planinfo">
@@ -71,16 +71,16 @@
         </FormItem>
         <div v-if="show3==='日期'">
           <FormItem label="开始时间" class="plandate">
-            <DatePicker  type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+            <DatePicker type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
-           <FormItem label="结束时间" class="plandate">
-            <DatePicker  type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+          <FormItem label="结束时间" class="plandate">
+            <DatePicker type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
         </div>
         <div v-if="show3==='周'">
           <FormItem label="选择时间" class="planweek">
             <DatePicker type="daterange" :options="options2" placement="bottom-end" placeholder="选择时间" style="width: 300px"></DatePicker>
-            </FormItem>  
+          </FormItem>
         </div>
         <div v-if="show3==='时间间隔'">
           <FormItem label="开始时间">
@@ -268,8 +268,11 @@ export default {
       ]
     };
   },
-  computed(){
-    console.log(this.$store.state.policyData,'newconten')
+  computed:{
+    show2() {
+    console.log(11,'newconten')
+    }
+  
   },
   methods: {
     clicks () {

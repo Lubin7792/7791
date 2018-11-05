@@ -52,7 +52,8 @@ export default {
     }
   },
 beforeMount() {
-    console.log(this.$store.state.policyData,'newpolicy')
+      console.log(this.$store.state.policyData,'newpolicy')
+    
   
 },
   beforeCreate() {
