@@ -15,6 +15,9 @@
     background-size: 20px;
     display: inline-block;
 }
+.newconten .basicinfo{
+    display: inline-block;
+}
 .newconten .basicinfo .ivu-form-item{
     width: 50%;
     float: left;
@@ -24,4 +27,7 @@
 .newconten .optionconten{
     max-height: 300px;
     overflow: auto;
+}
+.policyModal .ivu-modal{
+    width: 800px !important;
 }

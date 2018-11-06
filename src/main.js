@@ -1,14 +1,19 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './app.vue';
+import $ from 'jquery';
+import "../src/static/ztree/js/jquery-3.2.1.min";
+import "../src/static/ztree/js/jquery.ztree.core.js";
+import "../src/static/ztree/js/jquery.ztree.excheck";
+import "../src/static/ztree/css/zTreeStyle/zTreeStyle.css";
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import Routers from './router/router.js';
 import 'babel-polyfill';
 import Vuex from 'vuex';
 import store from './store/store.js';
+
 import 'babel-polyfill';
-import $ from 'jquery';
 Vue.use(VueRouter);
 Vue.use(iView);
 // The routing configuration

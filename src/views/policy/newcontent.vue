@@ -5,7 +5,7 @@
 <template>
   <div class="newconten">
     <div v-if="show==='基本信息'" class="basicinfo">
-      <Form ref="basic" :model="basic" :label-width="80">
+      <Form ref="basic" :model="basic" :label-width="120">
         <FormItem label="策略名称">
           <Input v-model="basic.name"></Input>
         </FormItem>
@@ -43,19 +43,12 @@
     <div v-if="show==='备份资源列表'">
       <Form ref="option" :model="option" :label-width="80">
         <FormItem label="备份内容" class="optionconten">
-          <!-- <Input v-model="option.content"></Input> -->
-          <Table :columns="columns13" :data="policyData"></Table>
-          <button @click="clicks">asd</button>
-          <Tree :data="data3" :load-data="loadData" show-checkbox></Tree>
+           <Tree class="lubin1" :data="data3" :load-data="loadData" show-checkbox @on-toggle-expand="selectChange"></Tree>
         </FormItem>
       </Form>
     </div>
-    <div v-if="show==='备份选项'">
-      <!-- <Tabs type="card" :animated="false" @on-click="click2"> -->
-      <!-- <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index"> -->
-      <backupoption :show2="basicty"></backupoption>
-      <!-- </TabPane> -->
-      <!-- </Tabs> -->
+       <div v-if="show==='备份选项'" >
+          <backupoption :show2="basicty"></backupoption>
     </div>
     <div v-if="show==='调度计划'" class="planinfo">
       <Form ref="plan" :model="plan" :label-width="80">
@@ -116,27 +109,20 @@ export default {
   components: {
     backupoption
   },
-
-  
-
   beforeUpdate() {
     //回填
     this.basictype = this.basicty;
-    
-
   },
   data() {
     return {
-      plan1: "",
-      policyData:[],
-      columns13:[
+      treedata: [
         {
-        title: 'Name'
-      },
-      {
-        title: 'value'
-      }
+          title: "客户端列表",
+          loading: "false",
+          children: []
+        }
       ],
+      plan1: "",
       basictype: "",
       options2: {
         shortcuts: [
@@ -259,24 +245,49 @@ export default {
         encryption: "",
         compress: ""
       },
-      data3: [
+      columns12: [
         {
-          title: "parent",
-          loading: false,
-          children: []
+          title: "机器名",
+          key: "machine"
+        },
+        {
+          title: "操作系统类型",
+          key: "systemType"
+        },
+        {
+          title: "IP地址",
+          key: "ip"
+        },
+        {
+          title: "软件版本号",
+          key: "softwareVersion"
         }
       ]
     };
   },
-  computed:{
-    show2() {
-    console.log(11,'newconten')
+  computed: {
+    data3() {
+      let data1 = [];
+      data1 = this.$store.state.policyData;
+      console.log(data1);
+      const array = [];
+      for (let i = 0; i < data1.length; i++) {
+        let item = data1[i];
+        array.push(
+          (item = {
+            id: item.id,
+            title: item.machine,
+            loading: false,
+            children: []
+          })
+        );
+      }
+      return array;
     }
-  
   },
   methods: {
-    clicks () {
-          console.log(this.$store.state.policyData,'1ss')
+    clicks() {
+      console.log(this.policyData, "1ss");
     },
     alick: function(value) {
       // 提交到父组件 用以保存
@@ -285,16 +296,19 @@ export default {
     onplantype: function(value) {
       this.show3 = value;
     },
+    selectChange (selectedList) {
+      console.log(selectedList)
+    },
     loadData(item, callback) {
       setTimeout(() => {
         const data = [
           {
-            title: "children",
+            title: "Microsoft Windows 8",
             loading: false,
             children: []
           },
           {
-            title: "children",
+            title: "linux linux x86_64",
             loading: false,
             children: []
           }
@@ -302,7 +316,6 @@ export default {
         callback(data);
       }, 1000);
     }
-
   }
 };
 </script>
