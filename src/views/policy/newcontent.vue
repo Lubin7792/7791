@@ -314,7 +314,7 @@ export default {
       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
     },
     zTreeOnClick: function(event, treeId, treeNode) {
-      console.log(treeNode.tId , treeId,event,treeNode.rtp);
+      console.log(event, treeId, treeNode);
     }
   }
 };
