@@ -314,7 +314,12 @@ export default {
       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
     },
     zTreeOnClick: function(event, treeId, treeNode) {
+      let cilentId = treeNode.id
+      let type = 65536
+      util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
       console.log(treeNode.tId , treeId,event,treeNode.rtp);
+
+      
     }
   }
 };
