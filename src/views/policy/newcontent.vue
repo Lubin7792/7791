@@ -9,9 +9,9 @@
         <FormItem label="策略名称">
           <Input v-model="basic.name"></Input>
         </FormItem>
-        <FormItem label="策略类型"  >
-            <Select v-model="basictype" style="width:160px" :placeholder="basicty" @on-change="alick">
-          <Option  v-for="item in basic.type" :value="item.value" :key="item.value" > </Option>
+        <FormItem label="策略类型">
+          <Select v-model="basictype" style="width:160px" :placeholder="basicty" @on-change="alick">
+            <Option v-for="item in basic.type" :value="item.value" :key="item.value"> </Option>
           </Select>
         </FormItem>
         <FormItem label="储存设备">
@@ -21,7 +21,7 @@
           <Input v-model="basic.state"></Input>
         </FormItem>
         <FormItem label="优先级">
-          <Input v-model="basic.state"></Input> 
+          <Input v-model="basic.state"></Input>
         </FormItem>
         <FormItem label="策略最大调度任务">
           <Input v-model="basic.state"></Input>
@@ -43,12 +43,19 @@
     <div v-if="show==='备份资源列表'">
       <Form ref="option" :model="option" :label-width="80">
         <FormItem label="备份内容" class="optionconten">
-           <Tree class="lubin1" :data="data3" :load-data="loadData" show-checkbox @on-toggle-expand="selectChange"></Tree>
+           <Tree class="lubin1" :data="data3" show-checkbox ></Tree>
         </FormItem>
       </Form>
-      <div id="">
-
-      </div>
+       <div id="areaTree">
+        <div class="box-title">
+            <span >列表<i class="fa  fa-refresh" @click="freshArea">asdsad</i></span>
+        </div>
+        <div class="tree-box">
+            <div class="zTreeDemoBackground left">
+                <ul id="treeDemo" class="ztree"></ul>
+            </div>
+        </div>
+    </div>
     </div>
        <div v-if="show==='备份选项'" >
           <backupoption :show2="basicty"></backupoption>
@@ -67,16 +74,16 @@
         </FormItem>
         <div v-if="show3==='日期'">
           <FormItem label="开始时间" class="plandate">
-            <DatePicker  type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+            <DatePicker type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
-           <FormItem label="结束时间" class="plandate">
-            <DatePicker  type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+          <FormItem label="结束时间" class="plandate">
+            <DatePicker type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
         </div>
         <div v-if="show3==='周'">
           <FormItem label="选择时间" class="planweek">
             <DatePicker type="daterange" :options="options2" placement="bottom-end" placeholder="选择时间" style="width: 300px"></DatePicker>
-            </FormItem>  
+          </FormItem>
         </div>
         <div v-if="show3==='时间间隔'">
           <FormItem label="开始时间">
@@ -118,6 +125,12 @@ export default {
   },
   data() {
     return {
+      setting: {
+        callback: {
+          onClick: this.zTreeOnClick
+        }
+      },
+      zNodes: [],
       treedata: [
         {
           title: "客户端列表",
@@ -279,9 +292,7 @@ export default {
         array.push(
           (item = {
             id: item.id,
-            title: item.machine,
-            loading: false,
-            children: []
+            name: item.machine
           })
         );
       }
@@ -299,26 +310,36 @@ export default {
     onplantype: function(value) {
       this.show3 = value;
     },
-    selectChange (selectedList) {
-      console.log(selectedList)
+    freshArea: function() {
+      $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
     },
-    loadData(item, callback) {
-      setTimeout(() => {
-        const data = [
-          {
-            title: "Microsoft Windows 8",
-            loading: false,
-            children: []
-          },
-          {
-            title: "linux linux x86_64",
-            loading: false,
-            children: []
-          }
-        ];
-        callback(data);
-      }, 1000);
+    zTreeOnClick: function(event, treeId, treeNode) {
+      console.log(treeNode.tId , treeId,event,treeNode.rtp);
     }
   }
 };
 </script>
+<style>
+#areaTree {
+  border: 1px solid #e5e5e5;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.box-title {
+  border-radius: 3px 3px 0 0;
+  background-color: #f5f5f5;
+}
+.box-title a {
+  color: #2fa4e7;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+.box-title .fa {
+  float: right;
+  line-height: 20px;
+}
+</style>

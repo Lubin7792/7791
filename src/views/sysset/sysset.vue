@@ -1,7 +1,7 @@
 <template>
     <div id="areaTree">
         <div class="box-title">
-            <a href="#">列表<i class="fa  fa-refresh" @click="freshArea"></i></a>
+            <span >列表<i class="fa  fa-refresh" @click="freshArea">asdsad</i></span>
         </div>
         <div class="tree-box">
             <div class="zTreeDemoBackground left">
@@ -12,86 +12,87 @@
 </template>
 
 <script>
-    export default {
-      name: 'areaTree',
-      components:{
-
-      },
-      data:function(){
-        return{
-            setting:{},
-            zNodes:[
-            { name:"父节点1 - 展开", open:true,
-                children: [
-                    { name:"父节点11 - 折叠",
-                        children: [
-                            { name:"叶子节点111"},
-                            { name:"叶子节点112"},
-                            { name:"叶子节点113"},
-                            { name:"叶子节点114"}
-                        ]},
-                    { name:"父节点12 - 折叠",
-                        children: [
-                            { name:"叶子节点121"},
-                            { name:"叶子节点122"},
-                            { name:"叶子节点123"},
-                            { name:"叶子节点124"}
-                        ]},
-                    { name:"父节点13 - 没有子节点", isParent:true}
-                ]},
-            { name:"父节点2 - 折叠",
-                children: [
-                    { name:"父节点21 - 展开", open:true,
-                        children: [
-                            { name:"叶子节点211"},
-                            { name:"叶子节点212"},
-                            { name:"叶子节点213"},
-                            { name:"叶子节点214"}
-                        ]},
-                    { name:"父节点22 - 折叠",
-                        children: [
-                            { name:"叶子节点221"},
-                            { name:"叶子节点222"},
-                            { name:"叶子节点223"},
-                            { name:"叶子节点224"}
-                        ]},
-                    { name:"父节点23 - 折叠",
-                        children: [
-                            { name:"叶子节点231"},
-                            { name:"叶子节点232"},
-                            { name:"叶子节点233"},
-                            { name:"叶子节点234"}
-                        ]}
-                ]},
-            { name:"父节点3 - 没有子节点", isParent:true}
-
-        ]
+export default {
+  name: "areaTree",
+  components: {},
+  data() {
+    return {
+      setting: {
+        callback: {
+          onClick: this.zTreeOnClick
         }
       },
-      methods:{
-        freshArea:function(){
-            $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes);
-        }
-      },
-      mounted(){
-        $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes);
-      }
+     zNodes : [
+			{ id:1, pId:0, name:"pNode 1", open:true},
+			{ id:11, pId:1, name:"pNode 11"},
+			{ id:111, pId:11, name:"leaf node 111"},
+			{ id:112, pId:11, name:"leaf node 112"},
+			{ id:113, pId:11, name:"leaf node 113"},
+			{ id:114, pId:11, name:"leaf node 114"},
+			{ id:12, pId:1, name:"pNode 12"},
+			{ id:121, pId:12, name:"leaf node 121"},
+			{ id:122, pId:12, name:"leaf node 122"},
+			{ id:123, pId:12, name:"leaf node 123"},
+			{ id:124, pId:12, name:"leaf node 124"},
+			{ id:13, pId:1, name:"pNode 13 - no child", isParent:true},
+			{ id:2, pId:0, name:"pNode 2"},
+			{ id:21, pId:2, name:"pNode 21", open:true},
+			{ id:211, pId:21, name:"leaf node 211"},
+			{ id:212, pId:21, name:"leaf node 212"},
+			{ id:213, pId:21, name:"leaf node 213"},
+			{ id:214, pId:21, name:"leaf node 214"},
+			{ id:22, pId:2, name:"pNode 22"},
+			{ id:221, pId:22, name:"leaf node 221"},
+			{ id:222, pId:22, name:"leaf node 222"},
+			{ id:223, pId:22, name:"leaf node 223"},
+			{ id:224, pId:22, name:"leaf node 224"},
+			{ id:23, pId:2, name:"pNode 23"},
+			{ id:231, pId:23, name:"leaf node 231"},
+			{ id:232, pId:23, name:"leaf node 232"},
+			{ id:233, pId:23, name:"leaf node 233"},
+			{ id:234, pId:23, name:"leaf node 234"},
+			{ id:3, pId:0, name:"pNode 3 - no child", isParent:true}
+		]
+    };
+  },
+  methods: {
+    freshArea: function() {
+      console.log(11112);
+      $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes);
+    },
+    zTreeOnClick: function(event, treeId, treeNode) {
+      let name = treeNode.getParentNode();
+      console.log(treeNode.tId,treeNode);
     }
+  },
+  computed: {
+  },
+  component: {},
+  mounted() {
+  }
+};
 </script>
 <style>
-
-    #areaTree{
-        border:1px solid #e5e5e5;    margin-bottom: 2px;border-radius: 4px;overflow: hidden;
-    }
-    .box-title{
-            border-radius: 3px 3px 0 0;background-color: #f5f5f5;
-    }
-    .box-title a{
-            color: #2fa4e7;
-             text-decoration: none;font-size:14px;    display: block;
-    padding: 8px 15px;cursor: pointer;
-    }
-    .box-title .fa{
-        float:right;line-height: 20px;
-    }
+#areaTree {
+  border: 1px solid #e5e5e5;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.box-title {
+  border-radius: 3px 3px 0 0;
+  background-color: #f5f5f5;
+}
+.box-title a {
+  color: #2fa4e7;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+.box-title .fa {
+  float: right;
+  line-height: 20px;
+}
 </style>
