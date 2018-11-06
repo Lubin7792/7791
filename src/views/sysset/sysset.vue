@@ -79,7 +79,7 @@
     }
 </script>
 <style>
-    @import '../../static/ztree/css/zTreeStyle/zTreeStyle.css';
+
     #areaTree{
         border:1px solid #e5e5e5;    margin-bottom: 2px;border-radius: 4px;overflow: hidden;
     }
