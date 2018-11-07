@@ -103,6 +103,7 @@
   </div>
 </template>
 <script>
+import util from "../../libs/util.js";
 import backupoption from "./backupoption";
 export default {
   props: {
@@ -131,6 +132,7 @@ export default {
         }
       },
       zNodes: [],
+      ztreeObj:{},
       treedata: [
         {
           title: "客户端列表",
@@ -279,13 +281,13 @@ export default {
           key: "softwareVersion"
         }
       ]
+      
     };
   },
   computed: {
     data3() {
       let data1 = [];
       data1 = this.$store.state.policyData;
-      console.log(data1);
       const array = [];
       for (let i = 0; i < data1.length; i++) {
         let item = data1[i];
@@ -301,7 +303,6 @@ export default {
   },
   methods: {
     clicks() {
-      console.log(this.policyData, "1ss");
     },
     alick: function(value) {
       // 提交到父组件 用以保存
@@ -314,8 +315,40 @@ export default {
       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
     },
     zTreeOnClick: function(event, treeId, treeNode) {
-      console.log(event, treeId, treeNode);
+      //获取子节点发送请求
+      let typeId = '65536';
+      let str = '/rest-ful/v3.0/client/resource/browse?' + "client=" + treeNode.id + "&type=" + typeId;
+      util.restfullCall(str, null, "get",
+          function (obj) {
+          //返回数据处理
+          var arrays = new Array();
+            let objj = obj.data.resources;
+          for (let i = 0; i < objj.length; i++) {
+            arrays.push({
+              ResType: objj[i].ResType,
+              name: objj[i].Name,
+            });
+          }
+          console.log(treeNode,1,arrays,treeId)
+          let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
+          newNodess = ztreeobj.addNodes(treeNode, arrays);
+          // newNodess = $.fn.zTree.getZTreeObj("treeNode").addNodes(null, arrays);
+        });
     }
+    // ztreeData: function (obj) {
+    //   //返回数据处理
+    //   var arrays = new Array();
+    //    let objj = obj.data.resources;
+    //   for (let i = 0; i < objj.length; i++) {
+    //     arrays.push({
+    //       ResType: objj[i].ResType,
+    //       name: objj[i].Name,
+    //     });
+    //   }
+    //   let ztreedom = this.ztreeObj
+    //  console.log(ztreedom,1,arrays)
+    //  newNodess = $.fn.zTree.getZTreeObj("ztreedom").addNodes(null, arrays);
+    // }
   }
 };
 </script>
