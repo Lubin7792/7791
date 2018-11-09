@@ -143,6 +143,8 @@ export default {
         });
       }
       this.$store.commit("savePolicyData", this.data);
+
+      
     },
     updatePolicy: function() {
       this.modal = true;

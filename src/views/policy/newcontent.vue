@@ -41,19 +41,17 @@
       </Form>
     </div>
     <div v-if="show==='备份资源列表'">
-      <Form ref="option" :model="option" :label-width="80">
-        <FormItem label="备份内容" class="optionconten">
-           <Tree class="lubin1" :data="data3" show-checkbox ></Tree>
-        </FormItem>
-      </Form>
        <div id="areaTree">
         <div class="box-title">
-            <span >列表<i class="fa  fa-refresh" @click="freshArea">asdsad</i></span>
+            <span  @click="freshArea">列表</span>
         </div>
         <div class="tree-box">
             <div class="zTreeDemoBackground left">
                 <ul id="treeDemo" class="ztree"></ul>
             </div>
+        </div>
+        <div class="tree-conten">
+          <Table border ref="selection" :columns="columns4" :data="pathConten"></Table>
         </div>
     </div>
     </div>
@@ -127,12 +125,23 @@ export default {
   data() {
     return {
       setting: {
+        check: {
+          enable: true
+        },
         callback: {
-          onClick: this.zTreeOnClick
+          onClick: this.zTreeOnClick,
+          onCheck: this.zTreeOnCheck
         }
       },
       zNodes: [],
       ztreeObj: {},
+      pathConten: [],
+      columns4: [
+        {
+          title: "已选地址",
+          key:'name'
+        }
+      ],
       treedata: [
         {
           title: "客户端列表",
@@ -294,16 +303,15 @@ export default {
           (item = {
             id: item.id,
             name: item.machine,
-            nodetype:0
+            nodetype: 0
           })
         );
       }
       return array;
     }
   },
-  updated: function() {
-    $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
-    console.log(1);
+  mounted: function() {
+    // $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
   },
   methods: {
     lading: function() {},
@@ -317,60 +325,69 @@ export default {
     freshArea: function() {
       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
     },
-
     build_path_by_tree_node: function(treeNode) {
       var path = "";
       var cid = 0;
+      let name = "";
       let current_node = treeNode;
       let parent = treeNode.getParentNode();
-      
 
       while (true) {
         parent = current_node.getParentNode();
-        
         if (!parent) {
           cid = current_node.id;
+          name = current_node.name;
           break;
-        }  
-
+        }
         if (parent.nodetype) {
           path = "/" + path;
         }
-
-         path = current_node.name + path;        
-         current_node = parent;
+        path = current_node.name + path;
+        current_node = parent;
       }
-      console.log(1, path, current_node.name);
-      return {client:cid, path:path};
+      return { client: cid, path: path, name: name };
     },
-
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-      let typeId = "65536";
+      if (!treeNode.hasOwnProperty("children")) {
+        let typeId = "65536";
+        let path = this.build_path_by_tree_node(treeNode);
+        // console.log(treeNode, treeNode.hasOwnProperty("children"));
+
+        let str =
+          "/rest-ful/v3.0/client/resource/browse?" +
+          "client=" +
+          path.client +
+          "&type=" +
+          typeId +
+          "&path=" +
+          path.path;
+        util.restfullCall(str, null, "get", function(obj) {
+          //返回数据处理
+          var arrays = new Array();
+          let objj = obj.data.resources;
+          for (let i = 0; i < objj.length; i++) {
+            arrays.push({
+              ResType: objj[i].ResType,
+              name: objj[i].Name,
+              nodetype: 1
+            });
+          }
+          let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
+          ztreeobj.addNodes(treeNode, arrays);
+        });
+      }
+    },
+    zTreeOnCheck: function(event, treeId, treeNode) {
       let path = this.build_path_by_tree_node(treeNode);
-      console.log(path);
-      let str =
-        "/rest-ful/v3.0/client/resource/browse?" +
-        "client=" +
-        path.client +
-        "&type=" +
-        typeId +
-        "&path=" +
-        path.path;
-      util.restfullCall(str, null, "get", function(obj) {
-        //返回数据处理
-        var arrays = new Array();
-        let objj = obj.data.resources;
-        for (let i = 0; i < objj.length; i++) {
-          arrays.push({
-            ResType: objj[i].ResType,
-            name: objj[i].Name,
-            nodetype:1
-          });
-        }
-        let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
-        ztreeobj.addNodes(treeNode, arrays);
-      });
+      let pathList = path.name + "_" + path.path;
+      this.pathConten.push({ name: pathList });
+      console.log(pathList, this.pathConten);
+      // let newPath = this.pathConten.filter( item => {
+      //     if(pathList !== item) {
+      //       return true
+      //     }
+      //   })
     }
   }
 };
