@@ -41,22 +41,22 @@
       </Form>
     </div>
     <div v-if="show==='备份资源列表'">
-       <div id="areaTree">
+      <div id="areaTree">
         <div class="box-title">
-            <span  @click="freshArea">列表</span>
+          <span @click="freshArea">列表</span>
         </div>
         <div class="tree-box">
-            <div class="zTreeDemoBackground left">
-                <ul id="treeDemo" class="ztree"></ul>
-            </div>
+          <div class="zTreeDemoBackground left">
+            <ul id="treeDemo" class="ztree"></ul>
+          </div>
         </div>
         <div class="tree-conten">
           <Table border ref="selection" :columns="columns4" :data="pathConten"></Table>
         </div>
+      </div>
     </div>
-    </div>
-       <div v-if="show==='备份选项'" >
-          <backupoption :show2="basicty"></backupoption>
+    <div v-if="show==='备份选项'">
+      <backupoption :show2="basicty"></backupoption>
     </div>
     <div v-if="show==='调度计划'" class="planinfo">
       <Form ref="plan" :model="plan" :label-width="80">
@@ -71,10 +71,10 @@
           </Select>
         </FormItem>
         <div v-if="show3==='日期'">
-          <FormItem label="开始时间" class="plandate">
+          <FormItem label="开始日期" class="plandate">
             <DatePicker type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
-          <FormItem label="结束时间" class="plandate">
+          <FormItem label="结束日期" class="plandate">
             <DatePicker type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
         </div>
@@ -88,7 +88,16 @@
             <DatePicker type="daterange" show-week-numbers placement="bottom-end" placeholder="Select date" style="width: 410px"></DatePicker>
           </FormItem>
         </div>
+        <div class="time">
+          <FormItem label="开始时间" width="100px">
+            <TimePicker :value="timevalue1" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
+          </FormItem>
+          <FormItem label="结束时间" width="100px">
+            <TimePicker :value="timevalue2" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
+          </FormItem>
+        </div>
       </Form>
+
       <div class="button">
         <Button type="warning">添加计划</Button>
         <Button type="warning">保存计划</Button>
@@ -134,6 +143,8 @@ export default {
         }
       },
       zNodes: [],
+      timevalue1:'',
+      timevalue2:'',
       ztreeObj: {},
       pathConten: [],
       columns4: [
@@ -204,13 +215,13 @@ export default {
       ],
       planbackups: [
         {
-          value: "日期"
+          value: "全备"
         },
         {
-          value: "周"
+          value: "增量"
         },
         {
-          value: "时间间隔"
+          value: "差量"
         }
       ],
       planlist: [
