@@ -4,7 +4,7 @@
 
 <template>
   <div class="newconten">
-    <div v-if="show==='基本信息'" class="basicinfo">
+    <div v-show="show==='基本信息'" class="basicinfo">
       <Form ref="basic" :model="basic" :label-width="120">
         <FormItem label="策略名称">
           <Input v-model="basic.name"></Input>
@@ -40,7 +40,7 @@
         </FormItem>
       </Form>
     </div>
-    <div v-if="show==='备份资源列表'">
+    <div v-show="show==='备份资源列表'">
       <div id="areaTree">
         <div class="box-title">
           <span @click="freshArea">列表</span>
@@ -55,10 +55,10 @@
         </div>
       </div>
     </div>
-    <div v-if="show==='备份选项'">
+    <div v-show="show==='备份选项'">
       <backupoption :show2="basicty"></backupoption>
     </div>
-    <div v-if="show==='调度计划'" class="planinfo">
+    <div v-show="show==='调度计划'" class="planinfo">
       <Form ref="plan" :model="plan" :label-width="80">
         <FormItem label="调度类型">
           <Select v-model="plan1" style="width:120px" @on-change="onplantype">
@@ -66,38 +66,32 @@
           </Select>
         </FormItem>
         <FormItem label="备份类型">
-          <Select v-model="plan1" style="width:120px">
-            <Option v-for="item in planbackups" :value="item.value" :key="item.value"></Option>
+          <Select  style="width:120px">
+            <Option v-for="item in plan.backups" :value="item.value" :key="item.value"></Option>
           </Select>
         </FormItem>
-        <div v-if="show3==='日期'">
           <FormItem label="开始日期" class="plandate">
-            <DatePicker type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+            <DatePicker type="date" :value="nowDate" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+          </FormItem>
+              <FormItem label="开始时间" width="100px"  >
+            <TimePicker :value="nowTime" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
           </FormItem>
           <FormItem label="结束日期" class="plandate">
-            <DatePicker type="date" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+            <DatePicker type="date" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
-        </div>
-        <div v-if="show3==='周'">
-          <FormItem label="选择时间" class="planweek">
-            <DatePicker type="daterange" :options="options2" placement="bottom-end" placeholder="选择时间" style="width: 300px"></DatePicker>
-          </FormItem>
-        </div>
-        <div v-if="show3==='时间间隔'">
-          <FormItem label="开始时间">
-            <DatePicker type="daterange" show-week-numbers placement="bottom-end" placeholder="Select date" style="width: 410px"></DatePicker>
-          </FormItem>
-        </div>
-        <div class="time">
-          <FormItem label="开始时间" width="100px">
-            <TimePicker :value="timevalue1" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
-          </FormItem>
-          <FormItem label="结束时间" width="100px">
+            <FormItem label="结束时间" width="100px">
             <TimePicker :value="timevalue2" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
           </FormItem>
-        </div>
-      </Form>
-
+        <!-- <div v-if="show3==='周'"></div> -->
+        <!-- <div v-if="show3==='时间间隔'"> </div> -->
+          <FormItem label="间隔类型" style="width:100%" >
+          <Select  style="width:150px"   @on-change="planShow">
+            <Option v-for="item in plan.intervalType" :value="item.value" :key="item.value" ></Option>
+          </Select>
+          <Input v-model="plan.intervalTime" placeholder="输入时间" style="width: 100px"></Input>
+        <span>1122{{ plan.timeType }}11</span>
+        </FormItem>
+          </Form>
       <div class="button">
         <Button type="warning">添加计划</Button>
         <Button type="warning">保存计划</Button>
@@ -106,7 +100,7 @@
       <div class="planlist">
         <Table border :columns="planlist" :data="planlistcon"></Table>
       </div>
-    </div>
+  </div>
   </div>
 </template>
 <script>
@@ -143,14 +137,16 @@ export default {
         }
       },
       zNodes: [],
-      timevalue1:'',
-      timevalue2:'',
+      timevalue1: "",
+      timevalue2: "",
+      nowTime: "",
+      nowDate: "",
       ztreeObj: {},
       pathConten: [],
       columns4: [
         {
           title: "已选地址",
-          key:'name'
+          key: "name"
         }
       ],
       treedata: [
@@ -213,17 +209,7 @@ export default {
           value: "时间间隔"
         }
       ],
-      planbackups: [
-        {
-          value: "全备"
-        },
-        {
-          value: "增量"
-        },
-        {
-          value: "差量"
-        }
-      ],
+
       planlist: [
         {
           title: "调度类型",
@@ -273,7 +259,29 @@ export default {
         client: "",
         state: ""
       },
-      plan: {},
+      plan: {
+        intervalType: [
+          {
+            value: "小时"
+          },
+          {
+            value: "分钟"
+          }
+        ],
+        intervalTime: "",
+        timeType: "",
+        backups: [
+          {
+            value: "全备"
+          },
+          {
+            value: "增量"
+          },
+          {
+            value: "差量"
+          }
+        ]
+      },
       resources: {
         pool: "",
         equipment: ""
@@ -325,13 +333,44 @@ export default {
     // $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
   },
   methods: {
+    planShow:function(value){
+      this.plan.timetype = value;
+      console.log(1,this.plan.timetype);
+    },
     lading: function() {},
     alick: function(value) {
       // 提交到父组件 用以保存
       this.$emit("switchBasicty", value);
     },
+    timeFormate: function() {
+      let year = new Date().getFullYear();
+      let month =
+        new Date().getMonth() + 1 < 10
+          ? "0" + (new Date().getMonth() + 1)
+          : new Date().getMonth() + 1;
+      let date =
+        new Date().getDate() < 10
+          ? "0" + new Date().getDate()
+          : new Date().getDate();
+      let hh =
+        new Date().getHours() < 10
+          ? "0" + new Date().getHours()
+          : new Date().getHours();
+      let mm =
+        new Date().getMinutes() < 10
+          ? "0" + new Date().getMinutes()
+          : new Date().getMinutes();
+      let ss =
+        new Date().getMinutes() < 10
+          ? "0" + new Date().getSeconds()
+          : new Date().getSeconds();
+      this.nowTime = hh + "点" + mm + "分" + ss + "秒";
+      this.nowDate = year + "年" + month + "月" + date + "日";
+      console.log(this.nowTime, this.nowDate);
+    },
     onplantype: function(value) {
       this.show3 = value;
+      this.timeFormate();
     },
     freshArea: function() {
       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);

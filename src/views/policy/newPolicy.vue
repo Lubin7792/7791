@@ -37,7 +37,7 @@ export default {
           title: "调度计划"
         }
       ],
-      show: "调度计划",
+      show: "基本信息",
       basicty: ""
     
     };

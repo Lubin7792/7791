@@ -4,13 +4,10 @@
   width: 50%;
 }
 .newconten .planinfo .ivu-form-item {
-  width: 200px;
+  width: 250px;
   display: inline-block;
 }
 
-.newconten .plandate .ivu-date-picker-focused {
-  width: 170px;
-}
 .planweek .ivu-date-picker-focused {
   position: fixed;
   z-index: 1;
@@ -24,13 +21,13 @@
 .newconten .tree-box {
   width: 60%;
   float: left;
-  height: 248px;
+  height: 300px;
   overflow: auto;
 }
 .newconten .tree-conten {
   width: 39%;
   float: right;
-  height: 248px;
+  height: 300px;
   overflow: auto;
 }
 .newconten .planinfo .time .ivu-form-item {
