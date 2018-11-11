@@ -14,7 +14,7 @@
      	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
       </TabPane>
     </Tabs>  
-      <NewContent :show="show" @switchBasicty="switchBasicty" :basicty = "basicty"></NewContent>
+      <NewContent :show="show" @switchBasicty="switchBasicty" :basicty = "basicty"  ref="newConten"></NewContent>
   </Modal>
 </template>
 <script>
@@ -39,7 +39,6 @@ export default {
       ],
       show: "基本信息",
       basicty: ""
-    
     };
   },
   components: {
@@ -61,6 +60,8 @@ export default {
     ok: function() {
       console.log(this.modals);
       this.$emit("closePolicy", false);
+      this.$refs.newConten.policypost();
+
     },
     cancel: function() {
       this.$emit("closePolicy", false);

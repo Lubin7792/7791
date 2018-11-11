@@ -15,28 +15,34 @@
           </Select>
         </FormItem>
         <FormItem label="储存设备">
-          <Input v-model="basic.client"></Input>
+          <Select style="width:200px" v-model="basic.deviceval" @on-change="showNow">
+             <Option v-for="item in basic.device" :label="item.servername" :value="item.id" :key="item.Level"></Option>
+          </Select>
         </FormItem>
         <FormItem label="介质池">
-          <Input v-model="basic.state"></Input>
+        <Select style="width:200px" v-model="basic.poolval" @on-change="showNow">
+             <Option v-for="item in basic.pool" :label="item.Name" :value="item.name" :key="item.Level"></Option>
+          </Select>
         </FormItem>
         <FormItem label="优先级">
-          <Input v-model="basic.state"></Input>
+           <Select style="width:200px" v-model="basic.privilegekey" @on-change="showNow">
+             <Option v-for="item in basic.privilege" :label="item.Name" :value="item.Name" :key="item.Level"></Option>
+          </Select>
         </FormItem>
         <FormItem label="策略最大调度任务">
-          <Input v-model="basic.state"></Input>
+          <Input v-model="basic.maxtasks"></Input>
         </FormItem>
         <FormItem label="启用压缩">
-          <Input v-model="basic.state"></Input>
+          <Input v-model="basic.compress"></Input>
         </FormItem>
         <FormItem label="启用加密">
-          <Input v-model="basic.state"></Input>
+          <Input v-model="basic.encryption"></Input>
         </FormItem>
         <FormItem label="加密算法">
-          <Input v-model="basic.state"></Input>
+          <Input v-model="basic.algorithm"></Input>
         </FormItem>
         <FormItem label="数据保留周期">
-          <Input v-model="basic.state"></Input>
+          <Input v-model="basic.savedays"></Input>
         </FormItem>
       </Form>
     </div>
@@ -59,47 +65,47 @@
       <backupoption :show2="basicty"></backupoption>
     </div>
     <div v-show="show==='调度计划'" class="planinfo">
-      <Form ref="plan" :model="plan" :label-width="80">
+      <Form ref="schedule" :model="schedule" :label-width="80">
         <FormItem label="调度类型">
-          <Select v-model="plan1" style="width:120px" @on-change="onplantype">
-            <Option v-for="item in plantype" :value="item.value" :key="item.value"></Option>
+          <Select  style="width:120px" @on-change="onplantype">
+            <Option v-for="item in schedule.type" :value="item.value" :key="item.value"></Option>
           </Select>
         </FormItem>
         <FormItem label="备份类型">
           <Select  style="width:120px">
-            <Option v-for="item in plan.backups" :value="item.value" :key="item.value"></Option>
+            <Option v-for="item in schedule.backuptype" :value="item.value" :key="item.value"></Option>
           </Select>
         </FormItem>
           <FormItem label="开始日期" class="plandate">
-            <DatePicker type="date" :value="nowDate" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+            <DatePicker type="date" :value="schedule.startday" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
               <FormItem label="开始时间" width="100px"  >
-            <TimePicker :value="nowTime" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
+            <TimePicker :value="schedule.starttime" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
           </FormItem>
           <FormItem label="结束日期" class="plandate">
-            <DatePicker type="date" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+            <DatePicker  :value="schedule.endday" type="date" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
           </FormItem>
             <FormItem label="结束时间" width="100px">
-            <TimePicker :value="timevalue2" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
+            <TimePicker :value="schedule.endtime" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
           </FormItem>
         <!-- <div v-if="show3==='周'"></div> -->
         <!-- <div v-if="show3==='时间间隔'"> </div> -->
           <FormItem label="间隔类型" style="width:100%" >
           <Select  style="width:150px"   @on-change="planShow">
-            <Option v-for="item in plan.intervalType" :value="item.value" :key="item.value" ></Option>
+            <Option v-for="item in schedule.freqtype" :value="item.value" :key="item.value" ></Option>
           </Select>
-          <Input v-model="plan.intervalTime" placeholder="输入时间" style="width: 100px"></Input>
-        <span>1122{{ plan.timeType }}11</span>
+          <Input v-model="schedule.intervalTime" placeholder="输入时间" style="width: 100px"></Input>
+        <span>{{ schedule.freqval }}</span>
         </FormItem>
-          </Form>
       <div class="button">
         <Button type="warning">添加计划</Button>
         <Button type="warning">保存计划</Button>
         <Button type="warning">删除计划</Button>
       </div>
       <div class="planlist">
-        <Table border :columns="planlist" :data="planlistcon"></Table>
+        <Table border :columns="planlist" :data="schedule.list"></Table>
       </div>
+    </Form>
   </div>
   </div>
 </template>
@@ -198,18 +204,6 @@ export default {
           }
         ]
       },
-      plantype: [
-        {
-          value: "日期"
-        },
-        {
-          value: "周"
-        },
-        {
-          value: "时间间隔"
-        }
-      ],
-
       planlist: [
         {
           title: "调度类型",
@@ -228,18 +222,8 @@ export default {
           title: "间隔时间"
         }
       ],
-      planlistcon: [
-        {
-          plantype: "时间"
-        },
-        {
-          plantype: "月份"
-        },
-        {
-          plantype: "周"
-        }
-      ],
-      show3: "月份",
+
+      show3: "",
       basic: {
         name: "",
         type: [
@@ -256,11 +240,82 @@ export default {
             value: "VMWARE备份选项"
           }
         ],
-        client: "",
-        state: ""
+        deviceval: "",
+        device: [
+          {
+            id: 2,
+            type: 0,
+            name: "test",
+            server: 1,
+            servername: "teststorageserver",
+            enable: 1
+          }
+        ],
+        poolval: "",
+        pool: [
+          {
+            id: 1,
+            name: "空白介质池",
+            type: 0,
+            Cover: 0,
+            Protected: 0
+          },
+          {
+            id: 2,
+            name: "默认介质池",
+            type: 1,
+            Cover: 30,
+            Protected: 30
+          },
+          {
+            id: 3,
+            name: "归档介质池",
+            type: 4,
+            Cover: 0,
+            Protected: 0
+          },
+          {
+            id: 4,
+            name: "CATALOG介质池",
+            type: 4,
+            Cover: 90,
+            Protected: 90
+          }
+        ],
+        privilegekey: "",
+        privilege: [
+          {
+            Level: 1,
+            Name: "低优先级"
+          },
+          {
+            Level: 2,
+            Name: "中等优先级"
+          },
+          {
+            Level: 3,
+            Name: "高优先级"
+          }
+        ],
+        maxtasks: "",
+        compress: "",
+        encryption: "",
+        algorithm: "",
+        savedays: ""
       },
-      plan: {
-        intervalType: [
+      schedule: {
+        type: [
+          {
+            value: "日期"
+          },
+          {
+            value: "周"
+          },
+          {
+            value: "时间间隔"
+          }
+        ],
+        freqtype: [
           {
             value: "小时"
           },
@@ -268,9 +323,8 @@ export default {
             value: "分钟"
           }
         ],
-        intervalTime: "",
-        timeType: "",
-        backups: [
+        freqval: "",
+        backuptype: [
           {
             value: "全备"
           },
@@ -280,16 +334,13 @@ export default {
           {
             value: "差量"
           }
-        ]
+        ],
+        intervalTime: "",
+        timeType: "",
+        list: []
       },
       resources: {
-        pool: "",
         equipment: ""
-      },
-      option: {
-        content: "",
-        encryption: "",
-        compress: ""
       },
       columns12: [
         {
@@ -333,14 +384,54 @@ export default {
     // $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
   },
   methods: {
-    planShow:function(value){
-      this.plan.timetype = value;
-      console.log(1,this.plan.timetype);
+    planShow: function(value) {
+      this.schedule.freqval = value;
+    },
+    showNow: function() {
+      console.log(this.basic.privilegekey);
+    },
+    policypost: function() {
+      let tests = {
+        base: {
+          name: "kk",
+          type: 65536,
+          privilege: 0,
+          pool: 2,
+          device: 2,
+          savedays: 30,
+          maxtasks: 0
+        },
+        resource: [{ client: 1, type: 65538, path: "c:/", exclude: 0 }],
+        option: [{ type: 0, value: "xx" }],
+        schedule: [
+          {
+            scheduletype: 0,
+            backuptype: 1,
+            freqtype: 0,
+            freqval: 1,
+            startday: 1,
+            starttime: "12:00:00",
+            endday: 1,
+            endtime: "13:00:00",
+            duration: 3600
+          }
+        ]
+      };
+
+      util.restfullCall(
+        "http://192.168.0.127:8080/rest-ful/v3.0/policy",
+        tests,
+        "post",
+        this.senddata
+      );
+    },
+    sendData: function(value) {
+      console.log(value, "ok");
     },
     lading: function() {},
     alick: function(value) {
       // 提交到父组件 用以保存
-      this.$emit("switchBasicty", value);
+      this.$emit("schedule.freqval", value);
     },
     timeFormate: function() {
       let year = new Date().getFullYear();
@@ -364,9 +455,8 @@ export default {
         new Date().getMinutes() < 10
           ? "0" + new Date().getSeconds()
           : new Date().getSeconds();
-      this.nowTime = hh + "点" + mm + "分" + ss + "秒";
-      this.nowDate = year + "年" + month + "月" + date + "日";
-      console.log(this.nowTime, this.nowDate);
+      this.schedule.starttime = hh + "点" + mm + "分" + ss + "秒";
+      this.schedule.startday = year + "年" + month + "月" + date + "日";
     },
     onplantype: function(value) {
       this.show3 = value;
@@ -376,6 +466,7 @@ export default {
       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
     },
     build_path_by_tree_node: function(treeNode) {
+      //获取路径
       var path = "";
       var cid = 0;
       let name = "";
@@ -403,7 +494,6 @@ export default {
         let typeId = "65536";
         let path = this.build_path_by_tree_node(treeNode);
         // console.log(treeNode, treeNode.hasOwnProperty("children"));
-
         let str =
           "/rest-ful/v3.0/client/resource/browse?" +
           "client=" +
@@ -433,11 +523,6 @@ export default {
       let pathList = path.name + "_" + path.path;
       this.pathConten.push({ name: pathList });
       console.log(pathList, this.pathConten);
-      // let newPath = this.pathConten.filter( item => {
-      //     if(pathList !== item) {
-      //       return true
-      //     }
-      //   })
     }
   }
 };

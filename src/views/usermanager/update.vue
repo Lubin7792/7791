@@ -109,6 +109,8 @@ import util from '../../libs/util.js';
                 array.id=this.updateId;
 
                 util.restfullCall(string,array,'put',this.render);
+                console.log(array)
+
             },
             render:function(obj){
                 this.$emit('changeUser',this.formdata);
