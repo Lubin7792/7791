@@ -393,13 +393,13 @@ export default {
     policypost: function() {
       let tests = {
         base: {
-          name: "kk",
+          name: this.basic.name,
           type: 65536,
-          privilege: 0,
-          pool: 2,
-          device: 2,
-          savedays: 30,
-          maxtasks: 0
+          privilege: this.basic.privilegekey,
+          pool: this.basic.poolval,
+          device: this.basic.deviceval,
+          savedays: this.basic.savedays? this.basic.savedays  : 0,
+          maxtasks: parseInt(this.basic.maxtasks)
         },
         resource: [{ client: 1, type: 65538, path: "c:/", exclude: 0 }],
         option: [{ type: 0, value: "xx" }],
@@ -417,13 +417,13 @@ export default {
           }
         ]
       };
-
-      util.restfullCall(
-        "http://192.168.0.127:8080/rest-ful/v3.0/policy",
-        tests,
-        "post",
-        this.senddata
-      );
+    console.log(tests)
+      // util.restfullCall(
+      //   "http://192.168.0.127:8080/rest-ful/v3.0/policy",
+      //   tests,
+      //   "post",
+      //   this.senddata
+      // );
     },
     sendData: function(value) {
       console.log(value, "ok");
@@ -518,6 +518,7 @@ export default {
         });
       }
     },
+    //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
       let path = this.build_path_by_tree_node(treeNode);
       let pathList = path.name + "_" + path.path;
