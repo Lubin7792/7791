@@ -59,39 +59,39 @@
       <backupoption :show2="basicty"></backupoption>
     </div>
     <div v-show="show==='调度计划'" class="planinfo">
-      <Form ref="plan" :model="plan" :label-width="80">
+      <Form ref="plan" :model="plan" style="width:80%">
         <FormItem label="调度类型">
           <Select v-model="plan1" style="width:120px" @on-change="onplantype">
             <Option v-for="item in plantype" :value="item.value" :key="item.value"></Option>
           </Select>
         </FormItem>
         <FormItem label="备份类型">
-          <Select  style="width:120px">
+          <Select style="width:120px">
             <Option v-for="item in plan.backups" :value="item.value" :key="item.value"></Option>
           </Select>
         </FormItem>
-          <FormItem label="开始日期" class="plandate">
-            <DatePicker type="date" :value="nowDate" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
-          </FormItem>
-              <FormItem label="开始时间" width="100px"  >
-            <TimePicker :value="nowTime" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
-          </FormItem>
-          <FormItem label="结束日期" class="plandate">
-            <DatePicker type="date" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
-          </FormItem>
-            <FormItem label="结束时间" width="100px">
-            <TimePicker :value="timevalue2" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
-          </FormItem>
+        <FormItem label="开始日期" class="plandate">
+          <DatePicker type="date" :value="nowDate" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+        </FormItem>
+        <FormItem label="开始时间" >
+          <TimePicker :value="nowTime" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
+        </FormItem>
+        <FormItem label="结束日期" class="plandate">
+          <DatePicker type="date" format="yyyy年MM月dd日" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+        </FormItem>
+        <FormItem label="结束时间" >
+          <TimePicker :value="timevalue2" format="HH点mm分ss秒" placeholder="Select time" style="width: 168px"></TimePicker>
+        </FormItem>
         <!-- <div v-if="show3==='周'"></div> -->
         <!-- <div v-if="show3==='时间间隔'"> </div> -->
-          <FormItem label="间隔类型" style="width:100%" >
-          <Select  style="width:150px"   @on-change="planShow">
-            <Option v-for="item in plan.intervalType" :value="item.value" :key="item.value" ></Option>
+        <FormItem label="间隔类型" style="width:100%">
+          <Select style="width:150px" @on-change="planShow">
+            <Option v-for="item in plan.intervalType" :value="item.value" :key="item.value"></Option>
           </Select>
           <Input v-model="plan.intervalTime" placeholder="输入时间" style="width: 100px"></Input>
-        <span>1122{{ plan.timeType }}11</span>
+          <span>{{ plan.timeType }}</span>
         </FormItem>
-          </Form>
+      </Form>
       <div class="button">
         <Button type="warning">添加计划</Button>
         <Button type="warning">保存计划</Button>
@@ -100,7 +100,7 @@
       <div class="planlist">
         <Table border :columns="planlist" :data="planlistcon"></Table>
       </div>
-  </div>
+    </div>
   </div>
 </template>
 <script>
@@ -269,7 +269,7 @@ export default {
           }
         ],
         intervalTime: "",
-        timeType: "",
+        timeType:"",
         backups: [
           {
             value: "全备"
@@ -334,7 +334,7 @@ export default {
   },
   methods: {
     planShow:function(value){
-      this.plan.timetype = value;
+      this.$set(this.plan,"timeType", value)
       console.log(1,this.plan.timetype);
     },
     lading: function() {},
