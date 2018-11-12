@@ -77,16 +77,16 @@
           </Select>
         </FormItem>
         <FormItem label="开始日期" class="plandate">
-          <DatePicker type="date" :value="schedule.startday" format="dd" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+          <DatePicker type="date"  :value="schedule.startday" format="dd" show-week-numbers placement="bottom-end" placeholder="Select date" @on-change="startDate"></DatePicker>
         </FormItem>
         <FormItem label="开始时间" width="100px">
-          <TimePicker :value="schedule.starttime" format="HH:mm:ss" placeholder="Select time" style="width: 168px"></TimePicker>
+          <TimePicker :value="schedule.starttime" format="HH:mm:ss" placeholder="Select time" style="width: 168px" @on-change="startTime"></TimePicker>
         </FormItem>
         <FormItem label="结束日期" class="plandate">
-          <DatePicker :value="schedule.endday" type="date" format="dd" show-week-numbers placement="bottom-end" placeholder="Select date" @on-change="showTime"></DatePicker>
+          <DatePicker :value="schedule.endday" type="date" format="dd" show-week-numbers placement="bottom-end" placeholder="Select date" @on-change="endDate"  ></DatePicker>
         </FormItem>
         <FormItem label="结束时间" width="100px">
-          <TimePicker :value="schedule.endtime" format="HH:mm:ss" placeholder="Select time" style="width: 168px" ></TimePicker>
+          <TimePicker :value="schedule.endtime" format="HH:mm:ss" @on-change="endTime" placeholder="Select time" style="width: 168px" ></TimePicker>
         </FormItem>
         <!-- <div v-if="show3==='周'"></div> -->
         <!-- <div v-if="show3==='时间间隔'"> </div> -->
@@ -350,10 +350,9 @@ export default {
         timeType: "",
         list: [],
         startday:'',
-        startdays:'',
-        startNow:'',
+        starttime:'',
         endday:'',
-        endNow:''
+        endtime:''
       },
       resources: {
         equipment: "",
@@ -402,8 +401,17 @@ export default {
     // $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
   },
   methods: {
-    showTime:function(value){
-        console.log(value)
+    startDate:function(value){
+        this.schedule.startday=value;
+    },
+    startTime:function(value){
+        this.schedule.starttime=value;
+    },
+    endDate:function(value){
+        this.schedule.endday=value;
+    },
+    endTime:function(value){
+        this.schedule.endtime=value;
     },
     planShow: function(value) {
       let test = value
@@ -433,8 +441,8 @@ export default {
             freqtype: parseInt(this.schedule.freqtypelevel?this.schedule.freqtypelevel:0),
             freqval: parseInt(this.schedule.intervalTime?this.schedule.intervalTime:0),
             startday:parseInt(this.schedule.startday.replace(/'/g,"")),
-            starttime:this.schedule.starttime?this.schedule.starttime:this.schedule.startNow ,
-            endday: this.schedule.endday,
+            starttime:this.schedule.starttime,
+            endday: parseInt(this.schedule.endday),
             endtime: this.schedule.endtime?this.schedule.endtime:this.schedule.endNow,
             duration: 0
           }
@@ -473,11 +481,8 @@ export default {
         new Date().getMinutes() < 10
           ? "0" + new Date().getSeconds()
           : new Date().getSeconds();
-      this.schedule.starttime = hh + ":" + mm + ":" + ss + ":";
-      this.schedule.startday = "'" +date +"'";
-      this.schedule.startNow =  hh + ":" + mm + ":" + ss + ":";
-      console.log(date, this.schedule.startday)
-
+      this.schedule.startday= "'" +date +"'";
+      this.schedule.starttime =  hh + ":" + mm + ":" + ss ;
     },
     onplantype: function(value) {
       this.show3 = value;
