@@ -448,13 +448,12 @@ export default {
           }
         ]
       };
-    console.log(tests)
-      // util.restfullCall(
-      //   "http://192.168.0.127:8080/rest-ful/v3.0/policy",
-      //   tests,
-      //   "post",
-      //   this.senddata
-      // );
+      util.restfullCall(
+        "http://192.168.0.127:8080/rest-ful/v3.0/policy",
+        tests,
+        "post",
+        this.senddata
+      );
     },
     sendData: function(value) {
       console.log(value, "ok");
@@ -513,8 +512,7 @@ export default {
         current_node = parent;
       }
       return { client: cid, path: path, name: name };
-      this.resources.clientId = cid;
-      this.resources.pathValue = path;
+     
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
@@ -551,6 +549,8 @@ export default {
       let path = this.build_path_by_tree_node(treeNode);
       let pathList = path.name + "_" + path.path;
       this.pathConten.push({ name: pathList });
+       this.resources.clientId = path.client
+      this.resources.pathValue =path.path;
       console.log(pathList, this.pathConten);
     }
   }
