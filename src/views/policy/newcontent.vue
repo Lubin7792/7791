@@ -21,12 +21,12 @@
         </FormItem>
         <FormItem label="介质池">
           <Select style="width:200px" v-model="basic.poolval" @on-change="showNow">
-            <Option v-for="item in basic.pool" :label="item.Name" :value="item.name" :key="item.Level"></Option>
+            <Option v-for="item in basic.pool" :label="item.name" :value="item.id" :key="item.name"></Option>
           </Select>
         </FormItem>
         <FormItem label="优先级">
           <Select style="width:200px" v-model="basic.privilegekey" @on-change="showNow">
-            <Option v-for="item in basic.privilege" :label="item.Name" :value="item.Name" :key="item.Level"></Option>
+            <Option v-for="item in basic.privilege" :label="item.Name" :value="item.Level" :key="item.Level"></Option>
           </Select>
         </FormItem>
         <FormItem label="策略最大调度任务">
@@ -72,7 +72,7 @@
           </Select>
         </FormItem>
         <FormItem label="备份类型">
-          <Select style="width:120px" v-model="schedule.backuplevel">
+          <Select style="width:120px" v-model="schedule.backuptlevel">
             <Option v-for="item in schedule.backuptype" :label="item.value" :value="item.level" :key="item.value"></Option>
           </Select>
         </FormItem>
@@ -83,10 +83,10 @@
           <TimePicker :value="schedule.starttime" format="HH:mm:ss" placeholder="Select time" style="width: 168px"></TimePicker>
         </FormItem>
         <FormItem label="结束日期" class="plandate">
-          <DatePicker :value="schedule.endday" type="date" format="dd" show-week-numbers placement="bottom-end" placeholder="Select date"></DatePicker>
+          <DatePicker :value="schedule.endday" type="date" format="dd" show-week-numbers placement="bottom-end" placeholder="Select date" @on-change="showTime"></DatePicker>
         </FormItem>
         <FormItem label="结束时间" width="100px">
-          <TimePicker :value="schedule.endtime" format="HH:mm:ss" placeholder="Select time" style="width: 168px" @on-change="showTime"></TimePicker>
+          <TimePicker :value="schedule.endtime" format="HH:mm:ss" placeholder="Select time" style="width: 168px" ></TimePicker>
         </FormItem>
         <!-- <div v-if="show3==='周'"></div> -->
         <!-- <div v-if="show3==='时间间隔'"> </div> -->
@@ -349,10 +349,11 @@ export default {
         intervalTime: "",
         timeType: "",
         list: [],
-        startDay:'',
+        startday:'',
+        startdays:'',
         startNow:'',
-        endDay:'',
-        endNow:'23:59:59'
+        endday:'',
+        endNow:''
       },
       resources: {
         equipment: "",
@@ -431,9 +432,9 @@ export default {
             backuptype: parseInt(this.schedule.backuptlevel?this.schedule.backuptlevel:0),
             freqtype: parseInt(this.schedule.freqtypelevel?this.schedule.freqtypelevel:0),
             freqval: parseInt(this.schedule.intervalTime?this.schedule.intervalTime:0),
-            startday: parseInt(this.schedule.startday?this.schedule.startday:this.schedule.startDay),
+            startday:parseInt(this.schedule.startday.replace(/'/g,"")),
             starttime:this.schedule.starttime?this.schedule.starttime:this.schedule.startNow ,
-            endday: parseInt(this.schedule.endday?this.schedule.endday:28),
+            endday: this.schedule.endday,
             endtime: this.schedule.endtime?this.schedule.endtime:this.schedule.endNow,
             duration: 0
           }
@@ -456,11 +457,6 @@ export default {
       this.$emit("schedule.freqval", value);
     },
     timeFormate: function() {
-      let year = new Date().getFullYear();
-      let month =
-        new Date().getMonth() + 1 < 10
-          ? "0" + (new Date().getMonth() + 1)
-          : new Date().getMonth() + 1;
       let date =
         new Date().getDate() < 10
           ? "0" + new Date().getDate()
@@ -478,9 +474,9 @@ export default {
           ? "0" + new Date().getSeconds()
           : new Date().getSeconds();
       this.schedule.starttime = hh + ":" + mm + ":" + ss + ":";
-      this.schedule.startday = year + "年" + month + "月" + date + "日";
-      this.schedule.startDay = date ;
+      this.schedule.startday = "'" +date +"'";
       this.schedule.startNow =  hh + ":" + mm + ":" + ss + ":";
+      console.log(date, this.schedule.startday)
 
     },
     onplantype: function(value) {
