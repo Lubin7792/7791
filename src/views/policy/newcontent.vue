@@ -121,7 +121,7 @@ export default {
       type: [String, Object]
     },
     basicty: {
-      default: "文件备份选项"
+      default: ""
     }
   },
   components: {
@@ -415,7 +415,6 @@ export default {
     },
     planShow: function(value) {
       let test = value
-      console.log(test)
       this.schedule.freqval = test.label;
     },
     showNow: function() {
@@ -458,10 +457,10 @@ export default {
     sendData: function(value) {
       console.log(value, "ok");
     },
-    lading: function() {},
     alick: function(value) {
       // 提交到父组件 用以保存
-      this.$emit("schedule.freqval", value);
+      // this.$emit("schedule.freqval", value);
+      this.$emit("switchBasicty", value);
     },
     timeFormate: function() {
       let date =

@@ -1,7 +1,6 @@
 import axios from 'axios';
 export default {
 	restfullCall: function (url, body, method, dataFormat) {
-		console.log(url, body, method, dataFormat);
 		axios({
 			method: method,
 				url: url,

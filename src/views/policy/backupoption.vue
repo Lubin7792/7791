@@ -18,7 +18,6 @@
 					<Input v-model="basic.state"></Input>
 				</FormItem>
 			</Form>
-      <button @click="show3">asdasd</button>
     </div>
     <div v-if="show2 === 'RAOLE备份选项'">
     	<Form ref="basic" :model="basic" :label-width="120">
