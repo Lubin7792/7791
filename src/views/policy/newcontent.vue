@@ -45,6 +45,7 @@
           <Input v-model="basic.savedays"></Input>
         </FormItem>
       </Form>
+      <div style="display:none" >{{lconten}}</div>
     </div>
     <div v-show="show==='备份资源列表'">
       <div id="areaTree">
@@ -380,11 +381,13 @@ export default {
     };
   },
   computed: {
-    data3() {
+   data3(){
       let data1 = [];
       data1 = this.$store.state.policyData;
+      console.log('methods',data1)
       const array = [];
       for (let i = 0; i < data1.length; i++) {
+      console.log(22,data1,11)
         let item = data1[i];
         array.push(
           (item = {
@@ -395,10 +398,34 @@ export default {
         );
       }
       return array;
-    }
   },
-  mounted: function() {
-    // $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
+  lconten(){
+    let data1 = [];
+      data1 = this.$store.state.policyData;
+      console.log('methods',data1)
+      const array = [];
+      for (let i = 0; i < data1.length; i++) {
+      console.log(22,data1,11)
+        let item = data1[i];
+        array.push(
+          (item = {
+            id: item.id,
+            name: item.machine,
+            nodetype: 0
+          })
+        );
+      console.log(11,array,1)
+      }
+      $.fn.zTree.init($("#treeDemo"), this.setting, array);
+  }
+  },
+  created(){
+  },
+  mounted(){
+    // this.data3()
+    console.log(this.data3)
+
+    
   },
   methods: {
     startDate:function(value){
@@ -553,7 +580,7 @@ export default {
       console.log(pathList, this.pathConten);
     }
   }
-};
+}
 </script>
 
 <style>
