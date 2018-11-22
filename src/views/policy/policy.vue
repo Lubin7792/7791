@@ -129,11 +129,8 @@ export default {
     newPolicy
   },
   created() {
-    console.time('11')
     util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
-      this.$store.commit("savePolicyData", this.data);
-      console.log(this.data,22)
-    console.timeEnd('11')
+     
   },
   mounted(){
   },
@@ -145,11 +142,11 @@ export default {
           machine: objj[i].machine,
           systemType: objj[i].os,
           ip: objj[i].ip,
-          id: objj[i].id
+          id: objj[i].id,
+          ce:0
         });
       }
-      console.log(this.data,333)
-
+       this.$store.commit("savePolicyData", this.data);
     },
     updatePolicy: function() {
       this.modal = true;

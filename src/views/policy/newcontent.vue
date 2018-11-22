@@ -134,6 +134,7 @@ export default {
   },
   data() {
     return {
+      
       setting: {
         check: {
           enable: true
@@ -381,13 +382,14 @@ export default {
     };
   },
   computed: {
+    databack(){
+     return this.$store.state.policyData
+    },
    data3(){
       let data1 = [];
       data1 = this.$store.state.policyData;
-      console.log('methods',data1)
       const array = [];
       for (let i = 0; i < data1.length; i++) {
-      console.log(22,data1,11)
         let item = data1[i];
         array.push(
           (item = {
@@ -402,10 +404,8 @@ export default {
   lconten(){
     let data1 = [];
       data1 = this.$store.state.policyData;
-      console.log('methods',data1)
       const array = [];
       for (let i = 0; i < data1.length; i++) {
-      console.log(22,data1,11)
         let item = data1[i];
         array.push(
           (item = {
@@ -414,18 +414,27 @@ export default {
             nodetype: 0
           })
         );
-      console.log(11,array,1)
       }
       $.fn.zTree.init($("#treeDemo"), this.setting, array);
   }
   },
   created(){
+    console.log('created')
+  },
+  beforeMount() {
+    console.log('beformount')
+    
   },
   mounted(){
     // this.data3()
-    console.log(this.data3)
+    console.log('mounted')
 
     
+  },
+  watch:{
+    databack:function (newdata,olddata) {
+      console.log(newdata,olddata)
+    }
   },
   methods: {
     startDate:function(value){
