@@ -3,7 +3,7 @@
 </style>
 <template>
 	<div>
-    <div v-if="show2 === '文件备份选项'">
+    <div v-show="show2 === '65536'">
      	<Form ref="basic" :model="basic" :label-width="120">
         	<FormItem label="时候打开文件备份">
 					<Input v-model="basic.state"></Input>
@@ -19,7 +19,7 @@
 				</FormItem>
 			</Form>
     </div>
-    <div v-if="show2 === 'RAOLE备份选项'">
+      <div v-show="show2 === '131072'">
     	<Form ref="basic" :model="basic" :label-width="120">
         	<FormItem label="使用多通道">
 					<Input v-model="basic.state"></Input>
@@ -41,7 +41,29 @@
 				</FormItem>
 			</Form>
     </div>
-    <div v-if="show2 === 'SQLSERVER备份选项'">
+     <div v-show="show2 === '196608'">
+    	<Form ref="basic" :model="basic" :label-width="120">
+        	<FormItem label="使用多通道">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="开启MYSQL备份">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="数据片中文件个数">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="全库备份时备份归档">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="归档备份范围">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+        	<FormItem label="删除已经备份的归档">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+			</Form>
+    </div>
+    <div v-show="show2 === '262144'">
     	<Form ref="basic" :model="basic" :label-width="120">
         	<FormItem label="备份前一致性检查">
 					<Input v-model="basic.state"></Input>
@@ -63,7 +85,7 @@
 				</FormItem>
 			</Form>
     </div>
-    <div v-if="show2 === 'VMWARE备份选项'">
+    <div v-show="show2 === '327680'">
     	<Form ref="basic" :model="basic" :label-width="120">
         	<FormItem label="跳过失败的虚拟机">
 					<Input v-model="basic.state"></Input>
@@ -73,11 +95,17 @@
 				</FormItem>
 			</Form>
     </div>
+     <div v-show="show2 === '393216'">
+    	<Form ref="basic" :model="basic" :label-width="120">
+        	<FormItem label="系统备份">
+					<Input v-model="basic.state"></Input>
+				</FormItem>
+			</Form>
+    </div>
   </div>
 </template>
 <script>
 export default {
-  // basictyp:this.show2,
   props: {
     show2: {
       type: String
@@ -88,19 +116,10 @@ export default {
   },
   created(){
     this.showtest = this.show2 
-    // console.log(this.showtest,11111);
+    console.log(this.show2)
   },
   methods:{
-    show3() {
-       console.log(this.data)
-    }
-
-    
   },
-  created() {
-   
-  },
-    
   data() {
     return {
       showtest:'',
@@ -180,10 +199,6 @@ export default {
       ]
     }
   },
-//   watch: {
-//   show2 (show2) {
-//     this.basictyp = show2
-//   }
-// }
+
 }
 </script> 

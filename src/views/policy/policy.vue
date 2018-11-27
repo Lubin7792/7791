@@ -132,8 +132,6 @@ export default {
     util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
      
   },
-  mounted(){
-  },
   methods: {
     policyData: function(obj) {
       let objj = obj.data;

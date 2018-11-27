@@ -30,7 +30,8 @@ const store = new Vuex.Store({
     modalDisk: false,
     modalLibrary: false,
     modalGlance: false,
-    policyData:[]
+    policyData: [],
+    policyType: []
   },
   mutations: {
     //更改updateModal的函数,使控件出现
@@ -118,8 +119,12 @@ const store = new Vuex.Store({
     getInstanceId(state, instanceId) {
       state.instanceId = instanceId;
     },
-    savePolicyData(state, policyOs ) {
+    //新建策略
+    savePolicyData(state, policyOs) {
       state.policyData = policyOs;
+    },
+    savePolicyType(state, policyTy) {
+      state.policyType = policyTy;
     }
   },
   actions: {

@@ -14,7 +14,7 @@
      	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
       </TabPane>
     </Tabs>  
-      <NewContent :show="show" @switchBasicty="switchBasicty" :basicty = "basicty"  ref="newConten"></NewContent>
+      <NewContent :show="show"  ref="newConten"></NewContent>
   </Modal>
 </template>
 <script>
@@ -53,12 +53,7 @@ export default {
     this.name = "调度计划";
   },
   methods: {
-    //保存子组件里传来的select的值
-    switchBasicty(value) {
-      this.basicty = value;
-    },
     ok: function() {
-      console.log(this.modals);
       this.$emit("closePolicy", false);
       this.$refs.newConten.policypost();
 

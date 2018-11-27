@@ -1,5 +1,5 @@
 <style>
-@import './navigation.css';
+@import "./navigation.css";
 /*@import './iconfont.css';*/
 </style>
 <template>
@@ -121,13 +121,33 @@
     </div>
 </template>
 <script>
-import icon from './iconfont.js'
+import util from "../../libs/util.js";
+import icon from "./iconfont.js";
 export default {
-  name: 'navigation',
+  name: "navigation",
   methods: {
     changeUrl(name) {
-      this.$router.push('/' + name)
+      this.$router.push("/" + name);
+    },
+    policyData: function(obj) {
+      let objj = obj.data;
+      let arrays = new Array();
+      for (let i = 0; i < objj.length; i++) {
+        arrays.push({
+          key: objj[i].type,
+          name: objj[i].name
+        });
+      }
+      this.$store.commit("savePolicyType",arrays);
     }
+  },
+  created() {
+    util.restfullCall(
+      "/rest-ful/v3.0/policytype",
+      null,
+      "get",
+      this.policyData
+    );
   }
-}
-</script>
+};
+</script>   

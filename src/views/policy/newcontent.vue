@@ -10,8 +10,8 @@
           <Input v-model="basic.name"></Input>
         </FormItem>
         <FormItem label="策略类型">
-          <Select v-model="basictype" style="width:160px" :placeholder="basicty" @on-change="alick">
-            <Option v-for="item in basic.type" :value="item.value" :key="item.value"> </Option>
+          <Select v-model="basictype" style="width:160px"  @on-change="alick" :label-in-value="true" >
+            <Option v-for="item in policyTyep" :label="item.name"  :value="item.key" :key="item.key"> </Option>
           </Select>
         </FormItem>
         <FormItem label="储存设备">
@@ -63,7 +63,7 @@
       </div>
     </div>
     <div v-show="show==='备份选项'">
-      <backupoption :show2="basicty"></backupoption>
+      <backupoption :show2="policyTypekey"></backupoption>
     </div>
     <div v-show="show==='调度计划'" class="planinfo">
       <Form ref="schedule" :model="schedule" :label-width="80">
@@ -120,21 +120,17 @@ export default {
     },
     model1: {
       type: [String, Object]
-    },
-    basicty: {
-      default: ""
     }
   },
   components: {
     backupoption
   },
-  beforeUpdate() {
-    //回填
-    this.basictype = this.basicty;
-  },
+  // beforeUpdate() {
+  //   //回填
+  //   this.basictype = this.basicty;
+  // },
   data() {
     return {
-      
       setting: {
         check: {
           enable: true
@@ -144,6 +140,7 @@ export default {
           onCheck: this.zTreeOnCheck
         }
       },
+      policyTypekey: "",
       zNodes: [],
       timevalue1: "",
       timevalue2: "",
@@ -228,20 +225,6 @@ export default {
       show3: "",
       basic: {
         name: "",
-        type: [
-          {
-            value: "文件备份选项"
-          },
-          {
-            value: "RAOLE备份选项"
-          },
-          {
-            value: "SQLSERVER备份选项"
-          },
-          {
-            value: "VMWARE备份选项"
-          }
-        ],
         deviceval: "",
         device: [
           {
@@ -306,60 +289,60 @@ export default {
         savedays: ""
       },
       schedule: {
-        typelevel:'',
+        typelevel: "",
         type: [
           {
             value: "日期",
-            level:0
+            level: 0
           },
           {
             value: "周",
-            level:1
+            level: 1
           },
           {
             value: "时间间隔",
-            level:2
+            level: 2
           }
         ],
-        freqtypelevel:'',
+        freqtypelevel: "",
         freqtype: [
           {
             value: "小时",
-            level:0
+            level: 0
           },
           {
             value: "分钟",
-            level:1
+            level: 1
           }
         ],
         freqval: "",
-        backuptlevel:'',
+        backuptlevel: "",
         backuptype: [
           {
             value: "全备",
-            level:0
+            level: 0
           },
           {
             value: "增量",
-            level:1
+            level: 1
           },
           {
             value: "差量",
-            level:2
+            level: 2
           }
         ],
         intervalTime: "",
         timeType: "",
         list: [],
-        startday:'',
-        starttime:'',
-        endday:'',
-        endtime:''
+        startday: "",
+        starttime: "",
+        endday: "",
+        endtime: ""
       },
       resources: {
         equipment: "",
-        clientId:'',
-        pathValue:''
+        clientId: "",
+        pathValue: ""
       },
       columns12: [
         {
@@ -382,10 +365,13 @@ export default {
     };
   },
   computed: {
-    databack(){
-     return this.$store.state.policyData
+    databack() {
+      return this.$store.state.policyData;
     },
-   data3(){
+    policyTyep() {
+      return this.$store.state.policyType;
+    },
+    data3() {
       let data1 = [];
       data1 = this.$store.state.policyData;
       const array = [];
@@ -400,9 +386,9 @@ export default {
         );
       }
       return array;
-  },
-  lconten(){
-    let data1 = [];
+    },
+    lconten() {
+      let data1 = [];
       data1 = this.$store.state.policyData;
       const array = [];
       for (let i = 0; i < data1.length; i++) {
@@ -416,41 +402,26 @@ export default {
         );
       }
       $.fn.zTree.init($("#treeDemo"), this.setting, array);
-  }
-  },
-  created(){
-    console.log('created')
-  },
-  beforeMount() {
-    console.log('beformount')
-    
-  },
-  mounted(){
-    // this.data3()
-    console.log('mounted')
-
-    
-  },
-  watch:{
-    databack:function (newdata,olddata) {
-      console.log(newdata,olddata)
     }
   },
+  watch: {
+    databack: function(newdata, olddata) {}
+  },
   methods: {
-    startDate:function(value){
-        this.schedule.startday=value;
+    startDate: function(value) {
+      this.schedule.startday = value;
     },
-    startTime:function(value){
-        this.schedule.starttime=value;
+    startTime: function(value) {
+      this.schedule.starttime = value;
     },
-    endDate:function(value){
-        this.schedule.endday=value;
+    endDate: function(value) {
+      this.schedule.endday = value;
     },
-    endTime:function(value){
-        this.schedule.endtime=value;
+    endTime: function(value) {
+      this.schedule.endtime = value;
     },
     planShow: function(value) {
-      let test = value
+      let test = value;
       this.schedule.freqval = test.label;
     },
     showNow: function() {
@@ -461,24 +432,45 @@ export default {
         base: {
           name: this.basic.name,
           type: 65536,
-          privilege: parseInt(this.basic.privilegekey?this.basic.privilegekey : 0),
-          pool: parseInt(this.basic.poolval?this.basic.poolval:0),
-          device: parseInt(this.basic.deviceval?this.basic.deviceval:0),
-          savedays: parseInt(this.basic.savedays? this.basic.savedays  : 0),
-          maxtasks: parseInt(this.basic.maxtasks? this.basic.maxtasks : 0)
+          privilege: parseInt(
+            this.basic.privilegekey ? this.basic.privilegekey : 0
+          ),
+          pool: parseInt(this.basic.poolval ? this.basic.poolval : 0),
+          device: parseInt(this.basic.deviceval ? this.basic.deviceval : 0),
+          savedays: parseInt(this.basic.savedays ? this.basic.savedays : 0),
+          maxtasks: parseInt(this.basic.maxtasks ? this.basic.maxtasks : 0)
         },
-        resource: [{ client: parseInt(this.resources.clientId?this.resources.clientId:1), type: 65538, path: this.resources.pathValue, exclude: 0 }],
+        resource: [
+          {
+            client: parseInt(
+              this.resources.clientId ? this.resources.clientId : 1
+            ),
+            type: 65538,
+            path: this.resources.pathValue,
+            exclude: 0
+          }
+        ],
         option: [{ type: 0, value: "xx" }],
         schedule: [
           {
-            scheduletype:parseInt(this.schedule.typelevel?this.schedule.typelevel:0),
-            backuptype: parseInt(this.schedule.backuptlevel?this.schedule.backuptlevel:0),
-            freqtype: parseInt(this.schedule.freqtypelevel?this.schedule.freqtypelevel:0),
-            freqval: parseInt(this.schedule.intervalTime?this.schedule.intervalTime:0),
-            startday:parseInt(this.schedule.startday.replace(/'/g,"")),
-            starttime:this.schedule.starttime,
+            scheduletype: parseInt(
+              this.schedule.typelevel ? this.schedule.typelevel : 0
+            ),
+            backuptype: parseInt(
+              this.schedule.backuptlevel ? this.schedule.backuptlevel : 0
+            ),
+            freqtype: parseInt(
+              this.schedule.freqtypelevel ? this.schedule.freqtypelevel : 0
+            ),
+            freqval: parseInt(
+              this.schedule.intervalTime ? this.schedule.intervalTime : 0
+            ),
+            startday: parseInt(this.schedule.startday.replace(/'/g, "")),
+            starttime: this.schedule.starttime,
             endday: parseInt(this.schedule.endday),
-            endtime: this.schedule.endtime?this.schedule.endtime:this.schedule.endNow,
+            endtime: this.schedule.endtime
+              ? this.schedule.endtime
+              : this.schedule.endNow,
             duration: 0
           }
         ]
@@ -494,9 +486,7 @@ export default {
       console.log(value, "ok");
     },
     alick: function(value) {
-      // 提交到父组件 用以保存
-      // this.$emit("schedule.freqval", value);
-      this.$emit("switchBasicty", value);
+      this.policyTypekey = String(value.value);
     },
     timeFormate: function() {
       let date =
@@ -515,8 +505,8 @@ export default {
         new Date().getMinutes() < 10
           ? "0" + new Date().getSeconds()
           : new Date().getSeconds();
-      this.schedule.startday= "'" +date +"'";
-      this.schedule.starttime =  hh + ":" + mm + ":" + ss ;
+      this.schedule.startday = "'" + date + "'";
+      this.schedule.starttime = hh + ":" + mm + ":" + ss;
     },
     onplantype: function(value) {
       this.show3 = value;
@@ -526,7 +516,7 @@ export default {
       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
     },
     build_path_by_tree_node: function(treeNode) {
-      //获取路径  
+      //获取路径
       var path = "";
       var cid = 0;
       let name = "";
@@ -547,7 +537,6 @@ export default {
         current_node = parent;
       }
       return { client: cid, path: path, name: name };
-     
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
@@ -584,12 +573,12 @@ export default {
       let path = this.build_path_by_tree_node(treeNode);
       let pathList = path.name + "_" + path.path;
       this.pathConten.push({ name: pathList });
-       this.resources.clientId = path.client
-      this.resources.pathValue =path.path;
+      this.resources.clientId = path.client;
+      this.resources.pathValue = path.path;
       console.log(pathList, this.pathConten);
     }
   }
-}
+};
 </script>
 
 <style>
