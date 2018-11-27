@@ -35,3 +35,7 @@
     height: 400px;
     overflow: auto;
 }
+.policy .buttonC{
+width: 100%;
+text-align: right;
+}

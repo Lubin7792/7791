@@ -4,10 +4,12 @@
 
 <template>
 	<div class='policy'>
-		<Table border :columns="policyColumns"  :data="data56"></Table>
-		<Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
-		<Button type="error" style="margin-top:15px;">删除策略</Button>
-		<Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
+    <div class="buttonC">
+      <Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
+		  <Button type="error" style="margin-top:15px;">删除策略</Button>
+		  <Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
+    </div>
+		<Table border :columns="policyColumns"  :data="policyList"></Table>
 		<newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
 		<updatePolicy :upmodal="modal" @close="close"></updatePolicy>
 	</div>
@@ -24,7 +26,7 @@ export default {
       policyColumns: [
         {
           title: "名称",
-          key: "name",
+          key: "machine",
           sortable: true
         },
         {
@@ -54,7 +56,7 @@ export default {
         },
         {
           title: "设备",
-          key: "state",
+          key: "ip",
           sortable: true
         },
         {
@@ -98,29 +100,7 @@ export default {
           }
         }
       ],
-      data56: [
-        {
-          name: "John Brown",
-          type: 18,
-          address: "New York No. 1 Lake Park"
-        },
-        {
-          name: "Jim Green",
-          type: 24,
-          address: "London No. 1 Lake Park"
-        },
-        {
-          name: "Joe Black",
-          type: 30,
-          address: "Sydney No. 1 Lake Park"
-        },
-        {
-          name: "Jon Snow",
-          type: 26,
-          address: "Ottawa No. 2 Lake Park"
-        }
-      ],
-      data: []
+      policyList: []
     };
   },
   component: {},
@@ -130,21 +110,20 @@ export default {
   },
   created() {
     util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
-     
   },
   methods: {
     policyData: function(obj) {
       let objj = obj.data;
       for (let i = 0; i < objj.length; i++) {
-        this.data.push({
+        this.policyList.push({
           machine: objj[i].machine,
           systemType: objj[i].os,
           ip: objj[i].ip,
           id: objj[i].id,
-          ce:0
+          ce: 0
         });
       }
-       this.$store.commit("savePolicyData", this.data);
+      this.$store.commit("savePolicyData", this.policyList);
     },
     updatePolicy: function() {
       this.modal = true;
