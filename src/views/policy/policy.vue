@@ -10,7 +10,7 @@
 		  <Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
     </div>
 		<Table border :columns="policyColumns"  :data="policyList">
-      <p>asd</p>
+    
     </Table>
 		<newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
 		<updatePolicy :upmodal="modal" @close="close"></updatePolicy>
@@ -73,18 +73,6 @@ export default {
                 }
               },
               [
-                h("span", {
-                  props: {
-                    size: 20
-                  },
-                  style: {
-                    marginLeft: "15px"
-                  },
-                  class: {
-                    run: true,
-                    icon: true
-                  }
-                }),
                 h("span", {
                   props: {
                     size: 20

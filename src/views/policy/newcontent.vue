@@ -476,7 +476,7 @@ export default {
         ]
       };
       util.restfullCall(
-        "http://192.168.0.127:8080/rest-ful/v3.0/policy",
+        "/rest-ful/v3.0/policy",
         tests,
         "post",
         this.senddata
