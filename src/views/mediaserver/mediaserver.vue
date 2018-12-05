@@ -12,7 +12,6 @@
                 <updateServer :putDatas="putDatas" ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
             </div>
         </TabPane>
-
         <!-- 磁盘 -->
         <TabPane label="磁盘">
             <Table stripe highlight-row :data="disk" :columns="disks" @on-current-change="diskData"></Table>
