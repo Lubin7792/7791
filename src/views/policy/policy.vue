@@ -106,7 +106,9 @@ export default {
                   h('span',{
                     slot:'close'
                   },'停用')
-                ])
+                ]),
+                
+
               ]
             );
           }
