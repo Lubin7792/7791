@@ -2,54 +2,61 @@
 @import './diskModal.css';
 </style>
 <template>
-	<Modal title="添加磁盘设备" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="518">
-		<Form :model="diskItem">
+	<div>
+    <Modal title="添加磁盘设备" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="540" :mask-closable="false">
+		  <Form :model="diskItem" :label-width="120">
 			<FormItem label="设备名称">
-				<Input v-model="diskItem.name" placeholder="请输入设备名称..." style="width: 415px"></Input>
+				<Input v-model="diskItem.name" placeholder="请输入设备名称"></Input>
 			</FormItem>
-			<FormItem>
-				<span>介质服务器</span>
-				<!-- <Dropdown style="margin-left: 20px"> -->
-					<!-- <Button type="primary">
-		            下拉菜单
-		            <Icon type="ios-arrow-down"></Icon>
-		        </Button> -->
-					<!-- <DropdownMenu slot="list">
-		            <DropdownItem>驴打滚</DropdownItem>
-		            <DropdownItem>炸酱面</DropdownItem>
-		            <DropdownItem disabled>豆汁儿</DropdownItem>
-		            <DropdownItem>冰糖葫芦</DropdownItem>
-		            <DropdownItem divided>北京烤鸭</DropdownItem>
-		        </DropdownMenu> -->
-					<Select v-model="model6" style="width:200px">
-						<Option value="beijing">驴打滚</Option>
-						<Option value="shanghai" disabled>炸酱面</Option>
-						<Option value="shanghai2" >鸡蛋面</Option>
-						<Option value="shanghai3" >鸡蛋面</Option>
-						<Option value="shanghai4" >鸡蛋面</Option>
-						<Option value="shenzhen" divided>北京烤鸭</Option>
+      <FormItem label="设备类型">
+        <Select @on-change="dislChanges" v-model="diskItem.type"> 
+          <Option v-for="item in selectType" :value="item.type" :key="item.type">{{ item.name }}</Option>
+				</Select>
+      </FormItem>
+			<FormItem label="介质服务器">
+					<Select @on-change="changes" v-model="diskItem.server">
+            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
 					</Select>
-				</Dropdown>
 			</FormItem>
 			<FormItem label="设备路径">
-				<Input v-model="diskItem.path" style="width: 360px"></Input>
-				<Button type="primary" @click="glance">浏览</Button>
-				<!-- <Glance></Glance> -->
+				<Row>
+					<Col span="19">
+            <Input type="text" v-model="diskItem.path" disabled></Input>
+          </Col>
+          <Col span="4" offset="1">
+            <Button type="primary" @click="browse">浏览</Button>
+          </Col>
+				</Row>
 			</FormItem>
-			<FormItem label="最大并发任务数" class="max">
-				<Input v-model="diskItem.max" style="width: 150px"></Input>
-			</FormItem>
-			<FormItem label="容量告警下限" class="min">
-				<Input v-model="diskItem.min" style="width: 150px"></Input>
-			</FormItem>
-			<FormItem class="document">
-				<Checkbox v-model="single">定制介质文件</Checkbox>
-				<FormItem label="介质文件容量" class="caption" v-if="single===true">
-					<Input v-model="diskItem.caption" style="width: 150px"></Input> (M)
-				</FormItem>
-			</FormItem>
-		</Form>
-	</Modal>
+			<Row type="flex" justify="space-around">
+				<Col span="12">
+					<FormItem label="最大并发数">
+            <InputNumber :max="10" :min="1" v-model="diskItem.maxjobs"></InputNumber>
+					</FormItem>
+				</Col>
+				<Col span="12">
+					<FormItem label="容量告警下限">
+            <InputNumber :max="10" :min="1" v-model="diskItem.lowlimit"></InputNumber>
+					</FormItem>
+				</Col>
+			</Row>
+			<Row type="flex" justify="space-around">
+				<Col span="6">
+					<Checkbox on-change="checkchange" v-model="single">定制介质文件</Checkbox>
+				</Col>
+				<Col span="12">
+					<FormItem label="介质文件容量" >
+            <InputNumber :max="10" :min="1" v-model="diskItem.filesize"></InputNumber>
+                <span slot="append">(M)</span>
+            </Input>
+					</FormItem>
+				</Col>
+			</Row>	
+		  </Form>
+	  </Modal>
+    <!-- glance浏览目录弹框 -->
+    <Glance ref="Glance" :device="device"></Glance>
+  </div>
 </template>
 <script>
 import Glance from './glance.vue'
@@ -57,46 +64,91 @@ import util from '../../libs/util.js'
 export default {
   data() {
     return {
+      modal: false,
+      single: false,
+      selectType:[],
+      cityList:[],
+      device:[],
       diskItem: {
         name: '',
         path: '',
-        max: '',
-        min: ''
+        maxjobs: null,
+        lowlimit: null,
+        filesize: null,
+        server: '',
+        type: '',
       },
-      single: false
     }
+  },
+  created(){
+    // 获取创建好的介质服务数据
+    util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
+    // 获取设备类型
+    util.restfullCall('/rest-ful/v3.0/devicetype', null, 'get', this.selType)
   },
   components: {
     Glance
   },
-  // mounted:function(){
-  // 	console.log(this.single);
-  // },
-  // updated:function(){
-  // 	console.log(this.single);
-  // },
-  computed: {
-    modal() {
-      return this.$store.state.modalDisk
-    }
-  },
   methods: {
+    selType:function(arr) {
+      var array = new Array
+      for(let i = 0;i < arr.data.length;i++ ){
+        array.push({
+          type:arr.data[i].type,
+          name:arr.data[i].name
+        })
+      }
+      this.selectType = array
+    },
+    // 拿到介质服务数据里的ID及machine赋给路径下拉框
+    senddata:function(obj){
+      var array = new Array
+      for(let i = 0;i < obj.data.length;i++ ){
+        array.push({
+          id:obj.data[i].id,
+          machine:obj.data[i].machine
+        })
+      }
+      this.cityList = array
+    },
+    // 回调地址赋值并传给子组件
+    address: function(ob) {
+      if(ob.data.code===0) this.device=ob.data.pathlist
+    },
+    // 选中的设备名称type赋值给diskItem里type
+    dislChanges: function(types) {
+      this.type = types 
+    },
+    // 选中下拉内容获取选中数据id传给后台，并返回回调地址
+    changes: function(datas) {
+      this.server = datas
+      util.restfullCall('/rest-ful/v3.0/devicepath?server=' + datas, null, 'get', this.address)
+    },
+    // 点击浏览弹出浏览框
+    browse: function() {
+      this.$refs.Glance.newGlance()
+    },
+    // 接收父组件
+    newDisks: function() {
+      this.modal = true
+    },
+    // 点击确认按钮，把信息传给后台
     ok() {
-      let url = 'rest-ful/v3.0/device'
-      // let newData={
-      // 	type:0,
-
-      // };
-      //  util.restfullCall(url, newData, 'post',(obj)=>{
-
-      //  });
-      this.$store.commit('getModalDisk', false)
+      util.restfullCall('/rest-ful/v3.0/device',JSON.stringify(this.diskItem), 'post', this.add)
+      this.$emit('diskReturn',this.diskItem)
+      this.modal = false
+    },
+    // 添加成功的回调
+    add: function(adds) {
+      if(adds.data.code===0) console.log("添加成功")
     },
     cancel() {
-      this.$store.commit('getModalDisk', false)
+      this.modal = false
+      // this.$store.commit('getModalDisk', false)
     },
     glance: function() {
-      this.$store.commit('getModalGlance', true)
+      this.modal = false
+      // this.$store.commit('getModalGlance', true)
     }
   }
 }

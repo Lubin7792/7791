@@ -2,94 +2,81 @@
 @import './diskModal.css';
 </style>
 <template>
-  <Modal title="修改磁盘设备" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="518">
-    <Form :model="diskItem">
+  <Modal title="修改磁盘设备" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="540" :mask-closable="false">
+    <Form :label-width="120">
       <FormItem label="设备名称">
-        <Input v-model="diskItem.name" placeholder="请输入设备名称..." style="width: 415px"></Input>
+        <Input v-model="modalDisk.name" placeholder="请输入设备名称"></Input>
       </FormItem>
-      <FormItem>
-        <span>介质服务器</span>
-        <Dropdown style="margin-left: 20px">
-          <Button type="primary">
-            下拉菜单
-            <Icon type="ios-arrow-down"></Icon>
-          </Button>
-          <DropdownMenu slot="list">
-            <DropdownItem>驴打滚</DropdownItem>
-            <DropdownItem>炸酱面</DropdownItem>
-            <DropdownItem disabled>豆汁儿</DropdownItem>
-            <DropdownItem>冰糖葫芦</DropdownItem>
-            <DropdownItem divided>北京烤鸭</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </FormItem>
+      <FormItem label="介质服务器">
+				<Input v-model="modalDisk.server" disabled></Input>
+			</FormItem>
       <FormItem label="设备路径">
-        <Input v-model="diskItem.path" style="width: 360px"></Input>
-        <Button type="primary" @click="glance">浏览</Button>
-        <!-- <Glance></Glance> -->
-      </FormItem>
-      <FormItem label="最大并发任务数" class="max">
-        <Input v-model="diskItem.max" style="width: 150px"></Input>
-      </FormItem>
-      <FormItem label="容量告警下限" class="min">
-        <Input v-model="diskItem.min" style="width: 150px"></Input>
-      </FormItem>
-      <FormItem class="document">
-        <Checkbox v-model="single">定制介质文件</Checkbox>
-        <FormItem label="介质文件容量" class="caption" v-if="single===true">
-          <Input v-model="diskItem.caption" style="width: 150px"></Input> (M)
-        </FormItem>
-      </FormItem>
+				<Input v-model="modalDisk.path" disabled></Input>
+			</FormItem>
+      <FormItem label="存储容量">
+				<Input v-model="modalDisk.enable"></Input>
+			</FormItem>
+      <FormItem label="状态">
+				<Input v-model="modalDisk.type"></Input>
+			</FormItem>
+      <Row type="flex" justify="space-around">
+				<Col span="12">
+					<FormItem label="最大并发数">
+					<Input v-model="modalDisk.maxjobs" style="width: 100px"></Input>
+					</FormItem>
+				</Col>
+				<Col span="12">
+					<FormItem label="容量告警下限">
+						<Input v-model="modalDisk.lowlimit" style="width: 100px"></Input>
+					</FormItem>
+				</Col>
+			</Row>
+			<Row type="flex" justify="space-around">
+				<Col span="6">
+					<Checkbox on-change="checkchange" v-model="single">定制介质文件</Checkbox>
+				</Col>
+				<Col span="12">
+					<FormItem label="介质文件容量" >
+						<Input :disabled="!single" v-model="modalDisk.filesize">
+                <span slot="append">(M)</span>
+            </Input>
+					</FormItem>
+				</Col>
+			</Row>
     </Form>
   </Modal>
 </template>
 <script>
-import Glance from './glance.vue'
 import util from '../../libs/util.js'
 export default {
+  props: {
+    modalDisk: {
+      type: Object
+    }
+  },
   data() {
     return {
-      diskItem: {
-        name: '',
-        path: '',
-        max: '',
-        min: ''
-      },
+      modal: false,
       single: false
     }
   },
-  components: {
-    Glance
-  },
-  // mounted:function(){
-  // 	console.log(this.single);
-  // },
-  // updated:function(){
-  // 	console.log(this.single);
-  // },
-  props: {
-    modal: {
-      type: Boolean
-    }
-  },
   methods: {
+    showModify:function() {
+      this.modal = true
+    },
+    // 点击保存时把修改的数据传给后台
     ok() {
-      let url = 'rest-ful/v3.0/device'
-      // let newData={
-      // 	type:0,
-
-      // };
-      //  util.restfullCall(url, newData, 'post',(obj)=>{
-
-      //  });
-      this.$emit('close', false)
+      util.restfullCall('/rest-ful/v3.0/device/'+this.modalDisk.id,{name:this.modalDisk.name,enable:this.modalDisk.enable,type:this.modalDisk.type},'PUT',this.upload);
+      this.modal = false
+    },
+    upload(callback){
+      console.log("999",callback)
+      if(callback.data.code === 0) this.$emit('listModify', this.modalDisk)
     },
     cancel() {
-      this.$emit('close', false)
+      // this.$emit('close', false)
+      this.modal = false
     },
-    glance: function() {
-      this.$store.commit('getModalGlance', true)
-    }
   }
 }
 </script>
