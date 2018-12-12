@@ -47,7 +47,7 @@ export default {
     return {
       modalss: true,
       modal: false,
-      status:[],
+      status:[false,false,false,false,false],
       _index:Number,
       policyColumns: [
         {
@@ -222,9 +222,10 @@ export default {
     },
     switch(params,value) {
        this._index = params.index
-      if( this.status[this._index]){
+      // if(!this.status[this._index]){
         this.status[this._index] = value
-      }
+       console.log(this.status)
+      // }
       //打开是true,已经处理1
       // if (this.data1[index].treatment == 1) {
       //   this.data1[index].treatment = 0
