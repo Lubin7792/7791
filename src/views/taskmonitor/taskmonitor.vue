@@ -1,6 +1,11 @@
 <template>
   <div>
-    <Table border ref="selection" :columns="columns4" :data="taskMonitor"></Table>
+    <Table
+      border
+      ref="selection"
+      :columns="columns4"
+      :data="taskMonitor"
+    ></Table>
     <Button @click="handleSelectAll(true)">全选</Button>
     <Button @click="handleSelectAll(false)">全部清除</Button>
   </div>
@@ -48,7 +53,7 @@ export default {
           title: "备份数据量",
           width: 100,
           key: "bytes"
-        }, 
+        },
         {
           title: "文件",
           width: 80,
@@ -68,16 +73,16 @@ export default {
           width: 80,
           key: "state"
         },
-         {
+        {
           title: "介质",
           key: "pool"
         },
-         {
+        {
           title: "任务日志",
           key: "taskLog"
         }
       ],
-      taskMonitor:[],
+      taskMonitor: []
     };
   },
   methods: {
@@ -85,24 +90,35 @@ export default {
       this.$refs.selection.selectAll(status);
     },
     dealingData: function(obj) {
-    let objj = obj.data;
-    for (let i = 0; i < objj.length; i++) {
+      let objj = obj.data;
+      for (let i = 0; i < objj.length; i++) {
         this.taskMonitor.push({
-            taskID: objj[i].id,
-            client: objj[i].client,
-            mediaServer: objj[i].mediaserver,
-            device: objj[i].device,
-            startTime: objj[i].starttime,
-            usedtime: objj[i].usedtime,
-            bytes: objj[i].bytes,
-            files: objj[i].files,
-            rate: objj[i].rate,
-            policy: objj[i].policy,
-            state: objj[i].state,
-            pool: objj[i].pool,
-            taskLog: objj[i].taskLog
+          taskID: objj[i].id,
+          client: objj[i].client,
+          mediaServer: objj[i].mediaserver,
+          device: objj[i].device,
+          startTime: objj[i].starttime,
+          usedtime: objj[i].usedtime,
+          bytes: objj[i].bytes,
+          files: objj[i].files,
+          rate: objj[i].rate,
+          policy: objj[i].policy,
+          state: objj[i].state,
+          pool: objj[i].pool,
+          taskLog: objj[i].taskLog
         });
-    }
+      }
+    },
+    refreshData() {
+      this.timer =  setInterval(() => {
+        console.log(1)
+        // util.restfullCall(
+        //   "/rest-ful/v3.0/task/monitor",
+        //   null,
+        //   "get",
+        //   this.dealingData
+        // );
+      }, 1000); //此处要理解为什么是1000*i
     }
   },
   created() {
@@ -112,6 +128,12 @@ export default {
     //   "get",
     //   this.dealingData
     // );
-  }
+    // this.refreshData();
+  },
+  beforeDestroy() {
+    if(this.timer) { //如果定时器还在运行 或者直接关闭，不用判断
+        clearInterval(this.timer); //关闭
+    }
+}
 };
 </script>

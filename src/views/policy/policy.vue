@@ -47,7 +47,8 @@ export default {
     return {
       modalss: true,
       modal: false,
-      status:true,
+      status:[],
+      _index:Number,
       policyColumns: [
         {
           title: "名称",
@@ -148,7 +149,7 @@ export default {
                     )
                   ]
                 ),
-                this.status && h("i-select", {style: {width: "100px"}}, [
+                this.status[this._index] && h("i-select", {style: {width: "100px"}}, [
                         h(
                           "Option",
                           {
@@ -173,7 +174,7 @@ export default {
           }
         }
       ],
-      policyList: [{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0}]
+      policyList: [{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0},{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0},{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0}]
     };
   },
   component: {},
@@ -220,7 +221,10 @@ export default {
       this.modalss = modalss;
     },
     switch(params,value) {
-      this.status = value
+       this._index = params.index
+      if( this.status[this._index]){
+        this.status[this._index] = value
+      }
       //打开是true,已经处理1
       // if (this.data1[index].treatment == 1) {
       //   this.data1[index].treatment = 0
