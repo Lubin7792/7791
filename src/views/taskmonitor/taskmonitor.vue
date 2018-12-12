@@ -106,12 +106,12 @@ export default {
     }
   },
   created() {
-    util.restfullCall(
-      "/rest-ful/v3.0/task/monitor",
-      null,
-      "get",
-      this.dealingData
-    );
+    // util.restfullCall(
+    //   "/rest-ful/v3.0/task/monitor",
+    //   null,
+    //   "get",
+    //   this.dealingData
+    // );
   }
 };
 </script>

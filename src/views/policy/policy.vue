@@ -3,18 +3,40 @@
 </style>
 
 <template>
-	<div class='policy'>
+  <div class='policy'>
     <div class="buttonC">
-      <Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
-		  <Button type="error" style="margin-top:15px;">删除策略</Button>
-		  <Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
+      <Button
+        type="error"
+        style="margin-top:15px;"
+        @click="newPolicy"
+      >新建策略</Button>
+      <Button
+        type="error"
+        style="margin-top:15px;"
+      >删除策略</Button>
+      <Button
+        type="error"
+        style="margin-top:15px;"
+        @click="updatePolicy"
+      >修改策略</Button>
     </div>
-		<Table border :columns="policyColumns"  :data="policyList">
-    
+    <Table
+      border
+      :columns="policyColumns"
+      :data="policyList"
+    >
+
     </Table>
-		<newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
-		<updatePolicy :upmodal="modal" @close="close"></updatePolicy>
-	</div>
+    <newPolicy
+      ref="truefalse"
+      :modals="modalss"
+      @closePolicy="closePolicy"
+    ></newPolicy>
+    <updatePolicy
+      :upmodal="modal"
+      @close="close"
+    ></updatePolicy>
+  </div>
 </template>
 <script>
 import updatePolicy from "./updatePolicy.vue";
@@ -63,6 +85,7 @@ export default {
         },
         {
           title: "操作栏",
+          width: 260,
           key: "operation",
           render: (h, params) => {
             return h(
@@ -85,34 +108,69 @@ export default {
                     icon: true
                   }
                 }),
-                h('i-switch',{
-                  props:{
-                    type:  "primary",
-                    value:params.row.treatment === 1,
-                  },
-                  style:{
-                    marginLeft:'10px',
-                    width:'60px',
-                  },
-                  on:{
-                    'on-change':(value)=>{
-                      this.switch(params)
+                h(
+                  "i-switch",
+                  {
+                    props: {
+                      type: "primary",
+                      value: params.row.treatment === 1
+                    },
+                    style: {
+                      marginLeft: "10px",
+                      width: "60px"
+                    },
+                    on: {
+                      "on-change": value => {
+                        console.log(value);
+                        value ? h("i-select", {style: {width: "100px"} }, [
+                        h(
+                          "Option",
+                          {
+                            props: {
+                              value: "1"
+                            }
+                          },
+                          "option1"
+                        ),
+                        h(
+                          "Option",
+                          {
+                            props: {
+                              value: "2"
+                            }
+                          },
+                          "option2"
+                        )
+                      ]):''
+
+                        this.switch(params,value);
+                      }
                     }
-                  }
-                },[
-                  h('span',{
-                    slot:'open'
-                  },'启动'),
-                  h('span',{
-                    slot:'close'
-                  },'停用')
-                ])
+                  },
+                  [
+                    h(
+                      "span",
+                      {
+                        slot: "open"
+                      },
+                      "启动"
+                    ),
+                    h(
+                      "span",
+                      {
+                        slot: "close"
+                      },
+                      "停用"
+                    )
+                  ]
+                )
+               
               ]
             );
           }
         }
       ],
-      policyList: []
+      policyList: [{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0}]
     };
   },
   component: {},
@@ -121,17 +179,17 @@ export default {
     newPolicy
   },
   created() {
-    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
+    // util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
     // this.timeShow();
-  //  this.times = setInterval(this.timeShow, 1000);
+    //  this.times = setInterval(this.timeShow, 1000);
   },
   beforeDestroy() {
     // console.log('clean')
-  //  clearInterval(this.times)
+    //  clearInterval(this.times)
   },
   methods: {
-    timeShow:function(){
-      console.log(111)
+    timeShow: function() {
+      console.log(111);
     },
     policyData: function(obj) {
       let objj = obj.data;
@@ -159,7 +217,7 @@ export default {
       this.modalss = modalss;
     },
     switch(index) {
-console.log(index)
+      console.log(index);
       //打开是true,已经处理1
       // if (this.data1[index].treatment == 1) {
       //   this.data1[index].treatment = 0
@@ -168,45 +226,50 @@ console.log(index)
       //   this.updateFeedbackMessage(this.data1[index].id, 'treatment', 1)
       // }
     },
- 
- 
+
     //更新反馈信息某一字段
     updateFeedbackMessage(id, key, value) {
-      var vm = this
+      var vm = this;
       var data = {
         id: id
-      }
-      data[key] = value
-      vm.$http.put('/v1/suggestion', data).then(function (response) {
-        if (response.data.code == '000000') {
-          vm.$Message.info('更新成功');
-          vm.getFeedbackMessages()//获取table数据信息，这里调用是因为修改值之后马上可以更新table值
-        }
-      }).catch((error) => {
-        console.log(error)
-      })
+      };
+      data[key] = value;
+      vm.$http
+        .put("/v1/suggestion", data)
+        .then(function(response) {
+          if (response.data.code == "000000") {
+            vm.$Message.info("更新成功");
+            vm.getFeedbackMessages(); //获取table数据信息，这里调用是因为修改值之后马上可以更新table值
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
- 
- //获取所有反馈信息列表
+
+    //获取所有反馈信息列表
     getFeedbackMessages() {
-      var vm = this
-      var url = '/v1/suggestions?'
-      url = url + "pageNum=" + this.pageNum + '&pageSize=' + this.pageSize
-      if (this.createByValue != '') {
-        url = url + '&createBy=' + this.createByValue
+      var vm = this;
+      var url = "/v1/suggestions?";
+      url = url + "pageNum=" + this.pageNum + "&pageSize=" + this.pageSize;
+      if (this.createByValue != "") {
+        url = url + "&createBy=" + this.createByValue;
       }
-      if (this.dealModelValue != '') {
-        url = url + '&treatment=' + this.dealModelValue
+      if (this.dealModelValue != "") {
+        url = url + "&treatment=" + this.dealModelValue;
       }
-      this.$http.get(url).then(response => {
-        if (response.data.code == '000000') {
-          vm.data1 = response.data.data
-          vm.pageTotal = parseInt(response.data.message)
-        }
-      }).catch(error => {
-        console.log(error)
-      })
-    },
+      this.$http
+        .get(url)
+        .then(response => {
+          if (response.data.code == "000000") {
+            vm.data1 = response.data.data;
+            vm.pageTotal = parseInt(response.data.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 };
 </script>
