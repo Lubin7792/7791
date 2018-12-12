@@ -120,7 +120,7 @@ export default {
                   {
                     props: {
                       type: "primary",
-                      value: params.row.treatment === 1
+                      value: this.policyList[params.index].state == 1?true:false
                     },
                     style: {
                       marginLeft: "10px",
@@ -148,8 +148,9 @@ export default {
                       "停用"
                     )
                   ]
-                ),
-                this.policyList.state == 1 && h("i-select", {style: {width: "100px"}}, [
+                ),console.log(this.policyList[0])
+                ,
+                this.policyList[params.index].state == 1? h("i-select", {style: {width: "100px"}}, [
                         h(
                           "Option",
                           {
@@ -168,7 +169,7 @@ export default {
                           },
                           "option2"
                         )
-                      ])
+                      ]):''
               ]
             );
           }
@@ -221,11 +222,12 @@ export default {
       this.modalss = modalss;
     },
     switch(params,value) {
-       this._index = params.index
-      // if(!this.status[this._index]){
-        this.status[this._index] = value
-       console.log(this.status)
-      // }
+      if(value){
+        this.policyList[params.index].state = 1
+      }else{
+        this.policyList[params.index].state = 0
+        
+      }
       //打开是true,已经处理1
       // if (this.data1[index].treatment == 1) {
       //   this.data1[index].treatment = 0
