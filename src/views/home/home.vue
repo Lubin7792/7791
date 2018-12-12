@@ -5,6 +5,8 @@
 <template>
 
   <div>
+      <button value="2121" type="button" @click="clickHandler">asdsad</button>
+
    <hometask ></hometask> 
     <homesuccess></homesuccess> 
    <homefail></homefail>  
@@ -24,6 +26,12 @@ export default {
     hometask,
     homefail,
     homewarning
+  },
+  methods:{
+    clickHandler(){
+      console.log('1111')
+    }
   }
 };
+
 </script>

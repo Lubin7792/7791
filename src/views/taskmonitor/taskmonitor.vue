@@ -1,106 +1,110 @@
 <template>
-    <div>
-        <Table border ref="selection" :columns="columns4" :data="data1"></Table>
-        <Button @click="handleSelectAll(true)">全选</Button>
-        <Button @click="handleSelectAll(false)">全部清除</Button>
-    </div>
+  <div>
+    <Table border ref="selection" :columns="columns4" :data="taskMonitor"></Table>
+    <Button @click="handleSelectAll(true)">全选</Button>
+    <Button @click="handleSelectAll(false)">全部清除</Button>
+  </div>
 </template>
 <script>
-    export default {
-        data () {
-            return {
-                columns4: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                        title: '任务ID',
-                        key: 'taskID'
-                    },
-                    {
-                        title: '客户端',
-                          width: 80,
-                        key: 'client'
-                    },
-                    {
-                        title: '介质服务器',
-                        key: 'mediaServer'
-                    },
-                     {
-                        title: '设备',
-                        key: 'device'
-                    },
-                    {
-                        title: '开始时间',
-                        key: 'startTime'
-                    },
-                    {
-                        title: '耗时',
-                        key: 'timeConsuming'
-                    },
-                     {
-                        title: '备份数量',
-                        key: 'backuoNum'
-                    },
-                    {
-                        title: '速率',
-                        key: 'rate'
-                    },
-                    {
-                        title: '调度策略',
-                        key: 'strategy'
-                    },
-                     {
-                        title: '状态',
-                        key: 'state'
-                    }
-
-                ],
-                data1: [
-                    {
-                        taskID: '001',
-                        client: 'mac',
-                        mediaServer: '阿里云',
-                        device: '浪潮',
-                        startTime:'2018-09-15',
-                        timeConsuming:'1年',
-                        backuoNum:'32T',
-                        rate:'10M',
-                        strategy:'随机',
-                        state:'传输数据'
-                    },
-                   {
-                        taskID: '001',
-                        client: 'mac',
-                        mediaServer: '阿里云',
-                        device: '浪潮',
-                        startTime:'2018-09-15',
-                        timeConsuming:'1年',
-                        backuoNum:'32T',
-                        rate:'10M',
-                        strategy:'随机',
-                        state:'传输数据'
-                    },{
-                        taskID: '001',
-                        client: 'mac',
-                        mediaServer: '阿里云',
-                        device: '浪潮',
-                        startTime:'2018-09-15',
-                        timeConsuming:'1年',
-                        backuoNum:'32T',
-                        rate:'10M',
-                        strategy:'随机',
-                        state:'传输数据'
-                    },
-                ]
-            }
+import util from "../../libs/util.js";
+export default {
+  data() {
+    return {
+      columns4: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
         },
-        methods: {
-            handleSelectAll (status) {
-                this.$refs.selection.selectAll(status);
-            }
+        {
+          title: "任务ID",
+          key: "taskID"
+        },
+        {
+          title: "客户端",
+          width: 80,
+          key: "client"
+        },
+        {
+          title: "介质服务器",
+          key: "mediaServer"
+        },
+        {
+          title: "设备",
+          key: "device"
+        },
+        {
+          title: "开始时间",
+          key: "startTime"
+        },
+        {
+          title: "耗时",
+          key: "usedtime"
+        },
+        {
+          title: "备份数据量",
+          key: "bytes"
+        }, 
+        {
+          title: "文件",
+          key: "files"
+        },
+        {
+          title: "速率",
+          key: "rate"
+        },
+        {
+          title: "调度策略",
+          key: "policy"
+        },
+        {
+          title: "状态",
+          key: "state"
+        },
+         {
+          title: "介质",
+          key: "pool"
+        },
+         {
+          title: "任务日志",
+          key: "taskLog"
         }
+      ],
+      taskMonitor:[],
+    };
+  },
+  methods: {
+    handleSelectAll(status) {
+      this.$refs.selection.selectAll(status);
+    },
+    dealingData: function(obj) {
+    let objj = obj.data;
+    for (let i = 0; i < objj.length; i++) {
+        this.taskMonitor.push({
+            taskID: objj[i].id,
+            client: objj[i].client,
+            mediaServer: objj[i].mediaserver,
+            device: objj[i].device,
+            startTime: objj[i].starttime,
+            usedtime: objj[i].usedtime,
+            bytes: objj[i].bytes,
+            files: objj[i].files,
+            rate: objj[i].rate,
+            policy: objj[i].policy,
+            state: objj[i].state,
+            pool: objj[i].pool,
+            taskLog: objj[i].taskLog
+        });
     }
+    }
+  },
+  created() {
+    util.restfullCall(
+      "/rest-ful/v3.0/task/monitor",
+      null,
+      "get",
+      this.dealingData
+    );
+  }
+};
 </script>
