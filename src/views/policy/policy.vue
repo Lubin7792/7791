@@ -47,6 +47,7 @@ export default {
     return {
       modalss: true,
       modal: false,
+      status:true,
       policyColumns: [
         {
           title: "名称",
@@ -93,6 +94,11 @@ export default {
               {
                 class: {
                   lubin: true
+                },
+                data(){
+                  return {
+                    status:true
+                  }
                 }
               },
               [
@@ -121,28 +127,6 @@ export default {
                     },
                     on: {
                       "on-change": value => {
-                        console.log(value);
-                        value ? h("i-select", {style: {width: "100px"} }, [
-                        h(
-                          "Option",
-                          {
-                            props: {
-                              value: "1"
-                            }
-                          },
-                          "option1"
-                        ),
-                        h(
-                          "Option",
-                          {
-                            props: {
-                              value: "2"
-                            }
-                          },
-                          "option2"
-                        )
-                      ]):''
-
                         this.switch(params,value);
                       }
                     }
@@ -163,8 +147,27 @@ export default {
                       "停用"
                     )
                   ]
-                )
-               
+                ),
+                this.status && h("i-select", {style: {width: "100px"}}, [
+                        h(
+                          "Option",
+                          {
+                            props: {
+                              value: "1"
+                            }
+                          },
+                          "option1"
+                        ),
+                        h(
+                          "Option",
+                          {
+                            props: {
+                              value: "2"
+                            }
+                          },
+                          "option2"
+                        )
+                      ])
               ]
             );
           }
@@ -216,8 +219,8 @@ export default {
     closePolicy: function(modalss) {
       this.modalss = modalss;
     },
-    switch(index) {
-      console.log(index);
+    switch(params,value) {
+      this.status = value
       //打开是true,已经处理1
       // if (this.data1[index].treatment == 1) {
       //   this.data1[index].treatment = 0
