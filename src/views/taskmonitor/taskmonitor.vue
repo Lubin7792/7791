@@ -18,11 +18,12 @@ export default {
         },
         {
           title: "任务ID",
+          width: 80,
           key: "taskID"
         },
         {
           title: "客户端",
-          width: 80,
+          width: 160,
           key: "client"
         },
         {
@@ -31,6 +32,7 @@ export default {
         },
         {
           title: "设备",
+          width: 80,
           key: "device"
         },
         {
@@ -39,18 +41,22 @@ export default {
         },
         {
           title: "耗时",
+          width: 80,
           key: "usedtime"
         },
         {
           title: "备份数据量",
+          width: 100,
           key: "bytes"
         }, 
         {
           title: "文件",
+          width: 80,
           key: "files"
         },
         {
           title: "速率",
+          width: 80,
           key: "rate"
         },
         {
@@ -59,6 +65,7 @@ export default {
         },
         {
           title: "状态",
+          width: 80,
           key: "state"
         },
          {
