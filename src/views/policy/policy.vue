@@ -149,7 +149,7 @@ export default {
                     )
                   ]
                 ),
-                this.status[this._index] && h("i-select", {style: {width: "100px"}}, [
+                this.policyList.state == 1 && h("i-select", {style: {width: "100px"}}, [
                         h(
                           "Option",
                           {
@@ -174,7 +174,7 @@ export default {
           }
         }
       ],
-      policyList: [{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0},{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0},{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0}]
+      policyList: [{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":1},{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0},{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":1}]
     };
   },
   component: {},
