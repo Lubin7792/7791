@@ -24,8 +24,8 @@
       border
       :columns="policyColumns"
       :data="policyList"
+      v-if="!showContorl"
     >
-
     </Table>
     <newPolicy
       ref="truefalse"
@@ -47,8 +47,8 @@ export default {
     return {
       modalss: true,
       modal: false,
-      status:[false,false,false,false,false],
-      _index:Number,
+      status:[],
+      showContorl:false,
       policyColumns: [
         {
           title: "名称",
@@ -120,7 +120,7 @@ export default {
                   {
                     props: {
                       type: "primary",
-                      value: params.row.treatment === 1
+                      value: this.fstatus(params.index)
                     },
                     style: {
                       marginLeft: "10px",
@@ -149,7 +149,7 @@ export default {
                     )
                   ]
                 ),
-                this.policyList.state == 1 && h("i-select", {style: {width: "100px"}}, [
+               this.fstatus(params.index) && h("i-select", {style: {width: "100px"}}, [
                         h(
                           "Option",
                           {
@@ -192,6 +192,9 @@ export default {
     //  clearInterval(this.times)
   },
   methods: {
+    fstatus(index){
+      return this.status[index]
+    },
     timeShow: function() {
       console.log(111);
     },
@@ -221,10 +224,10 @@ export default {
       this.modalss = modalss;
     },
     switch(params,value) {
-       this._index = params.index
-      // if(!this.status[this._index]){
-        this.status[this._index] = value
-       console.log(this.status)
+        this.status[params.index] = value
+        //重置状态强行刷新table数据
+        this.showContorl = true 
+        this.$nextTick(() => this.showContorl = false)
       // }
       //打开是true,已经处理1
       // if (this.data1[index].treatment == 1) {
