@@ -142,12 +142,12 @@ export default {
     }
   },
   created() {
-    // util.restfullCall(
-    //   "/rest-ful/v3.0/policytype",
-    //   null,
-    //   "get",
-    //   this.policyData
-    // );
+    util.restfullCall(
+      "/rest-ful/v3.0/policytype",
+      null,
+      "get",
+      this.policyData
+    );
   }
 };
 </script>   

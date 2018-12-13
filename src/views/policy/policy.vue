@@ -3,39 +3,15 @@
 </style>
 
 <template>
-  <div class='policy'>
+  <div class="policy">
     <div class="buttonC">
-      <Button
-        type="error"
-        style="margin-top:15px;"
-        @click="newPolicy"
-      >新建策略</Button>
-      <Button
-        type="error"
-        style="margin-top:15px;"
-      >删除策略</Button>
-      <Button
-        type="error"
-        style="margin-top:15px;"
-        @click="updatePolicy"
-      >修改策略</Button>
+      <Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
+      <Button type="error" style="margin-top:15px;">删除策略</Button>
+      <Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
     </div>
-    <Table
-      border
-      :columns="policyColumns"
-      :data="policyList"
-    >
-
-    </Table>
-    <newPolicy
-      ref="truefalse"
-      :modals="modalss"
-      @closePolicy="closePolicy"
-    ></newPolicy>
-    <updatePolicy
-      :upmodal="modal"
-      @close="close"
-    ></updatePolicy>
+    <Table border :columns="policyColumns" :data="policyList"></Table>
+    <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
+    <updatePolicy :upmodal="modal" @close="close"></updatePolicy>
   </div>
 </template>
 <script>
@@ -47,8 +23,8 @@ export default {
     return {
       modalss: true,
       modal: false,
-      status:[false,false,false,false,false],
-      _index:Number,
+      status: [false, false, false, false, false],
+      _index: Number,
       policyColumns: [
         {
           title: "名称",
@@ -57,7 +33,7 @@ export default {
         },
         {
           title: "策略类型",
-          key: "type",
+          key: "version",
           sortable: true
         },
         {
@@ -67,12 +43,12 @@ export default {
         },
         {
           title: "状态",
-          key: "pool",
+          key: "state",
           sortable: true
         },
         {
           title: "介质池",
-          key: "priority",
+          key: "os",
           sortable: true
         },
         {
@@ -96,39 +72,29 @@ export default {
                 class: {
                   lubin: true
                 },
-                data(){
+                data() {
                   return {
-                    status:true
-                  }
+                    status: true
+                  };
                 }
               },
               [
-                h("span", {
-                  props: {
-                    size: 20
-                  },
-                  style: {
-                    marginLeft: "15px"
-                  },
-                  class: {
-                    stop: true,
-                    icon: true
-                  }
-                }),
                 h(
                   "i-switch",
                   {
                     props: {
                       type: "primary",
-                      value: this.policyList[params.index].state == 1?true:false
+                      value:
+                        this.policyList[params.index].state == 1 ? true : false
                     },
                     style: {
                       marginLeft: "10px",
+                      marginRight: "10px",
                       width: "60px"
                     },
                     on: {
                       "on-change": value => {
-                        this.switch(params,value);
+                        this.switch(params, value);
                       }
                     }
                   },
@@ -138,44 +104,54 @@ export default {
                       {
                         slot: "open"
                       },
-                      "启动"
+                      "启用"
                     ),
                     h(
                       "span",
                       {
                         slot: "close"
                       },
-                      "停用"
+                      "禁用"
                     )
                   ]
-                ),console.log(this.policyList[0])
-                ,
-                this.policyList[params.index].state == 1? h("i-select", {style: {width: "100px"}}, [
-                        h(
-                          "Option",
-                          {
-                            props: {
-                              value: "1"
-                            }
-                          },
-                          "option1"
-                        ),
-                        h(
-                          "Option",
-                          {
-                            props: {
-                              value: "2"
-                            }
-                          },
-                          "option2"
-                        )
-                      ]):''
+                ),
+                this.policyList[params.index].state == 1
+                  ? h("i-select", { style: { width: "100px" } }, [
+                      h(
+                        "Option",
+                        {
+                          props: {
+                            value: "0"
+                          }
+                        },
+                        "全量备份"
+                      ),
+                      h(
+                        "Option",
+                        {
+                          props: {
+                            value: "1"
+                          }
+                        },
+                        "增量备份"
+                      ),
+                      h(
+                        "Option",
+                        {
+                          props: {
+                            value: "2"
+                          }
+                        },
+                        "差量备份"
+                      )
+                    ])
+                  : ""
               ]
             );
           }
         }
       ],
-      policyList: [{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":1},{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":0},{"machine":2,"policy":"test_file","client":"192.168.0.137","mediaserver":"","device":"","starttime":"","usedtime":0,"files":0,"bytes":0,"rate":0,"pool":"","state":1}]
+      policyList: []
     };
   },
   component: {},
@@ -184,13 +160,7 @@ export default {
     newPolicy
   },
   created() {
-    // util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
-    // this.timeShow();
-    //  this.times = setInterval(this.timeShow, 1000);
-  },
-  beforeDestroy() {
-    // console.log('clean')
-    //  clearInterval(this.times)
+    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
   },
   methods: {
     timeShow: function() {
@@ -201,9 +171,12 @@ export default {
       for (let i = 0; i < objj.length; i++) {
         this.policyList.push({
           machine: objj[i].machine,
-          systemType: objj[i].os,
+          os: objj[i].os,
           ip: objj[i].ip,
           id: objj[i].id,
+          state: objj[i].state,
+          version: objj[i].version,
+
           ce: 0
         });
       }
@@ -221,22 +194,13 @@ export default {
     closePolicy: function(modalss) {
       this.modalss = modalss;
     },
-    switch(params,value) {
-      if(value){
-        this.policyList[params.index].state = 1
-      }else{
-        this.policyList[params.index].state = 0
-        
+    switch(params, value) {
+      if (value) {
+        this.policyList[params.index].state = 1;
+      } else {
+        this.policyList[params.index].state = 0;
       }
-      //打开是true,已经处理1
-      // if (this.data1[index].treatment == 1) {
-      //   this.data1[index].treatment = 0
-      //   this.updateFeedbackMessage(this.data1[index].id, 'treatment', this.data1[index].treatment)
-      // } else {
-      //   this.updateFeedbackMessage(this.data1[index].id, 'treatment', 1)
-      // }
     },
-
     //更新反馈信息某一字段
     updateFeedbackMessage(id, key, value) {
       var vm = this;

@@ -91,6 +91,7 @@ export default {
     },
     dealingData: function(obj) {
       let objj = obj.data;
+      this.taskMonitor = [];
       for (let i = 0; i < objj.length; i++) {
         this.taskMonitor.push({
           taskID: objj[i].id,
@@ -110,25 +111,26 @@ export default {
       }
     },
     refreshData() {
+      
       this.timer =  setInterval(() => {
         console.log(1)
-        // util.restfullCall(
-        //   "/rest-ful/v3.0/task/monitor",
-        //   null,
-        //   "get",
-        //   this.dealingData
-        // );
-      }, 1000); //此处要理解为什么是1000*i
+        util.restfullCall(
+          "/rest-ful/v3.0/task/monitor",
+          null,
+          "get",
+          this.dealingData
+        );
+      }, 1000); 
     }
   },
   created() {
-    // util.restfullCall(
-    //   "/rest-ful/v3.0/task/monitor",
-    //   null,
-    //   "get",
-    //   this.dealingData
-    // );
-    // this.refreshData();
+    util.restfullCall(
+      "/rest-ful/v3.0/task/monitor",
+      null,
+      "get",
+      this.dealingData
+    );
+    this.refreshData();
   },
   beforeDestroy() {
     if(this.timer) { //如果定时器还在运行 或者直接关闭，不用判断

@@ -51,11 +51,12 @@ export default {
               },
               nativeOn: {
                 click: () => {
+                  console.log(params.row.id)
                   this.$store.commit("getTitle", "客户端配置");
                   this.updateModal = true;
                   this.$store.commit("updateTrue", true);
                   //获得标签页title
-                  this.$store.dispatch("getTabsTitle", 1);
+                  this.$store.dispatch("getTabsTitle", params.row.id);
                   this.$store.commit("getTab", "basic");
                 }
               }
