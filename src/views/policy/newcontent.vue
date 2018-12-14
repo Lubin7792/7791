@@ -10,13 +10,18 @@
           <Input v-model="basic.name"></Input>
         </FormItem>
         <FormItem label="策略类型">
-          <Select v-model="basictype" style="width:160px"  @on-change="alick" :label-in-value="true" >
-            <Option v-for="item in policyTyep" :label="item.name"  :value="item.key" :key="item.key"> </Option>
+          <Select v-model="basictype" style="width:160px" @on-change="alick" :label-in-value="true">
+            <Option v-for="item in policyTyep" :label="item.name" :value="item.key" :key="item.key"></Option>
           </Select>
         </FormItem>
         <FormItem label="储存设备">
           <Select style="width:200px" v-model="basic.deviceval" @on-change="showNow">
-            <Option v-for="item in basic.device" :label="item.servername" :value="item.id" :key="item.Level"></Option>
+            <Option
+              v-for="item in basic.device"
+              :label="item.servername"
+              :value="item.id"
+              :key="item.Level"
+            ></Option>
           </Select>
         </FormItem>
         <FormItem label="介质池">
@@ -26,7 +31,12 @@
         </FormItem>
         <FormItem label="优先级">
           <Select style="width:200px" v-model="basic.privilegekey" @on-change="showNow">
-            <Option v-for="item in basic.privilege" :label="item.Name" :value="item.Level" :key="item.Level"></Option>
+            <Option
+              v-for="item in basic.privilege"
+              :label="item.Name"
+              :value="item.Level"
+              :key="item.Level"
+            ></Option>
           </Select>
         </FormItem>
         <FormItem label="策略最大调度任务">
@@ -45,7 +55,7 @@
           <Input v-model="basic.savedays"></Input>
         </FormItem>
       </Form>
-      <div style="display:none" >{{lconten}}</div>
+      <div style="display:none">{{lconten}}</div>
     </div>
     <div v-show="show==='备份资源列表'">
       <div id="areaTree">
@@ -69,31 +79,79 @@
       <Form ref="schedule" :model="schedule" :label-width="80">
         <FormItem label="调度类型">
           <Select style="width:120px" @on-change="onplantype" v-model="schedule.typelevel">
-            <Option v-for="item in schedule.type" :label="item.value" :value="item.level" :key="item.value"></Option>
+            <Option
+              v-for="item in schedule.type"
+              :label="item.value"
+              :value="item.level"
+              :key="item.value"
+            ></Option>
           </Select>
         </FormItem>
         <FormItem label="备份类型">
           <Select style="width:120px" v-model="schedule.backuptlevel">
-            <Option v-for="item in schedule.backuptype" :label="item.value" :value="item.level" :key="item.value"></Option>
+            <Option
+              v-for="item in schedule.backuptype"
+              :label="item.value"
+              :value="item.level"
+              :key="item.value"
+            ></Option>
           </Select>
         </FormItem>
         <FormItem label="开始日期" class="plandate">
-          <DatePicker type="date"  :value="schedule.startday" format="dd" show-week-numbers placement="bottom-end" placeholder="Select date" @on-change="startDate"></DatePicker>
+          <DatePicker
+            type="date"
+            :value="schedule.startday"
+            format="dd"
+            show-week-numbers
+            placement="bottom-end"
+            placeholder="Select date"
+            @on-change="startDate"
+          ></DatePicker>
         </FormItem>
         <FormItem label="开始时间" width="100px">
-          <TimePicker :value="schedule.starttime" format="HH:mm:ss" placeholder="Select time" style="width: 168px" @on-change="startTime"></TimePicker>
+          <TimePicker
+            :value="schedule.starttime"
+            format="HH:mm:ss"
+            placeholder="Select time"
+            style="width: 168px"
+            @on-change="startTime"
+          ></TimePicker>
         </FormItem>
         <FormItem label="结束日期" class="plandate">
-          <DatePicker :value="schedule.endday" type="date" format="dd" show-week-numbers placement="bottom-end" placeholder="Select date" @on-change="endDate"  ></DatePicker>
+          <DatePicker
+            :value="schedule.endday"
+            type="date"
+            format="dd"
+            show-week-numbers
+            placement="bottom-end"
+            placeholder="Select date"
+            @on-change="endDate"
+          ></DatePicker>
         </FormItem>
         <FormItem label="结束时间" width="100px">
-          <TimePicker :value="schedule.endtime" format="HH:mm:ss" @on-change="endTime" placeholder="Select time" style="width: 168px" ></TimePicker>
+          <TimePicker
+            :value="schedule.endtime"
+            format="HH:mm:ss"
+            @on-change="endTime"
+            placeholder="Select time"
+            style="width: 168px"
+          ></TimePicker>
         </FormItem>
         <!-- <div v-if="show3==='周'"></div> -->
         <!-- <div v-if="show3==='时间间隔'"> </div> -->
         <FormItem label="间隔类型" style="width:100%">
-          <Select style="width:150px" :label-in-value="true" @on-change="planShow" v-model="schedule.freqtypelevel">
-            <Option v-for="item in schedule.freqtype" :label="item.value" :value="item.level" :key="item.value"></Option>
+          <Select
+            style="width:150px"
+            :label-in-value="true"
+            @on-change="planShow"
+            v-model="schedule.freqtypelevel"
+          >
+            <Option
+              v-for="item in schedule.freqtype"
+              :label="item.value"
+              :value="item.level"
+              :key="item.value"
+            ></Option>
           </Select>
           <Input v-model="schedule.intervalTime" placeholder="输入时间" style="width: 100px"></Input>
           <span>{{ schedule.freqval }}</span>
@@ -475,15 +533,13 @@ export default {
           }
         ]
       };
-      util.restfullCall(
-        "/rest-ful/v3.0/policy",
-        tests,
-        "post",
-        this.senddata
-      );
+      util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
     },
-    sendData: function(value) {
-      console.log(value, "ok");
+    senddata: function(value) {
+      alert(value.data.message);
+      if (value.data.code === 0) {
+        this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
+      }
     },
     alick: function(value) {
       this.policyTypekey = String(value.value);
@@ -540,6 +596,7 @@ export default {
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
+      console.log(11);
       if (!treeNode.hasOwnProperty("children")) {
         let typeId = "65536";
         let path = this.build_path_by_tree_node(treeNode);

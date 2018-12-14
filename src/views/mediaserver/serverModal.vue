@@ -1,22 +1,14 @@
 <style lang="less">
-.vertical-center-modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .ivu-modal {
-    top: 0;
-  }
-}
 </style>
 <template>
     <!-- 介质服务器新建介质弹框 -->
-    <Modal v-model="modal" title="添加介质服务器" @on-ok="ok" @on-cancel="cancel" ok-text="保存" class-name="vertical-center-modal">
-        <Form :model="serverItem" :label-width="130">
+    <Modal v-model="modal" title="添加介质服务器" @on-ok="ok" @on-cancel="cancel" ok-text="保存">
+        <Form :model="serverItem" :label-width="130" resetFields>
             <FormItem label="介质服务器名称">
                 <Input v-model="serverItem.name" placeholder="请输入介质服务器名称"></Input>
             </FormItem>
             <FormItem label="选择存储服务器">
-              <Select v-model="serverItem.id" placeholder="请选择选择存储服务器">
+              <Select v-model="serverItem.id" @on-open-change="server" placeholder="请选择选择存储服务器">
                 <Option v-for="item in selServiceList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
               </Select>
             </FormItem>
@@ -40,7 +32,7 @@ export default {
     }
   },
   created() {
-    util.restfullCall('/rest-ful/v3.0/vrtsserver?type=2', null, 'get', this.goback)
+    // util.restfullCall('/rest-ful/v3.0/vrtsserver?type=2', null, 'get', this.goback)
   },
   computed: {
     // modal() {
@@ -50,6 +42,9 @@ export default {
     
   },
   methods: {
+    server:function(open,merge) {
+      if(open == true) util.restfullCall('/rest-ful/v3.0/vrtsserver?type=2', null, 'get', this.goback)
+    },
     
     showMoadl: function() {
       this.modal = true

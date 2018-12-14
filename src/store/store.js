@@ -27,11 +27,13 @@ const store = new Vuex.Store({
     //初始tab标签页
     tabName: "",
     modal: false,
+    policySwitch: false,
     modalDisk: false,
     modalLibrary: false,
     modalGlance: false,
     policyData: [],
-    policyType: []
+    policyType: [],
+    policiesData: []
   },
   mutations: {
     //更改updateModal的函数,使控件出现
@@ -82,19 +84,19 @@ const store = new Vuex.Store({
         state.returnMessage = obj[0].data.client;
       }
       //tabs名称
-        let clientList = [];
+      let clientList = [];
+      clientList.push({
+        title: "基本信息",
+        name: "basic"
+      });
+      for (let i = 0; i < obj[0].data.agents.length; i++) {
         clientList.push({
-          title: "基本信息",
-          name: "basic"
+          title: obj[0].data.agents[i].name,
+          name: obj[0].data.agents[i].name,
+          key: obj[0].data.agents[i].type
         });
-        for (let i = 0; i < obj[0].data.agents.length; i++) {
-          clientList.push({
-            title: obj[0].data.agents[i].name,
-            name: obj[0].data.agents[i].name,
-            key: obj[0].data.agents[i].type
-          });
-        }
-        state.clientList = clientList;
+      }
+      state.clientList = clientList;
     },
     //oracle
     getOracle(state, oracle) {
@@ -119,12 +121,19 @@ const store = new Vuex.Store({
     getInstanceId(state, instanceId) {
       state.instanceId = instanceId;
     },
-    //新建策略
-    savePolicyData(state, policyOs) {
+    //客户端
+    saveClientsData(state, policyOs) {
       state.policyData = policyOs;
     },
     savePolicyType(state, policyTy) {
       state.policyType = policyTy;
+    },
+    policiesData(state, policyDa) {
+      state.policiesData = policyDa;
+    },
+    //新建请求成功
+    upPolicyOk(state, policyDa) {
+      state.policySwitch = policyDa;
     }
   },
   actions: {

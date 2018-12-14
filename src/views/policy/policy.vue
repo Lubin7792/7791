@@ -9,7 +9,7 @@
       <Button type="error" style="margin-top:15px;">删除策略</Button>
       <Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
     </div>
-    <Table border :columns="policyColumns" :data="policyList"></Table>
+    <Table border :columns="policyColumns" :data="policiesData"></Table>
     <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
     <updatePolicy :upmodal="modal" @close="close"></updatePolicy>
   </div>
@@ -23,22 +23,21 @@ export default {
     return {
       modalss: true,
       modal: false,
-      status: [false, false, false, false, false],
       _index: Number,
       policyColumns: [
         {
           title: "名称",
-          key: "machine",
+          key: "name",
           sortable: true
         },
         {
           title: "策略类型",
-          key: "version",
+          key: "type",
           sortable: true
         },
         {
           title: "优先级",
-          key: "equipment",
+          key: "privilege",
           sortable: true
         },
         {
@@ -48,12 +47,17 @@ export default {
         },
         {
           title: "介质池",
-          key: "os",
+          key: "pool",
           sortable: true
         },
         {
           title: "介质服务器",
-          key: "client",
+          key: "mediaserver",
+          sortable: true
+        },
+        {
+          title: "保留天数",
+          key: "savedays",
           sortable: true
         },
         {
@@ -85,11 +89,13 @@ export default {
                     props: {
                       type: "primary",
                       value:
-                        this.policyList[params.index].state == 1 ? true : false
+                        this.policiesData[params.index].state == 1
+                          ? true
+                          : false
                     },
                     style: {
-                      marginLeft: "10px",
-                      marginRight: "10px",
+                      marginLeft: "5px",
+                      marginRight: "5px",
                       width: "60px"
                     },
                     on: {
@@ -115,8 +121,26 @@ export default {
                     )
                   ]
                 ),
-                this.policyList[params.index].state == 1
-                  ? h("i-select", { style: { width: "100px" } }, [
+                h(
+                  "Button",
+                  {
+                    props: {
+                      type: "error",
+                      size: "small"
+                    },
+                    style: {
+                      marginRight: "5px"
+                    },
+                    on: {
+                      click: () => {
+                        this.remove(params.index);
+                      }
+                    }
+                  },
+                  "立即调用"
+                ),
+                this.policiesData[params.index].state == 1
+                  ? h("i-select", { style: { width: "80px" } }, [
                       h(
                         "Option",
                         {
@@ -150,37 +174,41 @@ export default {
             );
           }
         }
-      ],
-      policyList: []
+      ]
     };
   },
-  component: {},
   components: {
     updatePolicy,
     newPolicy
   },
   created() {
-    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.policyData);
+    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
+  },
+  computed: {
+    policiesData() {
+      return this.$store.state.policiesData;
+    }
   },
   methods: {
     timeShow: function() {
       console.log(111);
     },
-    policyData: function(obj) {
+    //客户端信息ztree
+    clientsData: function(obj) {
       let objj = obj.data;
+      let policyList = [];
       for (let i = 0; i < objj.length; i++) {
-        this.policyList.push({
+        policyList.push({
           machine: objj[i].machine,
           os: objj[i].os,
           ip: objj[i].ip,
           id: objj[i].id,
           state: objj[i].state,
           version: objj[i].version,
-
           ce: 0
         });
       }
-      this.$store.commit("savePolicyData", this.policyList);
+      this.$store.commit("saveClientsData", policyList);
     },
     updatePolicy: function() {
       this.modal = true;
@@ -196,54 +224,54 @@ export default {
     },
     switch(params, value) {
       if (value) {
-        this.policyList[params.index].state = 1;
+        this.policiesData[params.index].state = 1;
       } else {
-        this.policyList[params.index].state = 0;
+        this.policiesData[params.index].state = 0;
       }
-    },
-    //更新反馈信息某一字段
-    updateFeedbackMessage(id, key, value) {
-      var vm = this;
-      var data = {
-        id: id
-      };
-      data[key] = value;
-      vm.$http
-        .put("/v1/suggestion", data)
-        .then(function(response) {
-          if (response.data.code == "000000") {
-            vm.$Message.info("更新成功");
-            vm.getFeedbackMessages(); //获取table数据信息，这里调用是因为修改值之后马上可以更新table值
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-
-    //获取所有反馈信息列表
-    getFeedbackMessages() {
-      var vm = this;
-      var url = "/v1/suggestions?";
-      url = url + "pageNum=" + this.pageNum + "&pageSize=" + this.pageSize;
-      if (this.createByValue != "") {
-        url = url + "&createBy=" + this.createByValue;
-      }
-      if (this.dealModelValue != "") {
-        url = url + "&treatment=" + this.dealModelValue;
-      }
-      this.$http
-        .get(url)
-        .then(response => {
-          if (response.data.code == "000000") {
-            vm.data1 = response.data.data;
-            vm.pageTotal = parseInt(response.data.message);
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
     }
+    // //更新反馈信息某一字段
+    // updateFeedbackMessage(id, key, value) {
+    //   var vm = this;
+    //   var data = {
+    //     id: id
+    //   };
+    //   data[key] = value;
+    //   vm.$http
+    //     .put("/v1/suggestion", data)
+    //     .then(function(response) {
+    //       if (response.data.code == "000000") {
+    //         vm.$Message.info("更新成功");
+    //         vm.getFeedbackMessages(); //获取table数据信息，这里调用是因为修改值之后马上可以更新table值
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
+
+    // //获取所有反馈信息列表
+    // getFeedbackMessages() {
+    //   var vm = this;
+    //   var url = "/v1/suggestions?";
+    //   url = url + "pageNum=" + this.pageNum + "&pageSize=" + this.pageSize;
+    //   if (this.createByValue != "") {
+    //     url = url + "&createBy=" + this.createByValue;
+    //   }
+    //   if (this.dealModelValue != "") {
+    //     url = url + "&treatment=" + this.dealModelValue;
+    //   }
+    //   this.$http
+    //     .get(url)
+    //     .then(response => {
+    //       if (response.data.code == "000000") {
+    //         vm.data1 = response.data.data;
+    //         vm.pageTotal = parseInt(response.data.message);
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // }
   }
 };
 </script>

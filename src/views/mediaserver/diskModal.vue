@@ -9,12 +9,12 @@
 				<Input v-model="diskItem.name" placeholder="请输入设备名称"></Input>
 			</FormItem>
       <FormItem label="设备类型">
-        <Select @on-change="dislChanges" v-model="diskItem.type"> 
+        <Select @on-change="dislChanges" v-model="diskItem.type"  @on-open-change="typeDisk"> 
           <Option v-for="item in selectType" :value="item.type" :key="item.type">{{ item.name }}</Option>
 				</Select>
       </FormItem>
 			<FormItem label="介质服务器">
-					<Select @on-change="changes" v-model="diskItem.server">
+					<Select v-model="diskItem.server" @on-change="changes" @on-open-change="serverDisk">
             <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
 					</Select>
 			</FormItem>
@@ -31,12 +31,12 @@
 			<Row type="flex" justify="space-around">
 				<Col span="12">
 					<FormItem label="最大并发数">
-            <InputNumber :max="10" :min="1" v-model="diskItem.maxjobs"></InputNumber>
+            <InputNumber :max="100" :min="1" v-model="diskItem.maxjobs"></InputNumber>
 					</FormItem>
 				</Col>
 				<Col span="12">
 					<FormItem label="容量告警下限">
-            <InputNumber :max="10" :min="1" v-model="diskItem.lowlimit"></InputNumber>
+            <InputNumber :max="100" :min="1" v-model="diskItem.lowlimit"></InputNumber>
 					</FormItem>
 				</Col>
 			</Row>
@@ -46,7 +46,7 @@
 				</Col>
 				<Col span="12">
 					<FormItem label="介质文件容量" >
-            <InputNumber :max="10" :min="1" v-model="diskItem.filesize"></InputNumber>
+            <InputNumber :max="100" :min="1" v-model="diskItem.filesize"></InputNumber>
                 <span slot="append">(M)</span>
             </Input>
 					</FormItem>
@@ -82,14 +82,22 @@ export default {
   },
   created(){
     // 获取创建好的介质服务数据
-    util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
+    // util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     // 获取设备类型
-    util.restfullCall('/rest-ful/v3.0/devicetype', null, 'get', this.selType)
+    // util.restfullCall('/rest-ful/v3.0/devicetype', null, 'get', this.selType)
   },
   components: {
     Glance
   },
   methods: {
+    // 点击下拉框获取介质服务器信息
+    serverDisk:function(openServer) {
+      if(openServer == true) util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
+    },
+    // 点击下拉框获取设备类型信息
+    typeDisk:function(openType) {
+      if(openType == true) util.restfullCall('/rest-ful/v3.0/devicetype', null, 'get', this.selType)
+    },
     selType:function(arr) {
       var array = new Array
       for(let i = 0;i < arr.data.length;i++ ){

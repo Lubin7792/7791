@@ -1,5 +1,5 @@
 import axios from 'axios';
-axios.defaults.baseURL = "http://192.168.1.232:8080";
+axios.defaults.baseURL = "http://192.168.1.233:8080";
 // axios.defaults.baseURL = 'http://192.168.0.127:8080'
 export default {
 	restfullCall: function (url, body, method, dataFormat) {
@@ -11,7 +11,7 @@ export default {
 				dataFormat(res);
 			})
 			.catch(error => {
-				console.log(error);
+				// console.log(error);
 			});
 	}
 }
