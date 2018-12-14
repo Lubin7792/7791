@@ -155,7 +155,7 @@ export default {
       let arrays = new Array();
       for (let i = 0; i < objj.length; i++) {
         arrays.push({
-          key: objj[i].id,
+          id: objj[i].id,
           name: objj[i].name,
           type: objj[i].type,
           privilege: objj[i].privilege,

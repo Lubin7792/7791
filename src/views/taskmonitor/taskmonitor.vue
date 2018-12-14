@@ -111,9 +111,7 @@ export default {
       }
     },
     refreshData() {
-      
       this.timer =  setInterval(() => {
-        console.log(1)
         util.restfullCall(
           "/rest-ful/v3.0/task/monitor",
           null,

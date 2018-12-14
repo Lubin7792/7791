@@ -21,10 +21,15 @@ import newPolicy from "./newPolicy.vue";
 export default {
   data() {
     return {
-      modalss: true,
+      modalss: false,
       modal: false,
       _index: Number,
       policyColumns: [
+        {
+          title: "ID",
+          key: "id",
+          sortable: true
+        },
         {
           title: "名称",
           key: "name",
@@ -121,54 +126,68 @@ export default {
                     )
                   ]
                 ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "error",
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.index);
-                      }
-                    }
-                  },
-                  "立即调用"
-                ),
                 this.policiesData[params.index].state == 1
-                  ? h("i-select", { style: { width: "80px" } }, [
-                      h(
-                        "Option",
-                        {
-                          props: {
-                            value: "0"
-                          }
+                  ? h(
+                      "Button",
+                      {
+                        props: {
+                          type: "error",
+                          size: "small"
                         },
-                        "全量备份"
-                      ),
-                      h(
-                        "Option",
-                        {
-                          props: {
-                            value: "1"
-                          }
+                        style: {
+                          marginRight: "5px"
                         },
-                        "增量备份"
-                      ),
-                      h(
-                        "Option",
-                        {
-                          props: {
-                            value: "2"
+                        on: {
+                          click: () => {
+                            this.nowCall(params);
                           }
-                        },
-                        "差量备份"
-                      )
-                    ])
+                        }
+                      },
+                      "立即调用"
+                    )
+                  : "",
+                this.policiesData[params.index].state == 1
+                  ? h(
+                      "i-select",
+                      {
+                        style: { width: "80px" },
+                        on: {
+                          "on-change": (v, row) => {
+                            var i = v;
+                            this.selectOptions(i, params);
+                          }
+                        }
+                      },
+                      [
+                        h(
+                          "Option",
+                          {
+                            props: {
+                              value: "0"
+                            }
+                          },
+                          "全量备份"
+                        ),
+                        h(
+                          "Option",
+                          {
+                            props: {
+                              value: "1"
+                            }
+                          },
+                          "增量备份"
+                        ),
+                        h(
+                          "Option",
+                          {
+                            props: {
+                              value: "2"
+                            }
+                          },
+                          "差量备份"
+                        )
+                      ]
+                    )
                   : ""
               ]
             );
@@ -190,9 +209,15 @@ export default {
     }
   },
   methods: {
-    timeShow: function() {
-      console.log(111);
+    selectOptions(v, params) {
+      let url = "/rest-ful/v3.0/policy/schedule/" + params.row.id + "?type=" + v;
+      util.restfullCall(url, null, "get", this.nowCallBack);
     },
+    nowCall: function(params) {},
+    nowCallBack: function(params) {
+      alert(params.data.message);
+    },
+    timeShow: function() {},
     //客户端信息ztree
     clientsData: function(obj) {
       let objj = obj.data;

@@ -489,7 +489,7 @@ export default {
       let tests = {
         base: {
           name: this.basic.name,
-          type: 65536,
+          type: this.basictype,
           privilege: parseInt(
             this.basic.privilegekey ? this.basic.privilegekey : 0
           ),
