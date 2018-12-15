@@ -24,8 +24,8 @@
       border
       :columns="policyColumns"
       :data="policyList"
+      v-if="!showContorl"
     >
-
     </Table>
     <newPolicy
       ref="truefalse"
@@ -47,8 +47,8 @@ export default {
     return {
       modalss: true,
       modal: false,
-      status:[false,false,false,false,false],
-      _index:Number,
+      status:[],
+      showContorl:false,
       policyColumns: [
         {
           title: "名称",
@@ -120,7 +120,7 @@ export default {
                   {
                     props: {
                       type: "primary",
-                      value: this.policyList[params.index].state == 1?true:false
+                      value: this.fstatus(params.index)
                     },
                     style: {
                       marginLeft: "10px",
@@ -148,9 +148,8 @@ export default {
                       "停用"
                     )
                   ]
-                ),console.log(this.policyList[0])
-                ,
-                this.policyList[params.index].state == 1? h("i-select", {style: {width: "100px"}}, [
+                ),
+               this.fstatus(params.index) && h("i-select", {style: {width: "100px"}}, [
                         h(
                           "Option",
                           {
@@ -193,6 +192,9 @@ export default {
     //  clearInterval(this.times)
   },
   methods: {
+    fstatus(index){
+      return this.status[index]
+    },
     timeShow: function() {
       console.log(111);
     },
@@ -222,12 +224,11 @@ export default {
       this.modalss = modalss;
     },
     switch(params,value) {
-      if(value){
-        this.policyList[params.index].state = 1
-      }else{
-        this.policyList[params.index].state = 0
-        
-      }
+        this.status[params.index] = value
+        //重置状态强行刷新table数据
+        this.showContorl = true 
+        this.$nextTick(() => this.showContorl = false)
+      // }
       //打开是true,已经处理1
       // if (this.data1[index].treatment == 1) {
       //   this.data1[index].treatment = 0
