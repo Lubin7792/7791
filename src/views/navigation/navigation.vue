@@ -164,7 +164,9 @@ export default {
           key: objj[i].device,
           savedays: objj[i].savedays,
           key: objj[i].enable,
-          state: objj[i].maxtasks
+          state: objj[i].maxtasks,
+          scheduletypes: {type:'',name:''}
+
         });
       }
       this.$store.commit("policiesData", arrays);

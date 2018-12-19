@@ -1,5 +1,5 @@
 <template>
-<Table :columns="columns" :data="data" search="rest-ful/v3.0/clients" @searchFromTable="getData" @on-row-click='getId'></Table>
+<Table :columns="columns" :data="datas" search="rest-ful/v3.0/clients" @searchFromTable="getData" ></Table>
 </template>
 
 <script>
@@ -10,15 +10,15 @@ export default {
     Table
   },
   computed: {
-    clientId() {
-      return this.$store.state.clientId;
-    }
+    // clientId() {
+    //   return this.$store.state.clientId;
+    // }
   },
   data() {
     return {
       version: [],
       state: [],
-      clientId: "",
+      // clientId: "",
       updateModal: "false",
       columns: [
         {
@@ -52,9 +52,8 @@ export default {
               },
               nativeOn: {
                 click: () => {
-                  console.log(params.row.id)
                   this.$store.commit("getTitle", "客户端配置");
-                  this.updateModal = true;
+                  // this.updateModal = true;
                   this.$store.commit("updateTrue", true);
                   //获得标签页title
                   this.$store.dispatch("getTabsTitle", params.row.id);
@@ -65,7 +64,7 @@ export default {
           }
         }
       ],
-      data: []
+      datas: []
     };
   },
 
@@ -73,7 +72,7 @@ export default {
     getData: function(obj) {
       for (let i = 0; i < obj.length; i++) {
         this.filter(obj[i].version, obj[i].state);
-        this.data.push({
+        this.datas.push({
           machine: obj[i].machine,
           systemType: obj[i].os,
           ip: obj[i].ip,

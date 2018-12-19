@@ -5,7 +5,8 @@
 	float: right;
 }
 .basic-form input{
-	width:390px;
+	width:360px;
+	margin-right: 10px;
 }
 .special{
 	float: right;

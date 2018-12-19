@@ -32,43 +32,35 @@ export default {
         },
         {
           title: "名称",
-          key: "name",
-          sortable: true
+          key: "name"
         },
         {
           title: "策略类型",
-          key: "type",
-          sortable: true
+          key: "type"
         },
         {
           title: "优先级",
-          key: "privilege",
-          sortable: true
+          key: "privilege"
         },
         {
           title: "状态",
-          key: "state",
-          sortable: true
+          key: "state"
         },
         {
           title: "介质池",
-          key: "pool",
-          sortable: true
+          key: "pool"
         },
         {
           title: "介质服务器",
-          key: "mediaserver",
-          sortable: true
+          key: "mediaserver"
         },
         {
           title: "保留天数",
-          key: "savedays",
-          sortable: true
+          key: "savedays"
         },
         {
           title: "设备",
-          key: "ip",
-          sortable: true
+          key: "ip"
         },
         {
           title: "操作栏",
@@ -94,7 +86,7 @@ export default {
                     props: {
                       type: "primary",
                       value:
-                        this.policiesData[params.index].state == 1
+                        this.policiesData[params.index].state === 1
                           ? true
                           : false
                     },
@@ -159,33 +151,15 @@ export default {
                         }
                       },
                       [
-                        h(
-                          "Option",
-                          {
-                            props: {
-                              value: "0"
-                            }
-                          },
-                          "全量备份"
-                        ),
-                        h(
-                          "Option",
-                          {
-                            props: {
-                              value: "1"
-                            }
-                          },
-                          "增量备份"
-                        ),
-                        h(
-                          "Option",
-                          {
-                            props: {
-                              value: "2"
-                            }
-                          },
-                          "差量备份"
-                        )
+                         this.policiesData[params.index].scheduletypes == [] ?'':h(
+                            "Option",
+                            {
+                              props: {
+                                value:this.policiesData[params.index].scheduletypes.type
+                              }
+                            },
+                            this.policiesData[params.index].scheduletypes.name
+                          )
                       ]
                     )
                   : ""
@@ -202,6 +176,7 @@ export default {
   },
   created() {
     util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
+    util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);
   },
   computed: {
     policiesData() {
@@ -209,8 +184,18 @@ export default {
     }
   },
   methods: {
+    scheduletype(obj, parameter) {
+      console.log(this.policiesData[parameter.index].scheduletypes);
+      this.$set(this.policiesData[parameter.index], "scheduletypes", {
+        name: obj.data[0].name,
+        type: obj.data[0].type
+      });
+      console.log(this.policiesData[parameter.index].scheduletypes);
+
+    },
     selectOptions(v, params) {
-      let url = "/rest-ful/v3.0/policy/schedule/" + params.row.id + "?type=" + v;
+      let url =
+        "/rest-ful/v3.0/policy/schedule/" + params.row.id + "?type=" + v;
       util.restfullCall(url, null, "get", this.nowCallBack);
     },
     nowCall: function(params) {},
@@ -235,6 +220,22 @@ export default {
       }
       this.$store.commit("saveClientsData", policyList);
     },
+    devicesData: function(obj) {
+      let objj = obj.data;
+      let devicesList = [];
+      for (let i = 0; i < objj.length; i++) {
+        devicesList.push({
+          id: objj[i].id,
+          type: objj[i].type,
+          name: objj[i].name,
+          server: objj[i].server,
+          servername: objj[i].servername,
+          enable: objj[i].enable,
+          status: objj[i].status,
+        });
+      }
+      this.$store.commit("saveDevicesData", devicesList);
+    },
     updatePolicy: function() {
       this.modal = true;
     },
@@ -253,6 +254,14 @@ export default {
       } else {
         this.policiesData[params.index].state = 0;
       }
+      util.restfullCalls(
+        "/rest-ful/v3.0/policy/scheduletype/" +
+          this.policiesData[params.index].id,
+        null,
+        "get",
+        this.scheduletype,
+        params
+      );
     }
     // //更新反馈信息某一字段
     // updateFeedbackMessage(id, key, value) {

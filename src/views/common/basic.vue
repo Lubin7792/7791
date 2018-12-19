@@ -5,22 +5,22 @@
 <div>
 	<Form :label-width="80" class="basic-form">
 		<FormItem label="机器名称:">
-            		<Input :placeholder="returnMessage.machine" disabled="true"></Input>
+            		<Input :placeholder="returnMessage.machine" ></Input>
         		</FormItem>
 		<FormItem label="操作系统类型:" class="special">
-            		<Input :placeholder="returnMessage.os" disabled="true"></Input>
+            		<Input :placeholder="returnMessage.os" ></Input>
         		</FormItem>
         		<FormItem label="软件版本号:">
-            		<Input :placeholder="returnMessage.version" disabled="true"></Input>
+            		<Input :placeholder="returnMessage.version" ></Input>
         		</FormItem>
         		<FormItem label="CPU:">
-            		<Input :placeholder="returnMessage.cpu" disabled="true"></Input>
+            		<Input :placeholder="returnMessage.cpu" ></Input>
         		</FormItem>
         		<FormItem label="内存:">
-            		<Input :placeholder="returnMessage.memory" disabled="true"></Input>
+            		<Input :placeholder="returnMessage.memory" ></Input>
         		</FormItem>
         		<FormItem label="状态:">
-            		<Input :placeholder="returnMessage.state" disabled="true"></Input>
+            		<Input :placeholder="returnMessage.state" ></Input>
         		</FormItem>
         	</Form>
 	</div>

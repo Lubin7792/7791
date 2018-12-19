@@ -33,7 +33,8 @@ const store = new Vuex.Store({
     modalGlance: false,
     policyData: [],
     policyType: [],
-    policiesData: []
+    policiesData: [],
+    devicesList: []
   },
   mutations: {
     //更改updateModal的函数,使控件出现
@@ -78,7 +79,6 @@ const store = new Vuex.Store({
     },
     //返回的数据处理
     getReturnMessage(state, obj) {
-      console.log(state, obj[1]);
       //客户端配置基本信息页详细信息
       if (obj[1] == 0) {
         state.returnMessage = obj[0].data.client;
@@ -92,7 +92,7 @@ const store = new Vuex.Store({
       for (let i = 0; i < obj[0].data.agents.length; i++) {
         clientList.push({
           title: obj[0].data.agents[i].name,
-          name: obj[0].data.agents[i].name,
+          name: parseInt(obj[0].data.agents[i].type),
           key: obj[0].data.agents[i].type
         });
       }
@@ -127,6 +127,9 @@ const store = new Vuex.Store({
     },
     savePolicyType(state, policyTy) {
       state.policyType = policyTy;
+    },
+    saveDevicesData(state,devices) {
+      state.devicesList = devices;
     },
     policiesData(state, policyDa) {
       state.policiesData = policyDa;

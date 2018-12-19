@@ -1,7 +1,7 @@
 <template>
-    <Tabs  class="lubin111" :animated="false" @on-click="recallName" on-tab-remove="close" value="tabName" v-model="tabName">
-		<TabPane   class="lubin111" :label="list.title" v-for="(list,index) in clientList" :name="list.name" :key="index">
-			<Content  class="lubin22" ></Content>
+    <Tabs  :animated="false" @on-click="recallName" on-tab-remove="close" value="tabName" v-model="tabName">
+		<TabPane    :label="list.title" v-for="(list,index) in clientList" :name="list.name" :key="index">
+			<Content ></Content>
 		</TabPane>
 	</Tabs>
 </template>
@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      tabName: ''
+      // tabName: ''
     }
   },
   updated: function() {
@@ -43,10 +43,10 @@ export default {
     },
     oracle() {
       return this.$store.state.oracle
-    },
-    tabName() {
-      return this.$store.state.tabName
     }
+    // tabName() {
+    //   return this.$store.state.tabName
+    // }
   },
   methods: {
     recallName: function(name) {

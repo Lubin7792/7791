@@ -25,6 +25,11 @@ export default {
           title: "任务ID",
           width: 80,
           key: "taskID"
+        },   
+        {
+          title: "策略",
+          width: 160,
+          key: "policy"
         },
         {
           title: "客户端",
@@ -33,7 +38,7 @@ export default {
         },
         {
           title: "介质服务器",
-          key: "mediaServer"
+          key: "mediaserver"
         },
         {
           title: "设备",
@@ -42,44 +47,31 @@ export default {
         },
         {
           title: "开始时间",
-          key: "startTime"
+          key: "starttime"
         },
         {
           title: "耗时",
           width: 80,
           key: "usedtime"
         },
+        
         {
           title: "备份数据量",
-          width: 100,
           key: "bytes"
         },
-        {
-          title: "文件",
-          width: 80,
-          key: "files"
-        },
+        
         {
           title: "速率",
-          width: 80,
           key: "rate"
-        },
-        {
-          title: "调度策略",
-          key: "policy"
-        },
-        {
-          title: "状态",
-          width: 80,
-          key: "state"
         },
         {
           title: "介质",
           key: "pool"
         },
         {
-          title: "任务日志",
-          key: "taskLog"
+          title: "状态",
+          width: 80,
+          key: "state"
         }
       ],
       taskMonitor: []
@@ -95,18 +87,17 @@ export default {
       for (let i = 0; i < objj.length; i++) {
         this.taskMonitor.push({
           taskID: objj[i].id,
-          client: objj[i].client,
-          mediaServer: objj[i].mediaserver,
-          device: objj[i].device,
-          startTime: objj[i].starttime,
-          usedtime: objj[i].usedtime,
-          bytes: objj[i].bytes,
-          files: objj[i].files,
-          rate: objj[i].rate,
           policy: objj[i].policy,
-          state: objj[i].state,
+          client: objj[i].client,
+          mediaserver: objj[i].mediaserver,
+          device: objj[i].device,
+          starttime: objj[i].starttime,
+          usedtime: objj[i].usedtime,
+          files: objj[i].files,
+          bytes: objj[i].bytes,
+          rate: objj[i].rate,
           pool: objj[i].pool,
-          taskLog: objj[i].taskLog
+          state: objj[i].state
         });
       }
     },

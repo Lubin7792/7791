@@ -4,18 +4,21 @@
 		<!-- <Oracle></Oracle> -->
 		<Basic></Basic>
 	</div>
-	<div v-if="show==='ORACLE'">
+	<div v-if="show===65536">
 		<Oracle></Oracle>
 	</div>
-	<div v-if="show==='MYSQL数据库'">
+	<div v-if="show===196608">
 		<Mysql></Mysql>
 	</div>
-	<div v-if="show==='SQLSERVER数据库'">
+	<div v-if="show===262144">
 		<Sqlserver></Sqlserver>
 	</div>
 	<!-- <div v-if="show==='VMWARE虚拟机'"> -->
-	<div v-if="show==='文件系统'">
+	<div v-if="show===327680">
 		<Vmware></Vmware>
+	</div>
+	<div v-if="show===393216">
+		<p>系统备份这块还没编写</p>
 	</div>
 </div>
 
@@ -36,7 +39,6 @@ import Vmware from './vmware.vue';
 		},
 		computed:{
 			show(){
-			
 				return this.$store.state.clientTitle;
 			}
 		},
