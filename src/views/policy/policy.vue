@@ -151,7 +151,7 @@ export default {
                         }
                       },
                       [
-                         this.policiesData[params.index].scheduletypes == [] ?'':h(
+                         this.policiesData[params.index].scheduletypes == 1 ?'':h(
                             "Option",
                             {
                               props: {
