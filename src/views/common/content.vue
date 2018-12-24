@@ -4,20 +4,20 @@
 		<!-- <Oracle></Oracle> -->
 		<Basic></Basic>
 	</div>
-	<div v-if="show===65536">
+	<div v-if="show==='65536'">
 		<Oracle></Oracle>
 	</div>
-	<div v-if="show===196608">
+	<div v-if="show==='196608'">
 		<Mysql></Mysql>
 	</div>
-	<div v-if="show===262144">
+	<div v-if="show==='262144'">
 		<Sqlserver></Sqlserver>
 	</div>
 	<!-- <div v-if="show==='VMWARE虚拟机'"> -->
-	<div v-if="show===327680">
+	<div v-if="show==='327680'">
 		<Vmware></Vmware>
 	</div>
-	<div v-if="show===393216">
+	<div v-if="show==='393216'">
 		<p>系统备份这块还没编写</p>
 	</div>
 </div>

@@ -5,7 +5,7 @@
 </style>
 <template>
 	<div>
-		<Table :columns="columns" :data="data1"></Table>
+		
 	
 	</div>
 </template>

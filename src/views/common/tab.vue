@@ -1,5 +1,5 @@
 <template>
-    <Tabs  :animated="false" @on-click="recallName" on-tab-remove="close" value="tabName" v-model="tabName">
+    <Tabs  :animated="false" @on-click="recallName" on-tab-remove="close" value="tabName">
 		<TabPane    :label="list.title" v-for="(list,index) in clientList" :name="list.name" :key="index">
 			<Content ></Content>
 		</TabPane>
@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     recallName: function(name) {
+      console.log(name);
       this.$store.commit('clientTitle', name)
       if (name == 'ORACLE数据库') {
         let search = 'client/agent/instances?cid=' + this.clientId + '&type=1'

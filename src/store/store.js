@@ -92,7 +92,7 @@ const store = new Vuex.Store({
       for (let i = 0; i < obj[0].data.agents.length; i++) {
         clientList.push({
           title: obj[0].data.agents[i].name,
-          name: parseInt(obj[0].data.agents[i].type),
+          name: obj[0].data.agents[i].type.toString(),
           key: obj[0].data.agents[i].type
         });
       }

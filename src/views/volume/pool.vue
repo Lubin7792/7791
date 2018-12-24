@@ -48,7 +48,7 @@ import util from '../../libs/util.js'
 export default {
   data() {
     return {
-      modal: false,
+      model6:'',
       pool: {
         name: '',
         style: '',

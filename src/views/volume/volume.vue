@@ -2,21 +2,24 @@
 @import "./volume.css";
 </style>
 <template>
-<div>
-		<Col span="24" class="demo-tabs-style1" style="background: #e3e8ee;padding:16px;">
-	 <Tabs type="card" :animated="false" @on-click="click">
-            	<TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
-            		<Content  :columns="columns" :show="show"></Content>
-            	</TabPane>
-        </Tabs>
-	</Col>
-</div>
+  <div>
+    <Col span="24" class="demo-tabs-style1" style="background: #e3e8ee;padding:16px;">
+      <Tabs type="card" :animated="false" @on-click="click">
+        <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index">
+          <Table :columns="columns" :data="datas"></Table>
+          <Content :show="show"></Content>
+        </TabPane>
+      </Tabs>
+    </Col>
+  </div>
 </template>
 <script>
+import util from "../../libs/util.js";
 import Content from "./content.vue";
 export default {
   data() {
     return {
+      datas: [],
       tabList: [
         {
           title: "介质池"
@@ -27,24 +30,20 @@ export default {
       ],
       columns: [
         {
-          title: "介质池名称",
+          title: "ID",
+          key: "id"
+        },
+        {
+          title: "介质名称",
           key: "name"
         },
         {
-          title: "介质数量",
-          key: "number"
-        },
-        {
-          title: "类型",
-          key: "type"
+          title: "覆盖周期",
+          key: "Cover"
         },
         {
           title: "保留周期",
-          key: "time"
-        },
-        {
-          title: "覆盖周期",
-          key: "overTime"
+          key: "Protected"
         }
       ],
       show: "介质池"
@@ -58,27 +57,33 @@ export default {
       if (name == "介质池") {
         this.columns = [
           {
-            title: "介质池名称",
+            title: "ID",
+            sortable: true,
+            key: "id"
+          },
+          {
+            title: "介质名称",
             key: "name"
           },
           {
-            title: "介质数量",
-            key: "number"
-          },
-          {
-            title: "类型",
-            key: "type"
+            title: "覆盖周期",
+            sortable: true,
+            key: "Cover"
           },
           {
             title: "保留周期",
-            key: "time"
-          },
-          {
-            title: "覆盖周期",
-            key: "overTime"
+            sortable: true,
+            key: "Protected"
           }
         ];
+        this.datas = [];
         this.show = "介质池";
+        util.restfullCall(
+          "/rest-ful/v3.0/volpools",
+          null,
+          "get",
+          this.VRTSVolumeDataFormat
+        );
       }
       if (name == "介质") {
         this.columns = [
@@ -99,17 +104,41 @@ export default {
             key: "used"
           },
           {
-            key: "lastTime",
+            key: "LastWrtime",
             title: "最后写入时间"
           },
           {
             title: "状态",
             key: "state"
+          },
+          {
+            title: "在线状态",
+            key: "online"
           }
         ];
         this.show = "介质";
+        this.datas = [];
+        util.restfullCall(
+      "/rest-ful/v3.0/volumes",
+      null,
+      "get",
+      this.VRTSVolumeDataFormat
+    );
       }
+    },
+
+    VRTSVolumeDataFormat(obj) {
+      return (this.datas = obj.data.slice(0, obj.data.length));
+      // console.log(obj);
     }
+  },
+  created() {
+    util.restfullCall(
+      "/rest-ful/v3.0/volpools",
+      null,
+      "get",
+      this.VRTSVolumeDataFormat
+    );
   }
 };
 </script>

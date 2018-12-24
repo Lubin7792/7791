@@ -29,7 +29,7 @@
         </Row>
         <Row>
             <span>认证方式</span>
-            <Select v-model="type" style="width:200px" class='selection' @on-change="changeOption">
+            <Select v-model="type" style="width:200px" class='selection' >
                 <Option v-for="item in authtype" :value="item.value" :key="item.value"></Option>
             </Select>
         </Row>
@@ -101,7 +101,6 @@ export default {
         }
       ],
       type: '',
-      instanceId: '',
       code: '',
       param: false
     }
