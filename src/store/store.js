@@ -90,11 +90,13 @@ const store = new Vuex.Store({
         name: "basic"
       });
       for (let i = 0; i < obj[0].data.agents.length; i++) {
+        if (!(obj[0].data.agents[0].type === 65536)){
         clientList.push({
           title: obj[0].data.agents[i].name,
           name: obj[0].data.agents[i].type.toString(),
           key: obj[0].data.agents[i].type
         });
+      }
       }
       state.clientList = clientList;
     },

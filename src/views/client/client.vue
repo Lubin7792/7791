@@ -52,7 +52,7 @@ export default {
               },
               nativeOn: {
                 click: () => {
-                  this.$store.commit("getTitle", "客户端配置");
+                  // this.$store.commit("getTitle", "客户端配置");
                   // this.updateModal = true;
                   this.$store.commit("updateTrue", true);
                   //获得标签页title
@@ -71,7 +71,10 @@ export default {
   methods: {
     getData: function(obj) {
       for (let i = 0; i < obj.length; i++) {
+        console.log(obj,1)
         this.filter(obj[i].version, obj[i].state);
+        console.log(obj,2)
+
         this.datas.push({
           machine: obj[i].machine,
           systemType: obj[i].os,

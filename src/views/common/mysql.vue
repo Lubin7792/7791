@@ -88,7 +88,7 @@
 			}
 		},
 		mounted:function(){
-			let url='rest-ful/v3.0/client/agent/instances?cid='+this.clientId+'&type='+this.clientList[2].key;
+			let url='rest-ful/v3.0/client/agent/instances?cid='+this.clientId+'&type='+this.clientList[1].key;
 			let mysqlData=[];
 			  util.restfullCall(url, null, 'get',(obj)=>{
                     for(let i=0;i<obj.data.length;i++){
@@ -213,7 +213,7 @@
 				let conf=JSON.stringify(instance);
 				let postData={};
 				postData.cid=this.clientId;
-				postData.type=this.clientList[2].key;
+				postData.type=this.clientList[1].key;
 				postData.conf=conf;
 				util.restfullCall('rest-ful/v3.0/client/agent/instance',postData,'post',(obj)=>{
 					console.log(obj.data.id);

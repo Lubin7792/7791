@@ -12,7 +12,6 @@
         		</FormItem>
         		<FormItem label="软件版本号:">
             		<Input  :placeholder="returnMessage.version=== undefined ?'':returnMessage.version.toString()" disabled></Input>
-								<p class = "basicP">{{returnMessage.version}}</p>
         		</FormItem>
         		<FormItem label="CPU:">
             		<Input :placeholder=returnMessage.cpu disabled></Input>
@@ -33,13 +32,21 @@ export default {
     return this.$store.state.returnMessage ;
 		}
 	
-  },
+	},
+	created() {
+		console.log("111s")
+		
+	},
   mounted: function() {
+		console.log("1")
     let url = "rest-ful/v3.0/client/detail/";
     this.$store.commit("getUrl", url);
     this.$store.dispatch("getData", 0);
     // this.$store.commit('getUrl','rest-ful/v3.0/client/agent/instances?cid=');
     // this.$store.dispatch('getData',1);
-  }
+	},
+	destroyed:function(){
+		console.log('222')
+	}
 };
 </script>

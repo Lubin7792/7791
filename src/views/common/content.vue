@@ -1,10 +1,11 @@
 <template>
+<div>
+	<p>asd</p>
 <div :show="show">
 	<div v-if="show==='basic'">
-		<!-- <Oracle></Oracle> -->
 		<Basic></Basic>
 	</div>
-	<div v-if="show==='65536'">
+	<div v-if="show==='131072'">
 		<Oracle></Oracle>
 	</div>
 	<div v-if="show==='196608'">
@@ -20,6 +21,7 @@
 	<div v-if="show==='393216'">
 		<p>系统备份这块还没编写</p>
 	</div>
+</div>
 </div>
 
 </template>

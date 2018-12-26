@@ -25,14 +25,19 @@ export default {
   data() {
     return {
       tabName: 'basic'
+
     }
   },
   updated: function() {
     this.tabName = 'basic'
   },
   computed: {
-    updateModal() {
+    updateModal: {
+       get: function () {
       return this.$store.state.updateModal
+    },
+      set:function (obj) {
+      }
     },
     title() {
       return this.$store.state.title

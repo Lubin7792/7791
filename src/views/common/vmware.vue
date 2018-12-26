@@ -85,7 +85,7 @@ export default {
       'rest-ful/v3.0/client/agent/instances?cid=' +
       this.clientId +
       '&type=' +
-      this.clientList[4].key
+      this.clientList[1].key
     util.restfullCall(url, null, 'get', obj => {
       let data = []
       for (let i = 0; i < obj.data.length; i++) {
@@ -130,7 +130,7 @@ export default {
       let conf = JSON.stringify(message)
       let postData = {}
       postData.cid = this.clientId
-      postData.type = this.clientList[4].key
+      postData.type = this.clientList[1].key
       postData.conf = conf
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance',
