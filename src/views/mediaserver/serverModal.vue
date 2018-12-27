@@ -31,16 +31,6 @@ export default {
 
     }
   },
-  created() {
-    // util.restfullCall('/rest-ful/v3.0/vrtsserver?type=2', null, 'get', this.goback)
-  },
-  computed: {
-    // modal() {
-    //   return this.$store.state.modal
-    //   console.log(modal)a
-    // }
-    
-  },
   methods: {
     server:function(open,merge) {
       if(open == true) util.restfullCall('/rest-ful/v3.0/vrtsserver?type=2', null, 'get', this.goback)
@@ -63,7 +53,7 @@ export default {
     // 点击确定把添加的名字传给服务器
     ok() {
       util.restfullCall('/rest-ful/v3.0/mediaserver',this.serverItem,'post',this.upload);
-      this.model = false      
+      this.modal = false      
     },
     // 成功接收到回调数据就获取添加成功的表格数据
     upload(callback) {
@@ -90,7 +80,7 @@ export default {
         console.log("2323",array)
       },
     cancel() {
-      this.model = false
+      this.modal = false
       // this.$store.commit('getModal', false)
     }
   }

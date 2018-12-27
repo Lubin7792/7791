@@ -48,7 +48,7 @@ export default {
             if(callback.data.code === 0) this.$emit('toogleMedium', this.putDatas)
         },
         cancel () {
-            this.model1 = false
+            this.modal1 = false
         }
     }
 }

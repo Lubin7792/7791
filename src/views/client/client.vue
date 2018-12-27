@@ -1,5 +1,5 @@
 <template>
-<Table :columns="columns" :data="datas" search="rest-ful/v3.0/clients" @searchFromTable="getData" ></Table>
+  <Table :columns="columns" :data="datas" search="rest-ful/v3.0/clients" @searchFromTable="getData"></Table>
 </template>
 
 <script>
@@ -52,12 +52,13 @@ export default {
               },
               nativeOn: {
                 click: () => {
-                  // this.$store.commit("getTitle", "客户端配置");
+                  this.$store.commit("getTitle", "客户端配置");
                   // this.updateModal = true;
                   this.$store.commit("updateTrue", true);
                   //获得标签页title
                   this.$store.dispatch("getTabsTitle", params.row.id);
                   this.$store.commit("getTab", "basic");
+                  this.$store.commit("getBasic",params);
                 }
               }
             });
@@ -71,13 +72,12 @@ export default {
   methods: {
     getData: function(obj) {
       for (let i = 0; i < obj.length; i++) {
-        console.log(obj,1)
         this.filter(obj[i].version, obj[i].state);
-        console.log(obj,2)
-
         this.datas.push({
           machine: obj[i].machine,
           systemType: obj[i].os,
+          cpu: obj[i].cpu,
+          memory: obj[i].memory,
           ip: obj[i].ip,
           softwareVersion: this.version[i],
           state: this.state[i],
@@ -86,13 +86,22 @@ export default {
       }
     },
     filter: function(versions, state) {
+      // let v1 = (versions & 0xff0000) >> 16;
+      // v1 = v1.toString();
+      // let v2 = (versions & 0xff00) >> 8;
+      // v2 = v2.toString();
+      // let v3 = versions & 0xff;
+      // v3 = v3.toString();
+      let v0 = (versions & 0xff000000) >> 24;
+      v0 = v0.toString();
       let v1 = (versions & 0xff0000) >> 16;
       v1 = v1.toString();
       let v2 = (versions & 0xff00) >> 8;
       v2 = v2.toString();
       let v3 = versions & 0xff;
       v3 = v3.toString();
-      let str = v1 + "." + v2 + "." + v3;
+
+      let str = v0 + "." + v1 + "." + v2 + "." + v3;
       if (state == 0) {
         this.state.push("离线");
       }

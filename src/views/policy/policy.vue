@@ -185,13 +185,10 @@ export default {
   },
   methods: {
     scheduletype(obj, parameter) {
-      console.log(this.policiesData[parameter.index].scheduletypes);
       this.$set(this.policiesData[parameter.index], "scheduletypes", {
         name: obj.data[0].name,
         type: obj.data[0].type
       });
-      console.log(this.policiesData[parameter.index].scheduletypes);
-
     },
     selectOptions(v, params) {
       let url =

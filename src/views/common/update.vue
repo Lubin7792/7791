@@ -3,7 +3,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
+  .ivu-modal-close{
+  }
   .ivu-modal {
     top: 0;
   }
@@ -11,8 +12,8 @@
 </style>
 <template>
     <div>
-        <Modal v-model="updateModal" class-name="vertical-center-modal" :title="title" @on-ok="ok" @on-cancel="cancel" id="modal">
-            <Tab   v-model="tabName" value="tabName"></Tab>
+        <Modal v-model="updateModal" class-name="vertical-center-modal" :title="title" @on-ok="ok" @on-cancel="cancel" id="modal" >
+            <Tab :values="tabName" ></Tab>
         </Modal>
     </div>
 </template>
@@ -28,9 +29,9 @@ export default {
 
     }
   },
-  updated: function() {
-    this.tabName = 'basic'
-  },
+  // updated: function() {
+  //   this.tabName = 'basic'
+  // },
   computed: {
     updateModal: {
        get: function () {
@@ -44,13 +45,14 @@ export default {
     }
   },
   methods: {
+  
     ok() {
-      //this.updateModal=false;
+      // this.updateModal=false;
       this.$store.commit('updateFalse', false)
       this.tabName = 'basic'
     },
     cancel() {
-      //this.updateModal=false;
+      // this.updateModal=false;
       this.$store.commit('updateFalse', false)
       this.tabName = 'basic'
     }

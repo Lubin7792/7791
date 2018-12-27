@@ -97,6 +97,7 @@ export default {
         this.data.push(data[i])
       }
     })
+   
   },
   methods: {
     ok: function() {

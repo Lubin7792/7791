@@ -8,14 +8,15 @@
 </style>
 
 <template>
-  <div >
+  <div>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-document.body.onselectstart = function(){
-　　return false;
-}
+document.body.onselectstart = function() {
+  return false;
+};
+
 export default {};
 </script>

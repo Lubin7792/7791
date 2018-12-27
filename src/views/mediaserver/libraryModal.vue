@@ -85,7 +85,6 @@ export default {
     },
     // 介质服务器选中数据id传给后台拿到接卸臂的回调
     server:function(row){
-      console.log("row",row)
       util.restfullCall('/rest-ful/v3.0/mediumchanges?server='+row, null, 'get', this.senddata)
     },
     // 机械臂回调并赋值给机械臂下拉框
@@ -106,7 +105,6 @@ export default {
     },
     // 机械臂传id返回的数据
     address:function(changer) {
-      console.log("changer",changer)
       if(changer.data.code === 0) 
       this.driver=changer.data.changer.driverlist,
       this.slot=changer.data.changer.slotlist,
@@ -120,15 +118,9 @@ export default {
     // 点击确认按钮，把信息传给后台
     ok() {
       this.modal = false
-      console.log("1111",this.libraryItem)
       util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', null)
       this.$emit('libraryReturn',this.libraryItem)
-      console.log("222",JSON.stringify(this.libraryItem))
     },
-    // 添加成功的回调
-    // add: function(adds) {
-    //   if(adds.data.code===0) console.log("添加成功")
-    // },
     cancel() {
       this.modal = false
     }

@@ -1,6 +1,5 @@
 <template>
 <div>
-	<p>asd</p>
 <div :show="show">
 	<div v-if="show==='basic'">
 		<Basic></Basic>
@@ -41,11 +40,14 @@ import Vmware from './vmware.vue';
 		},
 		computed:{
 			show(){
+				console.log(this.$store.state.clientTitle,'conten')
 				return this.$store.state.clientTitle;
 			}
 		},
 		mounted:function(){
 			// console.log(this.show);
+				console.log(this.$store.state.clientTitle,'conten')
+
 		}
 	}
 </script>
