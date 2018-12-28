@@ -19,10 +19,11 @@ export default {
     }
   },
   mounted:function(){
-  	this.$store.commit('getTab','basic');
+  	// this.$store.commit('getTab','basic');
   },
   updated: function() {
-    // console.log(this.tabName);
+  	// // this.$store.commit('getTab','basic');
+
   },
   data() {
     return {
@@ -30,8 +31,6 @@ export default {
     }
   },
   updated: function() {
-    console.log('aaaaaa');
-    this.tabName='basic';
   },
   computed: {
     // ...mapGetters(['clientId','clientList'])
@@ -47,10 +46,10 @@ export default {
     // tabName() {
     //   return this.$store.state.tabName
     // }
+
   },
   methods: {
     recallName: function(name) {
-      console.log(name);
       this.$store.commit('clientTitle', name)
       // if (name == 'ORACLE数据库') {
       //   let search = 'client/agent/instances?cid=' + this.clientId + '&type=1'

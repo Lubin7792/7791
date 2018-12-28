@@ -38,15 +38,17 @@ import Vmware from './vmware.vue';
 			Sqlserver,
 			Vmware
 		},
+		created() {
+		},
 		computed:{
 			show(){
-				console.log(this.$store.state.clientTitle,'conten')
+				console.log(this.$store.state.clientList)
 				return this.$store.state.clientTitle;
 			}
 		},
 		mounted:function(){
 			// console.log(this.show);
-				console.log(this.$store.state.clientTitle,'conten')
+				// console.log(this.$store.state.clientTitle,'conten mounted')
 
 		}
 	}

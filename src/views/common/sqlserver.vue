@@ -106,7 +106,6 @@ export default {
     }
   },
   mounted: function() {
-    console.log(this.clientList);
     let url =
       'rest-ful/v3.0/client/agent/instances?cid=' +
       this.clientId +

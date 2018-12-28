@@ -25,7 +25,7 @@ const store = new Vuex.Store({
     //当前要修改或删除的对象的id
     instanceId: "",
     //初始tab标签页
-    tabName: "",
+    // tabName: "basic",
     modal: false,
     policySwitch: false,
     modalDisk: false,
@@ -83,7 +83,6 @@ const store = new Vuex.Store({
     },
     //返回的数据处理
     getReturnMessage(state, obj) {
-      console.log(obj, "store");
       //客户端配置基本信息页详细信息
       if (obj[1] == 0) {
         state.returnMessage = obj[0].data.client;
@@ -95,15 +94,18 @@ const store = new Vuex.Store({
         name: "basic"
       });
       for (let i = 0; i < obj[0].data.agents.length; i++) {
-        if (!(obj[0].data.agents[0].type === 65536)) {
+        // if (!(obj[0].data.agents[0].type === 65536)) {
           clientList.push({
             title: obj[0].data.agents[i].name,
             name: obj[0].data.agents[i].type.toString(),
             key: obj[0].data.agents[i].type
           });
-        }
+        // }
       }
-      state.clientList = clientList;
+      function clientl(element) {
+        return element.key !== 65536;
+      }
+      state.clientList = clientList.filter(clientl);
     },
     //oracle
     getOracle(state, oracle) {
@@ -115,7 +117,6 @@ const store = new Vuex.Store({
       state.title = title;
     },
     getId(state, id) {
-      console.log(4);
       state.id = id;
     },
     getPostData(state, postData) {
@@ -200,7 +201,6 @@ const store = new Vuex.Store({
     },
     //获取tabs标签页名称
     getTabsTitle(state, number) {
-      console.log("111aa")
       util.restfullCall(
         "rest-ful/v3.0/client/agents?client=" + number,
         null,

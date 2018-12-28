@@ -57,7 +57,7 @@ export default {
                   this.$store.commit("updateTrue", true);
                   //获得标签页title
                   this.$store.dispatch("getTabsTitle", params.row.id);
-                  this.$store.commit("getTab", "basic");
+                  // this.$store.commit("getTab", "basic");
                   this.$store.commit("getBasic",params);
                 }
               }
