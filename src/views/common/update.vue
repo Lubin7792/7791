@@ -5,6 +5,10 @@
   justify-content: center;
   .ivu-modal-close {
   }
+  .ivu-modal-body{
+    height: 470px;
+    overflow: auto;
+  }
   .ivu-modal {
     top: 0;
   }

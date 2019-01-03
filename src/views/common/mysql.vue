@@ -30,14 +30,6 @@
 	        		</FormItem>
         		</Col>
     	</Row>
-    	<Row>
-    		<Col span="24">
-        			<span style='height:33px;line-height: 33px'>Bin-Log</span>
-        			<FormItem label="路径:">
-	            		<Input v-model="mysql.path" class="mysql-path"></Input>
-	        		</FormItem>
-        		</Col>
-    	</Row>
     	<Row class="mysql-btn">
 		 <Button type="info" @click="updateInstance">保存修改</Button>
 		 <Button type="info" @click="newInstance">添加实例</Button>

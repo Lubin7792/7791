@@ -102,6 +102,7 @@ const store = new Vuex.Store({
           });
         // }
       }
+      //删除列表中的文件系统
       function clientl(element) {
         return element.key !== 65536;
       }

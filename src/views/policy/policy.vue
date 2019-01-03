@@ -21,7 +21,7 @@ import newPolicy from "./newPolicy.vue";
 export default {
   data() {
     return {
-      modalss: false,
+      modalss: true,
       modal: false,
       _index: Number,
       policyColumns: [
