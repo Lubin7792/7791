@@ -2,86 +2,108 @@
 @import './libraryModal.css';
 </style>
 <template>
-	<Modal title="修改磁带库" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消">
-		<Form :model="libraryItem">
-			<FormItem label="设备名称">
-				<Input v-model="libraryItem.name" placeholder="请输入设备名称..." style="width: 415px"></Input>
-			</FormItem>
-			<FormItem>
-				<span>介质服务器</span>
-				<Dropdown style="margin-left: 20px">
-					<Button type="primary">
-						下拉菜单
-						<Icon type="ios-arrow-down"></Icon>
-					</Button>
-					<DropdownMenu slot="list">
-						<DropdownItem>驴打滚</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
-			</FormItem>
-			<FormItem>
-				<span>机械肩</span>
-				<Dropdown style="margin-left: 20px">
-					<Button type="primary">
-						下拉菜单
-						<Icon type="ios-arrow-down"></Icon>
-					</Button>
-					<DropdownMenu slot="list">
-						<DropdownItem divided>北京烤鸭</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
-			</FormItem>
-			<Table :columns="libraryColumns"></Table>
-			<FormItem>
-				<Checkbox v-model="single" class="checkbox">是否允许任务并行</Checkbox>
-				<FormItem label="最大并行任务数量" v-if="single===true" class="maxTask">
-					<Input v-model="libraryItem.max" style="width: 150px"></Input>
-				</FormItem>
-			</FormItem>
-		</Form>
+	<Modal footer-hide title="磁带库设备管理页面" v-model="modal" class-name="vertical-center-modal" width="640">
+      <P class="titl">基本信息</P>
+      <div class="parent" style="margin-bottom:20px">
+        <div v-for="(value,key) in changer" :key="key" v-if="(typeof(value) !== 'object') && (key !== 'id')">{{ralations[key]}}: {{value}}</div>
+      </div>
+      <P class="titl">驱动器信息</P>
+			<Table :columns="driverColumns" :data="driver" style="margin-bottom:20px" height="200"></Table>
+      <P class="titl">槽位信息</P>
+			<Table :columns="slotColumns" :data="slot" border height="200"></Table>
 	</Modal>
 </template>
 <script>
+import util from '../../libs/util.js'
 export default {
-  data() {
-    return {
-      libraryItem: {
-        name: '',
-        max: ''
-      },
-      libraryColumns: [
-        {
-          title: '序列号',
-          key: 'id'
-        },
-        {
-          title: '厂商',
-          key: 'Manufacturer'
-        },
-        {
-          title: '驱动器数量',
-          key: 'driver'
-        },
-        {
-          title: '槽位数量',
-          key: 'slot'
-        }
-      ],
-      single: false
+  props: {
+    modalLibrary: {
+      type: Object
     }
   },
-  props: {
-    modal: {
-      type: Boolean
+  data() {
+    return {
+      changer:{},
+      ralations: {
+        name: '名称',
+        Vendor: '厂商',
+        productid: '产品id',
+        revision: '版本号',
+        sn: '产品序列号',
+        drivers: '驱动器数量',
+        slots: '槽位数量',
+        iexports: '扩展槽位数量',
+      },
+      key:[],
+      driver:[],
+      slot:[],
+      name: null,
+      modal: false,
+      driverColumns: [
+        { title: '序列号', key: 'driverno' },
+        { title: '厂商', key: 'vendor' },
+        { title: '产品ID', key: 'productid' },
+        { title: '版本', key: 'sn' },
+        { title: '磁带条码', key: 'barcode' },
+        { title: '原槽位号', key: 'slotno' },
+        {title: '操作',key: 'operation',align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Icon', {
+                  props: {
+                      type: 'ios-close',
+                      size: '20'
+                  },
+                  on: {
+                      click: () => {
+                        console.log("删除")
+                      }
+                  }
+              },),
+            ]);
+          }
+        },
+      ],
+      slotColumns:[
+        { title: '槽位号', key: 'slotno' },
+        { title: '磁带条码', key: 'barcode' },
+        { title: 'I/EXPORT', key: 'iexport' },
+        {title: '操作',key: 'operation',align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Icon', {
+                  props: {
+                      type: 'ios-browsers',
+                      size: '20'
+                  },
+                  on: {
+                      click: () => {
+                        console.log("下拉框")
+                      }
+                  }
+              },),
+            ]);
+          }
+        },
+      ],
     }
   },
   methods: {
-    ok() {
-      this.$emit('close', false)
+    livrayModify:function(changer, name){
+      this.name = name
+      util.restfullCall('/rest-ful/v3.0/mediumchanger/' + changer, null, 'get', this.address)
+      this.modal = true
     },
-    cancel() {
-      this.$emit('close', false)
-    }
+    address:function(changer) {
+      console.log("changer",changer)
+      if(changer.data.code !== 0) return
+      this.driver=changer.data.changer.driverlist
+      this.slot=changer.data.changer.slotlist
+      this.changer.name = this.name
+      Object.assign(this.changer, this.changer, changer.data.changer)
+      // this.changer = changer.data.changer
+      console.log(this.changer)
+    },
   }
 }
 </script>

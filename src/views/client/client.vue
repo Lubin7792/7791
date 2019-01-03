@@ -1,6 +1,7 @@
 <template>
-	<Table :columns="columns" :data="data" search="rest-ful/v3.0/clients" @searchFromTable="getData" @on-row-click='getId'></Table>
+<Table :columns="columns" :data="data" search="rest-ful/v3.0/clients" @searchFromTable="getData" @on-row-click='getId'></Table>
 </template>
+
 <script>
 import Table from "../common/table.vue";
 import $ from "jquery";
@@ -51,11 +52,12 @@ export default {
               },
               nativeOn: {
                 click: () => {
+                  console.log(params.row.id)
                   this.$store.commit("getTitle", "客户端配置");
                   this.updateModal = true;
                   this.$store.commit("updateTrue", true);
                   //获得标签页title
-                  this.$store.dispatch("getTabsTitle", 1);
+                  this.$store.dispatch("getTabsTitle", params.row.id);
                   this.$store.commit("getTab", "basic");
                 }
               }

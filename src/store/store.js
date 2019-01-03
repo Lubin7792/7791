@@ -14,7 +14,7 @@ const store = new Vuex.Store({
     url: "",
     returnMessage: {},
     //标签页title接口地址
-    tabsUrl: "rest-ful/v3.0/client/agents?client=1",
+    tabsUrl: "",
     //临时测试
     id: "",
     columns: [],
@@ -27,11 +27,13 @@ const store = new Vuex.Store({
     //初始tab标签页
     tabName: "",
     modal: false,
+    policySwitch: false,
     modalDisk: false,
     modalLibrary: false,
     modalGlance: false,
     policyData: [],
-    policyType: []
+    policyType: [],
+    policiesData: []
   },
   mutations: {
     //更改updateModal的函数,使控件出现
@@ -76,26 +78,25 @@ const store = new Vuex.Store({
     },
     //返回的数据处理
     getReturnMessage(state, obj) {
+      console.log(state, obj[1]);
       //客户端配置基本信息页详细信息
       if (obj[1] == 0) {
         state.returnMessage = obj[0].data.client;
       }
       //tabs名称
-      if (obj[1] == 1) {
-        let clientList = [];
+      let clientList = [];
+      clientList.push({
+        title: "基本信息",
+        name: "basic"
+      });
+      for (let i = 0; i < obj[0].data.agents.length; i++) {
         clientList.push({
-          title: "基本信息",
-          name: "basic"
+          title: obj[0].data.agents[i].name,
+          name: obj[0].data.agents[i].name,
+          key: obj[0].data.agents[i].type
         });
-        for (let i = 0; i < obj[0].data.agents.length; i++) {
-          clientList.push({
-            title: obj[0].data.agents[i].name,
-            name: obj[0].data.agents[i].name,
-            key: obj[0].data.agents[i].type
-          });
-        }
-        state.clientList = clientList;
       }
+      state.clientList = clientList;
     },
     //oracle
     getOracle(state, oracle) {
@@ -107,6 +108,7 @@ const store = new Vuex.Store({
       state.title = title;
     },
     getId(state, id) {
+      console.log(4);
       state.id = id;
     },
     getPostData(state, postData) {
@@ -119,12 +121,19 @@ const store = new Vuex.Store({
     getInstanceId(state, instanceId) {
       state.instanceId = instanceId;
     },
-    //新建策略
-    savePolicyData(state, policyOs) {
+    //客户端
+    saveClientsData(state, policyOs) {
       state.policyData = policyOs;
     },
     savePolicyType(state, policyTy) {
       state.policyType = policyTy;
+    },
+    policiesData(state, policyDa) {
+      state.policiesData = policyDa;
+    },
+    //新建请求成功
+    upPolicyOk(state, policyDa) {
+      state.policySwitch = policyDa;
     }
   },
   actions: {
@@ -181,12 +190,17 @@ const store = new Vuex.Store({
     },
     //获取tabs标签页名称
     getTabsTitle(state, number) {
-      util.restfullCall(this.state.tabsUrl, null, "get", obj => {
-        let arr = [];
-        arr.push(obj);
-        arr.push(number);
-        state.commit("getReturnMessage", arr);
-      });
+      util.restfullCall(
+        "rest-ful/v3.0/client/agents?client=" + number,
+        null,
+        "get",
+        obj => {
+          let arr = [];
+          arr.push(obj);
+          arr.push(number);
+          state.commit("getReturnMessage", arr);
+        }
+      );
     }
   }
 });

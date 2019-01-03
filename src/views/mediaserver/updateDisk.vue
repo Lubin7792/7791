@@ -13,12 +13,12 @@
       <FormItem label="设备路径">
 				<Input v-model="modalDisk.path" disabled></Input>
 			</FormItem>
-      <FormItem label="存储容量">
+      <!-- <FormItem label="存储容量">
 				<Input v-model="modalDisk.enable"></Input>
 			</FormItem>
       <FormItem label="状态">
 				<Input v-model="modalDisk.type"></Input>
-			</FormItem>
+			</FormItem> -->
       <Row type="flex" justify="space-around">
 				<Col span="12">
 					<FormItem label="最大并发数">

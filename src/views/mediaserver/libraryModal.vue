@@ -1,78 +1,136 @@
 <style>
-@import './libraryModal.css';
-.titl {
-  font-weight: 600;
-  text-align: center
-}
 </style>
 <template>
-	<Modal title="新建磁带库" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="640">
+	<Modal title="新建磁带库" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="640">
 		<Form :model="libraryItem" :label-width="100">
 			<FormItem label="设备名称">
 				<Input v-model="libraryItem.name" placeholder="请输入设备名称"></Input>
 			</FormItem>
-			<FormItem label="介质服务器">
-				<Select placeholder="请选择介质服务器">
-					<Option value="beijing">New York</Option>
-					<Option value="shanghai">London</Option>
-					<Option value="shenzhen">Sydney</Option>
-				</Select>
-			</FormItem>
-			<FormItem label="机械肩">
-				<Select>
-					<Option value="beijing">New York</Option>
-					<Option value="shanghai" disabled>London</Option>
-					<Option value="shenzhen">Sydney</Option>
-				</Select>
-			</FormItem>
+      <Row>
+        <Col span="12">
+          <FormItem label="介质服务器">
+          <Select v-model="libraryItem.server" placeholder="请选择介质服务器" @on-change="server" @on-open-change="serverDisk">
+            <Option v-for="item in selList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
+          </Select>
+        </FormItem>
+        </Col>
+        <Col span="12">
+          <FormItem label="机械肩">
+            <Select placeholder="请选择选择机械臂" @on-change="changes">
+              <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            </Select>
+			    </FormItem>
+        </Col>
+      </Row>	
       <P class="titl">驱动器信息</P>
-			<Table :columns="libraryColumns" style="margin-bottom:20px"></Table>
+			<Table :columns="driverColumns" :data="driver" style="margin-bottom:20px" height="200"></Table>
       <P class="titl">槽位信息</P>
-			<Table border :columns="Columns"></Table>
-			<!-- <FormItem>
-				<Checkbox v-model="single" class="checkbox">是否允许任务并行</Checkbox>
-				<FormItem label="最大并行任务数量" v-if="single===true" class="maxTask">
-					<Input v-model="libraryItem.max" style="width: 50px"></Input>
-				</FormItem>
-			</FormItem> -->
+			<Table :columns="slotColumns" :data="slot" border height="200"></Table>
 		</Form>
 	</Modal>
 </template>
 <script>
+import util from '../../libs/util.js'
 export default {
   data() {
     return {
+      cityList:[],
+      selList:[],
+      driver:[],
+      slot:[],
+      modal: false,
       libraryItem: {
         name: '',
-        max: ''
+        path: '',
+        maxjobs: '',
+        lowlimit: 0,
+        filesize: 0,
+        server: '',
+        type: 1,
       },
-      libraryColumns: [
-        { title: '序列号', key: 'id' },
-        { title: '厂商', key: 'Manufacturer' },
-        { title: '产品ID', key: 'driver' },
-        { title: '版本', key: 'driver' },
-        { title: '磁带条码', key: 'slot' },
-        { title: '槽位数', key: 'slot' },
+      driverColumns: [
+        { title: '序列号', key: 'driverno' },
+        { title: '厂商', key: 'vendor' },
+        { title: '产品ID', key: 'productid' },
+        { title: '版本', key: 'sn' },
+        { title: '磁带条码', key: 'barcode' },
+        { title: '槽位数', key: 'slotno' },
       ],
-      Columns:[
-        { title: '槽位号', key: 'id' },
-        { title: '磁带条码', key: 'id' },
-        { title: 'I/EXPORT', key: 'id' },
+      slotColumns:[
+        { title: '槽位号', key: 'slotno' },
+        { title: '磁带条码', key: 'barcode' },
+        { title: 'I/EXPORT', key: 'iexport' },
       ],
       single: false
     }
   },
-  computed: {
-    modal() {
-      return this.$store.state.modalLibrary
-    }
+  created() {
+    // util.restfullCall('/rest-ful/v3.0/mediumchanges?server='+16, null, 'get', this.senddata)
   },
   methods: {
-    ok() {
-      this.$store.commit('getModalLibrary', false)
+    // 点击下拉框获取介质服务器信息
+    serverDisk:function(openServer) {
+      if(openServer == true) util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.diskdata)
     },
+    // 介质服务器的回调接收并赋值给下拉框
+    diskdata:function(obj){
+      var array = new Array
+      for(let i = 0;i < obj.data.length;i++ ){
+        array.push({
+          id:obj.data[i].id,
+          machine:obj.data[i].machine
+        })
+      }
+      this.selList = array
+    },
+    // 介质服务器选中数据id传给后台拿到接卸臂的回调
+    server:function(row){
+      console.log("row",row)
+      util.restfullCall('/rest-ful/v3.0/mediumchanges?server='+row, null, 'get', this.senddata)
+    },
+    // 机械臂回调并赋值给机械臂下拉框
+    senddata:function(obj){
+      var array = new Array
+      for(let i = 0;i < obj.data.length;i++ ){
+        array.push({
+          id:obj.data[i].id,
+          name:obj.data[i].name
+        })
+      }
+      this.cityList = array
+    },
+    
+    // 获取选中机械臂的id传给后台
+    changes: function(datas) {
+      util.restfullCall('/rest-ful/v3.0/mediumchanger/' + datas, null, 'get', this.address)
+    },
+    // 机械臂传id返回的数据
+    address:function(changer) {
+      console.log("changer",changer)
+      if(changer.data.code === 0) 
+      this.driver=changer.data.changer.driverlist,
+      this.slot=changer.data.changer.slotlist,
+      this.libraryItem.path=changer.data.changer.sn,
+      this.libraryItem.maxjobs=changer.data.changer.drivers
+    },
+    // 接收父组件
+    newLibrarys:function(){
+      this.modal = true
+    },
+    // 点击确认按钮，把信息传给后台
+    ok() {
+      this.modal = false
+      console.log("1111",this.libraryItem)
+      util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', null)
+      this.$emit('libraryReturn',this.libraryItem)
+      console.log("222",JSON.stringify(this.libraryItem))
+    },
+    // 添加成功的回调
+    // add: function(adds) {
+    //   if(adds.data.code===0) console.log("添加成功")
+    // },
     cancel() {
-      this.$store.commit('getModalLibrary', false)
+      this.modal = false
     }
   }
 }

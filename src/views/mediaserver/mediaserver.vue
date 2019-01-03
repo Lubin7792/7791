@@ -1,8 +1,8 @@
 <template>
-    <Tabs class="demo-tabs-style1" style="background: #e3e8ee;padding:16px;" type="card">
+    <Tabs :animated="false" class="demo-tabs-style1" style="background: #e3e8ee;padding:16px;" type="card">
         <!-- 介质服务器 -->
         <TabPane label="介质服务器">
-            <Table stripe highlight-row :data="medium" :columns="mediums" @on-current-change="putData"></Table>
+            <Table stripe highlight-row :data="medium" :columns="mediums" @on-current-change="putData" height="620px"></Table>
 
             <div class="btn"> 
                 <Button type="info" @click="newServer">新建介质服务器</Button>
@@ -12,9 +12,10 @@
                 <updateServer :putDatas="putDatas" ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
             </div>
         </TabPane>
+
         <!-- 磁盘 -->
         <TabPane label="磁盘">
-            <Table stripe highlight-row :data="disk" :columns="disks" @on-current-change="diskData"></Table>
+            <Table stripe highlight-row :data="disk" :columns="disks" @on-current-change="diskData" height="620px"></Table>
             
             <div class="btn">
                 <Button type="info" @click="newDisk">新建磁盘</Button>
@@ -27,14 +28,14 @@
 
         <!-- 磁带库 -->
         <TabPane label="磁带库">
-            <Table :columns="tapes" :data="tape"></Table>
+            <Table stripe highlight-row :data="tape" :columns="tapes" @on-current-change="librayData" height="620px"></Table>
             
             <div class="btn">
                 <Button type="info" @click="newLibrary">新建磁带库</Button>
-                <Button type="info">删除磁带库</Button>
-                <Button type="info" @click="updateLibrary">修改磁带库</Button>
-                <libraryModal></libraryModal>
-                <updateLibrary :modal="modalLibrary" @close="closeLibrary"></updateLibrary>
+                <Button type="info" @click="delLibrary">删除磁带库</Button>
+                <!-- <Button type="info" @click="modifyLibrary">修改磁带库</Button> -->
+                <libraryModal ref="libraryModal" @libraryReturn="libraryReturn"></libraryModal>
+                <updateLibrary :modalLibrary="modalLibrary" ref="updateLibrary"></updateLibrary>
             </div>
         </TabPane>        
     </Tabs>
@@ -58,11 +59,6 @@ import libraryModal from './libraryModal.vue'
 import updateLibrary from './updateLibrary.vue'
 
 export default {
-  // provide(){
-  //     return{
-  //         getmediumInfo:this.getmediumInfo
-  //     }
-  // },
   components: {
     serverModal,
     diskModal,
@@ -76,7 +72,7 @@ export default {
       mediums: [
         { title: '名称', key: 'name' },
         { title: '设备数量', key: 'devices' },
-        { title: '类型', key: 'machine' },
+        { title: '机器名称', key: 'machine' },
         { title: 'IP地址', key: 'addr' },
         { title: '操作系统', key: 'os' },
         { title: '软件版本', key: 'Version' },
@@ -91,18 +87,36 @@ export default {
       ],
       tapes: [
         { title: '名称', key: 'name' },
-        { title: '介质服务器', key: 'server' },
-        { title: '设备序列号', key: 'serialNumber' },
-        { title: '槽位数', key: 'slotNumber' },
-        { title: '驱动器数量', key: 'number' },
-        { title: '状态', key: 'state' }
+        { title: '介质服务器', key: 'servername' },
+        { title: '设备序列号', key: 'serialno' },
+        { title: '槽位数', key: 'sltos' },
+        { title: '驱动器数量', key: 'drivers' },
+        { title: '状态', key: 'state' },
+        {title: '操作',key: 'operation',align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Icon', {
+                  props: {
+                      type: 'gear-b',
+                      size: '20'
+                  },
+                  on: {
+                      click: () => {
+                        console.log(params)
+                        this.$refs.updateLibrary.livrayModify(params.row.changer, params.row.name)
+                      }
+                  }
+              },),
+            ]);
+          }
+        },
       ],
       medium: [],
       disk: [],
       tape: [],
       putDatas: {},
       modalDisk: {},
-      modalLibrary: false,
+      modalLibrary: {},
     }
   },
 
@@ -110,7 +124,9 @@ export default {
     // 获取介质信息
     util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     // 获取磁盘信息
-    util.restfullCall('/rest-ful/v3.0/devices?type=0', null, 'get', this.diskdata)    
+    util.restfullCall('/rest-ful/v3.0/devices?type=0', null, 'get', this.diskdata)
+    //获取磁带库信息
+    util.restfullCall('/rest-ful/v3.0/devices?type=1', null, 'get', this.tapesdata)
   },
 
   methods: {
@@ -146,7 +162,27 @@ export default {
         this.disk = array
       }
     },
-
+     // 查询添加成功的磁带库表
+    tapesdata: function(typeobj) {
+      console.log("磁带库表",typeobj)
+      var array = new Array()
+      for (let i = 0; i < typeobj.data.length; i++) {
+        array.push({
+          name: typeobj.data[i].name,
+          id: typeobj.data[i].id,
+          server: typeobj.data[i].server,
+          servername: typeobj.data[i].servername,
+          vendor: typeobj.data[i].vendor,
+          productid: typeobj.data[i].productid,
+          status: typeobj.data[i].status,
+          serialno: typeobj.data[i].serialno,
+          drivers: typeobj.data[i].drivers,
+          slots: typeobj.data[i].slots,
+          changer: typeobj.data[i].changer,
+        })
+        this.tape = array
+      }
+    },
   // 介质服务器部分代码
     // 点击新建服务器触发事件
     newServer: function() {
@@ -213,28 +249,31 @@ export default {
         if (item.id === listDisk.id) item.name=listDisk.name
       })
     },
+  // 磁带库部分代码
+    // 点击创建磁带库
     newLibrary: function() {
-      this.$store.commit('getModalLibrary', true)
+      // this.$store.commit('getModalLibrary', true)
+      this.$refs.libraryModal.newLibrarys()
     },
-
-    newLibrary: function() {
-      this.$store.commit('getModalLibrary', true)
+    // 接收添加成功的磁带库信息赋值给磁带库表
+    libraryReturn(librardata) {
+      console.log("cida",librardata)
+      util.restfullCall('/rest-ful/v3.0/devices?type='+librardata.type, null, 'get', this.tapesdata)
     },
-
-    updateLibrary: function() {
-      this.modalLibrary = true
+    // 选中点击的磁带库数据
+    librayData:function(livrayRow) {
+      console.log("磁带库",livrayRow)
+      this.modalLibrary = livrayRow
     },
-
-    closeLibrary: function(modal) {
-      this.modalLibrary = modal
-    }
-    // getmediumInfo:function(){
-    //     console.log("我重新被调用了");
-    //     util.restfullCall('/rest-ful/v3.0/mediaservers',null,'get',this.senddata);
-    // }，
-    // getdiskInfo:function(){
-
-    // }
+    // 删除磁盘
+    delLibrary:function() {
+      if (confirm('确认删除数据')) { util.restfullCall( '/rest-ful/v3.0/device/' + this.modalLibrary.id, null, 'DELETE', this.delLibrarys) }
+    },
+    // 删除磁带库成功之后的回调判断
+    delLibrarys(librarys) {
+      if (librarys.data.code === 0)
+      util.restfullCall('/rest-ful/v3.0/devices?type=1', null, 'get', this.tapesdata)   
+    },
   }
 }
 </script>

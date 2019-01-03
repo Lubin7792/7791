@@ -13,7 +13,8 @@
 	<div v-if="show==='SQLSERVER数据库'">
 		<Sqlserver></Sqlserver>
 	</div>
-	<div v-if="show==='VMWARE虚拟机'">
+	<!-- <div v-if="show==='VMWARE虚拟机'"> -->
+	<div v-if="show==='文件系统'">
 		<Vmware></Vmware>
 	</div>
 </div>
