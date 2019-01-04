@@ -24,7 +24,7 @@ export default {
       serverItem: {
         name: '',
         Protected: null,
-        Cover: null
+        Cover: null,
       },
     }
   },
@@ -51,6 +51,7 @@ export default {
           name: poolObj.data[i].name,
           Cover: poolObj.data[i].Cover,
           Protected: poolObj.data[i].Protected,
+          type: poolObj.data[i].type
           })
         }
         this.$emit('Return',array)

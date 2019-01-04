@@ -14,7 +14,7 @@
 				</Select>
       </FormItem>
 			<FormItem label="介质服务器">
-					<Select v-model="diskItem.server" @on-change="changes" @on-open-change="serverDisk">
+					<Select v-model="diskItem.server" @on-change="changes" @on-open-change="serverDisk" :label-in-value="true">
             <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
 					</Select>
 			</FormItem>
@@ -53,7 +53,7 @@
 		  </Form>
 	  </Modal>
     <!-- glance浏览目录弹框 -->
-    <Glance ref="Glance" @glanceReturn="glanceReturn" :device="device" :pathlista="pathlist"></Glance>
+    <Glance ref="Glance" @glanceReturn="glanceReturn" :device="device"></Glance>
   </div>
 </template>
 <script>
@@ -66,8 +66,7 @@ export default {
       single: false,
       selectType:[],
       cityList:[],
-      device:null,
-      pathlist:[],
+      device: [],
       diskItem: {
         name: '',
         path: '',
@@ -120,12 +119,12 @@ export default {
     },
     // 选中下拉内容获取选中数据id传给后台，并返回回调地址
     changes: function(datas) {
-      this.device = datas
-      util.restfullCall('/rest-ful/v3.0/devicepath?server=' + datas + '&path=', null, 'get', this.address)
-    },
-    // 回调地址赋值并传给子组件
-    address: function(ob) {
-      this.pathlist=ob.data.pathlist
+      var ar = []
+        ar.push({
+          name: datas.label,
+          id: datas.value
+        })
+      this.device = ar
     },
     // 点击浏览弹出浏览框
     browse: function() {

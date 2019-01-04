@@ -231,6 +231,7 @@ export default {
     },
     // 选中行数据
     diskData: function(diskRow) {
+      console.log("磁盘选中数据",diskRow)
       this.modalDisk = diskRow
     },
     // 删除磁盘

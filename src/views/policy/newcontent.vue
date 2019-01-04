@@ -220,7 +220,7 @@ export default {
         }
       ],
       plan1: "",
-      basictype: "",
+      basictype: [null],
       options2: {
         shortcuts: [
           {
@@ -421,7 +421,6 @@ export default {
     },
      devicesList() {
       return this.$store.state.devicesList;
-      console.log(this.$store.state.devicesList)
     },
     data3() {
       let data1 = [];
@@ -477,7 +476,6 @@ export default {
       this.schedule.freqval = test.label;
     },
     showNow: function() {
-      console.log(this.basic.privilegekey);
     },
     policypost: function() {
       let tests = {

@@ -1,5 +1,4 @@
   <style>
-@import "./policy.css";
 @import "./newcontent.css";
 </style>
 <template>
@@ -7,26 +6,43 @@
     <div v-if="show2">
       <div>
         <div v-show="show2 === '65536'" class="file">
-          <Form ref="basic" :model="basic" :label-width="120">
-            <div class="filter">
-              <RadioGroup v-model="basic.animal">
+          <Form ref="file" :model="file" :label-width="120">
+            <div class="frame">
+              <p class="titles">备份过滤选项</p>
+              <RadioGroup v-model="file.filter">
                 <Radio label="只备份以下类型文件"></Radio>
-                <Input v-model="basic.only" placeholder="Enter something..." style="width: 300px"/>
+                <Input v-model="file.only" style="width: 300px"/>
+                <p class="blanks"></p>
                 <Radio label="不备份以下类型文件"></Radio>
-                <Input
-                  v-model="basic.exclude"
-                  placeholder="Enter something..."
-                  style="width: 300px"
-                />
+                <Input v-model="file.exclude" style="width: 300px"/>
               </RadioGroup>
             </div>
-            <div class="fail">
-              <RadioGroup v-model="disabledGroup">
-                <Radio label="终止备份作业" disabled></Radio>
-                <Radio label="跳过被打开的文件"></Radio>
+            <div class="clearfloat">
+              <div class="frame fail">
+                <p class="titles">打开文件失败处理方式</p>
+                <RadioGroup v-model="file.fail">
+                  <Radio label="终止备份作业"></Radio>
+                  <p class="blanks"></p>
+                  <Radio label="跳过被打开的文件"></Radio>
+                </RadioGroup>
+              </div>
+              <div class="list">
+                <CheckboxGroup v-model="file.other">
+                  <Checkbox label="启动高级文件备份"></Checkbox>
+                  <p class="blanks"></p>
+                  <Checkbox label="备份后删除源文件"></Checkbox>
+                </CheckboxGroup>
+              </div>
+            </div>
+            <div class="frame">
+              <RadioGroup v-model="file.scritpts">
+                <Radio label="备份前运行脚本"></Radio>
+                <Input v-model="file.only" style="width: 300px"/>
+                <p class="blanks"></p>
+                <Radio label="备份后运行脚本"></Radio>
+                <Input v-model="file.exclude" style="width: 300px"/>
               </RadioGroup>
             </div>
-            <div class="list"></div>
           </Form>
         </div>
         <div v-if="show2 === '131072'">
@@ -74,25 +90,10 @@
           </Form>
         </div>
         <div v-if="show2 === '262144'">
-          <Form ref="basic" :model="basic" :label-width="120">
-            <FormItem label="备份前一致性检查">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="备份后一致性检查">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="启用SQLSERVER压缩  ">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="事务日志截断">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="归档备份范围">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="删除已经备份的归档">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
+          <Form ref="sqlserver" :model="sqlserver" :label-width="120">
+            <div class="frame">
+              <p class="titles">备份过滤选项</p>
+            </div>
           </Form>
         </div>
         <div v-if="show2 === '327680'">
@@ -137,83 +138,30 @@ export default {
   data() {
     return {
       showtest: "",
-      basic: {
+      file: {
         name: "",
         type: "",
         client: "",
         state: "",
-        animal: "",
+        filter: "",
         only: "",
-        exclude: ""
+        exclude: "",
+        fail: "",
+        other: "",
+        scritpts: ""
       },
-      plan: {},
-      resources: {
-        pool: "",
-        equipment: ""
-      },
-      option: {
-        content: "",
-        encryption: "",
-        compress: ""
-      },
-      frequency: [
-        {
-          value: "天",
-          label: "天"
-        },
-        {
-          value: "周",
-          label: "周"
-        },
-        {
-          value: "月",
-          label: "月"
-        },
-        {
-          value: "季度",
-          label: "季度"
-        },
-        {
-          value: "年",
-          label: "年"
-        }
-      ],
-      level: [
-        {
-          value: "全量",
-          label: "全量"
-        },
-        {
-          value: "增量",
-          label: "增量"
-        },
-        {
-          value: "差量",
-          label: "差量"
-        }
-      ],
-      cycle: [
-        {
-          value: "天",
-          label: "天"
-        },
-        {
-          value: "周",
-          label: "周"
-        },
-        {
-          value: "月",
-          label: "月"
-        },
-        {
-          value: "季度",
-          label: "季度"
-        },
-        {
-          value: "年",
-          label: "年"
-        }
-      ]
+      sqlserver: {
+        name: "",
+        type: "",
+        client: "",
+        state: "",
+        filter: "",
+        only: "",
+        exclude: "",
+        fail: "",
+        other: "",
+        scritpts: ""
+      }
     };
   }
 };

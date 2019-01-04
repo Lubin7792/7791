@@ -1,12 +1,13 @@
 <template>
+  <div class="volume">
   <Tabs :animated="false" class="demo-tabs-style1" style="background: #e3e8ee;padding:16px;" type="card">
   <!-- 介质池 -->
     <TabPane label="介质池">
-        <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="620px"></Table>
+        <Table stripe highlight-row @on-current-change="poolData" :data="volpool" :columns="mediumPools" height="620px"></Table>
 
           <div class="btn"> 
               <Button type="info" @click="newPool">新建介质池</Button>
-              <Button type="info">删除介质池</Button>
+              <Button type="info" @click="delPool">删除介质池</Button>
               <Button type="info">修改介介质池</Button>
               <poolModal ref="poolModal" @Return="Return"></poolModal>
               <!-- <updatePool></updatePool> -->
@@ -14,18 +15,19 @@
     </TabPane>
     <!-- 介质 -->
     <TabPane label="介质">
-            <Table stripe highlight-row :data="volume" :columns="mediums" @on-current-change="selData" height="620px"></Table>
-            
-            <div class="btn">
-                <Button type="info">新建介质</Button>
-                <Button type="info">修改介介质</Button>
-                <Button type="info"  @click="bingDing">绑定介质池</Button>
-                <bindModal :volumeData="volumeData" ref="bindModal"></bindModal>
-                <!-- <mediumModal></mediumModal>
-                <updateMedium></updateMedium> -->
-            </div>
-        </TabPane>
+        <Table :data="volume" :columns="mediums" stripe highlight-row @on-current-change="selData" height="620px"></Table>
+        
+          <div class="btn">
+              <Button type="info">新建介质</Button>
+              <Button type="info" @click="delMedium">删除介介质</Button>
+              <Button type="info" @click="bingDing">绑定介质池</Button>
+              <bindModal :volumeData="volumeData" ref="bindModal" @againData="againData"></bindModal>
+              <!-- <mediumModal></mediumModal>
+              <updateMedium></updateMedium> -->
+          </div>
+    </TabPane>
   </Tabs>
+  </div>
 </template>
 
 <script>
@@ -72,7 +74,8 @@
         ],
         volpool: [],
         volume: [],
-        volumeData: {}
+        volumeData: {},
+        selPool: {}
       }
     },
     
@@ -86,6 +89,7 @@
     methods:{
       // 查询介质池列表
       callbackPool: function(poolObj) {
+        // console.log("介质池数据",poolObj)
         var array = new Array()
         for (let i = 0; i < poolObj.data.length; i++) {
           array.push({
@@ -93,14 +97,15 @@
           name: poolObj.data[i].name,
           Cover: poolObj.data[i].Cover,
           Protected: poolObj.data[i].Protected,
+          type: poolObj.data[i].type
           })
           this.volpool = array
         }
-
       },
       // 介质池
       // 查询介质列表
       callbackMedium: function(mediumObj) {
+        // console.log("介质数据",mediumObj)
         var array = new Array()
         for (let i = 0; i < mediumObj.data.length; i++) {
           array.push({
@@ -125,6 +130,22 @@
         console.log("添加成功数据",datas)
         this.volpool = datas
       },
+      // 选中介质池行数据
+      poolData: function(currentRow) {
+        this.selPool = currentRow
+      },
+      // 点击删除选中介质池
+      delPool:function() {
+        if(this.selPool.type == 4) {
+          if (confirm('确认删除数据'))  util.restfullCall('/rest-ful/v3.0/volpool/'+this.selPool.id, null, 'DELETE', this.deletePool)
+        } else{
+          alert("该数据禁止被删除") && this.selPool.type == 4
+        }
+      },
+      // 删除成功之后的回调判断
+      deletePool(callback) {
+        if (callback.data.code === 0) util.restfullCall('/rest-ful/v3.0/volpools', null, 'get', this.callbackPool)
+      },
 
       // 介质
       // 绑定介质池弹框触发事件
@@ -133,15 +154,32 @@
       },
       // 选中行数据
       selData: function(currentRow) {
-        console.log("选中行",currentRow)
+        console.log("选中介质数据",currentRow)
         this.volumeData = currentRow
       },
+      // 点击删除选中介质
+      delMedium:function() {
+        if (confirm('确认删除数据'))  util.restfullCall('/rest-ful/v3.0/volume/'+this.volumeData.id, null, 'DELETE', this.deleteMedium)
+      },
+      // 删除成功之后的回调判断
+      deleteMedium(callback) {
+        if (callback.data.code === 0) util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.callbackMedium)
+      },
+      // 绑定成功之后的数据接收
+      againData(again) {
+       this.volume = again
+        
+      }
     }
   
   }
 </script>
 
 <style>
+.ivu-table-body {
+  height: 610px;
+  overflow: scroll;
+}
 .demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content {
   height: 120px;
   margin-top: -16px;
