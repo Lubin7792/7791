@@ -42,11 +42,15 @@
         <FormItem label="策略最大调度任务">
           <Input v-model="basic.maxtasks"></Input>
         </FormItem>
-        <FormItem label="启用压缩">
-          <Input v-model="basic.compress"></Input>
+        <FormItem label="启用压缩" class="h30">
+          <CheckboxGroup v-model="basic.compress">
+            <Checkbox label=""></Checkbox>
+          </CheckboxGroup>
         </FormItem>
-        <FormItem label="启用加密">
-          <Input v-model="basic.encryption"></Input>
+        <FormItem label="启用加密" class="h30">
+           <CheckboxGroup v-model="basic.encryption">
+            <Checkbox label=""></Checkbox>
+          </CheckboxGroup>
         </FormItem>
         <FormItem label="加密算法">
           <Input v-model="basic.algorithm"></Input>
@@ -331,8 +335,8 @@ export default {
           }
         ],
         maxtasks: "",
-        compress: "",
-        encryption: "",
+        compress: [],
+        encryption: [],
         algorithm: "",
         savedays: ""
       },
@@ -419,7 +423,7 @@ export default {
     policyTyep() {
       return this.$store.state.policyType;
     },
-     devicesList() {
+    devicesList() {
       return this.$store.state.devicesList;
     },
     data3() {
@@ -475,8 +479,7 @@ export default {
       let test = value;
       this.schedule.freqval = test.label;
     },
-    showNow: function() {
-    },
+    showNow: function() {},
     policypost: function() {
       let tests = {
         base: {

@@ -9,7 +9,7 @@
           <Form ref="file" :model="file" :label-width="120">
             <div class="frame">
               <p class="titles">备份过滤选项</p>
-              <RadioGroup v-model="file.filter">
+              <RadioGroup v-model="file.filter" >
                 <Radio label="只备份以下类型文件"></Radio>
                 <Input v-model="file.only" style="width: 300px"/>
                 <p class="blanks"></p>
@@ -20,14 +20,14 @@
             <div class="clearfloat">
               <div class="frame fail">
                 <p class="titles">打开文件失败处理方式</p>
-                <RadioGroup v-model="file.fail">
+                <RadioGroup v-model="file.fail" >
                   <Radio label="终止备份作业"></Radio>
                   <p class="blanks"></p>
                   <Radio label="跳过被打开的文件"></Radio>
                 </RadioGroup>
               </div>
               <div class="list">
-                <CheckboxGroup v-model="file.other">
+                <CheckboxGroup v-model="file.other" >
                   <Checkbox label="启动高级文件备份"></Checkbox>
                   <p class="blanks"></p>
                   <Checkbox label="备份后删除源文件"></Checkbox>
@@ -35,13 +35,15 @@
               </div>
             </div>
             <div class="frame">
-              <RadioGroup v-model="file.scritpts">
-                <Radio label="备份前运行脚本"></Radio>
-                <Input v-model="file.only" style="width: 300px"/>
-                <p class="blanks"></p>
-                <Radio label="备份后运行脚本"></Radio>
-                <Input v-model="file.exclude" style="width: 300px"/>
-              </RadioGroup>
+               <CheckboxGroup v-model="file.leftScritpts">
+                  <Checkbox label="备份前运行脚本"></Checkbox>
+                <Input v-model="file.leftConten" :disabled="this.disShow" style="width: 300px"/>
+                  <p class="blanks"></p>
+                </CheckboxGroup>
+                 <CheckboxGroup v-model="file.rightScritpts">
+                  <Checkbox label="备份后运行脚本"></Checkbox>
+                <Input v-model="file.rightConten" style="width: 300px"/>
+                </CheckboxGroup>
             </div>
           </Form>
         </div>
@@ -92,7 +94,41 @@
         <div v-if="show2 === '262144'">
           <Form ref="sqlserver" :model="sqlserver" :label-width="120">
             <div class="frame">
-              <p class="titles">备份过滤选项</p>
+              <!-- <p class="titles">备份过滤选项</p> -->
+              <FormItem label="备份前检查" class="marleft48">
+                <Select
+                  v-model="sqlserver.frontResult"
+                  style="width:160px"
+                  :label-in-value="true"
+                >
+                  <Option
+                    v-for="item in sqlserver.front"
+                    :label="item.name"
+                    :value="item.key"
+                    :key="item.key"
+                  ></Option>
+                </Select>
+              </FormItem>
+               <FormItem label="备份后检查" class="marleft48">
+                <Select
+                  v-model="sqlserver.afterResult"
+                  style="width:160px"
+                  @on-change="shows"
+                  :label-in-value="true"
+                >
+                  <Option
+                    v-for="item in sqlserver.after"
+                    :label="item.name"
+                    :value="item.key"
+                    :key="item.key"
+                  ></Option>
+                </Select>
+              </FormItem>
+              <CheckboxGroup v-model="sqlserver.other">
+                  <Checkbox label="备份检验数据有效性（仅SQL 2005或以上版本）"></Checkbox>
+                  <p class="blanks"></p>
+                  <Checkbox label="检查失败后仍继续备份（如果不勾选,检查失败后将中止备份）"></Checkbox>
+                </CheckboxGroup>
             </div>
           </Form>
         </div>
@@ -134,10 +170,25 @@ export default {
     this.showtest = this.show2;
     console.log(this.show2);
   },
-  methods: {},
+  methods: {
+    shows(obj){
+      console.log(obj)
+    }
+    
+  },
+  computed: {
+    disShow(){
+      // this.showNo=!this.showNo;
+     this.showNo= ! this.showNo;
+    }
+  },
   data() {
     return {
+      showNo:true,
       showtest: "",
+      basic:{
+        state:''
+      },
       file: {
         name: "",
         type: "",
@@ -147,20 +198,44 @@ export default {
         only: "",
         exclude: "",
         fail: "",
-        other: "",
-        scritpts: ""
+        other: [],
+        leftScritpts: [],
+        rightScritpts: [],
+        leftConten: '',
+        rightConten: ''
       },
       sqlserver: {
-        name: "",
-        type: "",
-        client: "",
-        state: "",
-        filter: "",
-        only: "",
-        exclude: "",
-        fail: "",
-        other: "",
-        scritpts: ""
+        front: [
+          {
+            name: "不检查",
+            key: "0"
+          },
+          {
+            name: "检查索引一致性",
+            key: "1"
+          },
+          {
+            name: "检查物理一致性",
+            key: "2"
+          }
+        ],
+        frontResult: "",
+        after:  [
+          {
+            name: "不检查",
+            key: "0"
+          },
+          {
+            name: "检查索引一致性",
+            key: "1"
+          },
+          {
+            name: "检查物理一致性",
+            key: "2"
+          }
+        ],
+        afterResult: "",
+        other: []
       }
     };
   }
