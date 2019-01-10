@@ -9,7 +9,7 @@
           <Form ref="file" :model="file" :label-width="120">
             <div class="frame">
               <p class="titles">备份过滤选项</p>
-              <RadioGroup v-model="file.filter" >
+              <RadioGroup v-model="file.filter">
                 <Radio label="只备份以下类型文件"></Radio>
                 <Input v-model="file.only" style="width: 300px"/>
                 <p class="blanks"></p>
@@ -20,14 +20,14 @@
             <div class="clearfloat">
               <div class="frame fail">
                 <p class="titles">打开文件失败处理方式</p>
-                <RadioGroup v-model="file.fail" >
+                <RadioGroup v-model="file.fail">
                   <Radio label="终止备份作业"></Radio>
                   <p class="blanks"></p>
                   <Radio label="跳过被打开的文件"></Radio>
                 </RadioGroup>
               </div>
               <div class="list">
-                <CheckboxGroup v-model="file.other" >
+                <CheckboxGroup v-model="file.other">
                   <Checkbox label="启动高级文件备份"></Checkbox>
                   <p class="blanks"></p>
                   <Checkbox label="备份后删除源文件"></Checkbox>
@@ -35,15 +35,15 @@
               </div>
             </div>
             <div class="frame">
-               <CheckboxGroup v-model="file.leftScritpts">
-                  <Checkbox label="备份前运行脚本"></Checkbox>
-                <Input v-model="file.leftConten" :disabled="this.disShow" style="width: 300px"/>
-                  <p class="blanks"></p>
-                </CheckboxGroup>
-                 <CheckboxGroup v-model="file.rightScritpts">
-                  <Checkbox label="备份后运行脚本"></Checkbox>
-                <Input v-model="file.rightConten" style="width: 300px"/>
-                </CheckboxGroup>
+              <CheckboxGroup v-model="file.before" @on-change="fileBefore">
+                <Checkbox label="备份前运行脚本"></Checkbox>
+                <Input v-model="file.beforeConten" :disabled="showa" style="width: 300px"/>
+                <p class="blanks"></p>
+              </CheckboxGroup>
+              <CheckboxGroup v-model="file.after" >
+                <Checkbox label="备份后运行脚本" @on-change="fileAfter"></Checkbox>
+                <Input v-model="file.afterConten" :disabled="showb" style="width: 300px"/>
+              </CheckboxGroup>
             </div>
           </Form>
         </div>
@@ -96,11 +96,7 @@
             <div class="frame">
               <!-- <p class="titles">备份过滤选项</p> -->
               <FormItem label="备份前检查" class="marleft48">
-                <Select
-                  v-model="sqlserver.frontResult"
-                  style="width:160px"
-                  :label-in-value="true"
-                >
+                <Select v-model="sqlserver.frontResult" style="width:160px" :label-in-value="true">
                   <Option
                     v-for="item in sqlserver.front"
                     :label="item.name"
@@ -109,13 +105,8 @@
                   ></Option>
                 </Select>
               </FormItem>
-               <FormItem label="备份后检查" class="marleft48">
-                <Select
-                  v-model="sqlserver.afterResult"
-                  style="width:160px"
-                  @on-change="shows"
-                  :label-in-value="true"
-                >
+              <FormItem label="备份后检查" class="marleft48">
+                <Select v-model="sqlserver.afterResult" style="width:160px" :label-in-value="true">
                   <Option
                     v-for="item in sqlserver.after"
                     :label="item.name"
@@ -125,10 +116,10 @@
                 </Select>
               </FormItem>
               <CheckboxGroup v-model="sqlserver.other">
-                  <Checkbox label="备份检验数据有效性（仅SQL 2005或以上版本）"></Checkbox>
-                  <p class="blanks"></p>
-                  <Checkbox label="检查失败后仍继续备份（如果不勾选,检查失败后将中止备份）"></Checkbox>
-                </CheckboxGroup>
+                <Checkbox label="备份检验数据有效性（仅SQL 2005或以上版本）"></Checkbox>
+                <p class="blanks"></p>
+                <Checkbox label="检查失败后仍继续备份（如果不勾选,检查失败后将中止备份）"></Checkbox>
+              </CheckboxGroup>
             </div>
           </Form>
         </div>
@@ -168,26 +159,39 @@ export default {
   },
   created() {
     this.showtest = this.show2;
-    console.log(this.show2);
   },
   methods: {
-    shows(obj){
-      console.log(obj)
+    fileBefore() {
+      this.showa = !this.showa;
+      if (!this.showa) {
+        this.adds(5, this.file.beforeConten);
+      } else {
+        this.deletes(5);
+      }
+      console.log(this.options);
+    },
+    fileAfter(num){
+      console.log(num)
+    },
+    adds(num, conten) {
+      this.options.push({ type: num, value: conten });
+    },
+    deletes(num) {
+      function filters(element) {
+        return element.type !== num;
+      }
+      this.options = this.options.filter(filters);
     }
-    
   },
-  computed: {
-    disShow(){
-      // this.showNo=!this.showNo;
-     this.showNo= ! this.showNo;
-    }
-  },
+  computed: {},
   data() {
     return {
-      showNo:true,
+      showa: true,
+      showb: true,
       showtest: "",
-      basic:{
-        state:''
+      options: [],
+      basic: {
+        state: ""
       },
       file: {
         name: "",
@@ -199,10 +203,10 @@ export default {
         exclude: "",
         fail: "",
         other: [],
-        leftScritpts: [],
-        rightScritpts: [],
-        leftConten: '',
-        rightConten: ''
+        before: [],
+        after: [],
+        beforeConten: "",
+        afterConten: ""
       },
       sqlserver: {
         front: [
@@ -220,7 +224,7 @@ export default {
           }
         ],
         frontResult: "",
-        after:  [
+        after: [
           {
             name: "不检查",
             key: "0"

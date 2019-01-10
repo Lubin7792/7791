@@ -1,9 +1,9 @@
 <template>
     <!-- 绑定介质池弹框 -->
     <Modal v-model="modal" title="绑定介质池" @on-ok="ok" @on-cancel="cancel" ok-text="保存">
-        <Form :label-width="130" resetFields>
+        <Form :label-width="140">
             <FormItem label="选择绑定的介质池">
-              <Select placeholder="请选择选择存储服务器" @on-open-change="openDisk" @on-change="optionId">
+              <Select placeholder="请选择存储服务器" v-model="storage" @on-open-change="openDisk" @on-change="optionId">
                 <Option v-for="item in selServiceList" :value="item.id" :key="item.id">{{ item.name }}</Option>
               </Select>
             </FormItem>
@@ -21,6 +21,7 @@ export default {
   },
   data() {
     return {
+      storage:"",
       modal: false,
       selServiceList:[],
       volumeId: null
@@ -79,11 +80,11 @@ export default {
         volume = array
       }
       this.$emit('againData', volume)
+      this.storage = null
     },
     cancel() {   
       console.log("下拉框选中数据",this.volumeId,"选中数据id",this.volumeData.id)
       this.model = false
-
     }
   }
 }

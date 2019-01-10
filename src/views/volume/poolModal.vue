@@ -55,11 +55,11 @@ export default {
           })
         }
         this.$emit('Return',array)
+        Object.keys(this.serverItem).forEach(key => this.serverItem[key] = null)
+        
     },
     cancel() {
       this.modal = false
-      
-      // this.$store.commit('getModal', false)
     }
   }
 }

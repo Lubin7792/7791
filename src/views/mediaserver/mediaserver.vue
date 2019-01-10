@@ -227,7 +227,8 @@ export default {
     },
     //接收添加成功的数据并附给磁盘表
     diskReturn(diskdatas) {
-      util.restfullCall('/rest-ful/v3.0/devices?type='+diskdatas.type, null, 'get', this.diskdata)
+      this.disk = diskdatas
+      util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     },
     // 选中行数据
     diskData: function(diskRow) {
@@ -236,12 +237,13 @@ export default {
     },
     // 删除磁盘
     delDisk:function() {
-      if (confirm('确认删除数据')) { util.restfullCall( '/rest-ful/v3.0/device/' + this.modalDisk.id, null, 'DELETE', this.deldisks) }
+      if (confirm('确认删除数据')){ util.restfullCall( '/rest-ful/v3.0/device/' + this.modalDisk.id, null, 'DELETE', this.deldisks) }
     },
     // 删除磁盘成功之后的回调判断
     deldisks(calback) {
       if (calback.data.code === 0)
-      util.restfullCall('/rest-ful/v3.0/devices?type=0', null, 'get', this.diskdata)   
+      util.restfullCall('/rest-ful/v3.0/devices?type=0', null, 'get', this.diskdata)
+      util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     },
     // 点击修改磁盘
     modifyDisk: function() {

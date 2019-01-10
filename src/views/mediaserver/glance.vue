@@ -13,7 +13,6 @@
   <div>
     <Modal v-model="browse" title="浏览磁盘设备目录" @on-ok="ok" @on-cancel="cancel">
         <div class="tree-box">
-          <span @click="click">点击</span>
           <div class="tree">
             <ul id="treeDemo" class="ztree"></ul>
           </div>
@@ -42,7 +41,6 @@ export default {
       glancePath:''
     }
   },
- 
   props: {
     device: {
       type:Array
@@ -65,18 +63,16 @@ export default {
       return array;
     }
   },
-  // mounted(){
-  //   let datas = this.data3
-  //   $.fn.zTree.init($("#treeDemo"), this.setting, datas);
-
-  // },
-  created:function() {
-    // $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
+  watch: {
+    data3: {
+      handler(newVal, oldVal) {
+        console.log('newVal', newVal)
+        $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
+      },
+    }
   },
+  
   methods: {
-    click:function () {
-       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
-    },
     build_path_by_tree_node: function(treeNode) {
       //获取路径  
       var path = "";

@@ -3,8 +3,8 @@
 <template>
     <!-- 介质服务器新建介质弹框 -->
     <Modal v-model="modal" title="添加介质服务器" @on-ok="ok" @on-cancel="cancel" ok-text="保存">
-        <Form :model="serverItem" :label-width="130" resetFields>
-            <FormItem label="介质服务器名称">
+        <Form :model="serverItem" :label-width="130">
+            <FormItem label="介质服务器名称" prop="name">
                 <Input v-model="serverItem.name" placeholder="请输入介质服务器名称"></Input>
             </FormItem>
             <FormItem label="选择存储服务器">
@@ -52,8 +52,8 @@ export default {
     },
     // 点击确定把添加的名字传给服务器
     ok() {
-      util.restfullCall('/rest-ful/v3.0/mediaserver',this.serverItem,'post',this.upload);
-      this.modal = false      
+      util.restfullCall('/rest-ful/v3.0/mediaserver',this.serverItem,'post',this.upload)
+      this.modal = false
     },
     // 成功接收到回调数据就获取添加成功的表格数据
     upload(callback) {
@@ -77,7 +77,8 @@ export default {
             })
         }
         this.$emit('Return',array)
-        console.log("2323",array)
+        // 初始化弹框页面
+        Object.keys(this.serverItem).forEach(key => this.serverItem[key] = null)
       },
     cancel() {
       this.modal = false
