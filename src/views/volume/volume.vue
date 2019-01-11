@@ -1,5 +1,4 @@
 <template>
-  <div class="volume">
   <Tabs :animated="false" class="demo-tabs-style1" style="background: #e3e8ee;padding:16px;" type="card">
   <!-- 介质池 -->
     <TabPane label="介质池">
@@ -27,7 +26,6 @@
           </div>
     </TabPane>
   </Tabs>
-  </div>
 </template>
 
 <script>
@@ -176,9 +174,8 @@
 </script>
 
 <style>
-.ivu-table-body {
-  height: 610px;
-  overflow: scroll;
+.ivu-table {
+  overflow-x: hidden!important
 }
 .demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content {
   height: 120px;

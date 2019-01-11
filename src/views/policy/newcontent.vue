@@ -503,7 +503,7 @@ export default {
             exclude: 0
           }
         ],
-        option: [{ type: 0, value: "xx" }],
+        option: [{ type: 5, value: "xx" },{ type: 6 },{ type: 7, value: "xx" },{ type: 4, value: "xx" }],
         schedule: [
           {
             scheduletype: parseInt(

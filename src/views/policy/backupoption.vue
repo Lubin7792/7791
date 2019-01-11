@@ -9,41 +9,54 @@
           <Form ref="file" :model="file" :label-width="120">
             <div class="frame">
               <p class="titles">备份过滤选项</p>
-              <RadioGroup v-model="file.filter">
-                <Radio label="只备份以下类型文件"></Radio>
-                <Input v-model="file.only" style="width: 300px"/>
+              <RadioGroup v-model="file.filter" @on-change="filterType(parseInt(file.filter))">
+                <Radio label="6">只备份以下类型文件</Radio>
+                <Input
+                  v-model="file.only"
+                  style="width: 300px"
+                  placeholder="txt;exe;dat"
+                  @on-blur="filterValue(6,file.only)"
+                />
                 <p class="blanks"></p>
-                <Radio label="不备份以下类型文件"></Radio>
-                <Input v-model="file.exclude" style="width: 300px"/>
+                <Radio label="7">不备份以下类型文件</Radio>
+                <Input v-model="file.exclude" style="width: 300px" placeholder="txt;exe;dat"/>
               </RadioGroup>
             </div>
             <div class="clearfloat">
               <div class="frame fail">
                 <p class="titles">打开文件失败处理方式</p>
-                <RadioGroup v-model="file.fail">
-                  <Radio label="终止备份作业"></Radio>
+                <RadioGroup v-model="file.fail" @on-change="failType(parseInt(file.fail))">
+                  <Radio label="0">终止备份作业</Radio>
                   <p class="blanks"></p>
-                  <Radio label="跳过被打开的文件"></Radio>
+                  <Radio label="9">跳过被打开的文件</Radio>
                 </RadioGroup>
               </div>
               <div class="list">
-                <CheckboxGroup v-model="file.other">
-                  <Checkbox label="启动高级文件备份"></Checkbox>
-                  <p class="blanks"></p>
-                  <Checkbox label="备份后删除源文件"></Checkbox>
-                </CheckboxGroup>
+                <Checkbox v-model="showc" @on-change="checkType(showc,5)">启动高级文件备份</Checkbox>
+                <p class="blanks"></p>
+                <Checkbox v-model="showd" @on-change="checkType(showd,8)">备份后删除源文件</Checkbox>
               </div>
             </div>
             <div class="frame">
-              <CheckboxGroup v-model="file.before" @on-change="fileBefore">
-                <Checkbox label="备份前运行脚本"></Checkbox>
-                <Input v-model="file.beforeConten" :disabled="showa" style="width: 300px"/>
-                <p class="blanks"></p>
-              </CheckboxGroup>
-              <CheckboxGroup v-model="file.after" >
-                <Checkbox label="备份后运行脚本" @on-change="fileAfter"></Checkbox>
-                <Input v-model="file.afterConten" :disabled="showb" style="width: 300px"/>
-              </CheckboxGroup>
+              <Checkbox
+                label="备份前运行脚本"
+                v-model="showa"
+                @on-change="checkType(showa,3,file.beforeConten)"
+              >备份前运行脚本</Checkbox>
+              <Input
+                v-model="file.beforeConten"
+                :disabled="!showa"
+                style="width: 300px"
+                @on-blur="checkValue(showa,3,file.beforeConten)"
+              />
+              <p class="blanks"></p>
+              <Checkbox v-model="showb" @on-change="checkType(showb,4,file.afterConten)">备份后运行脚本</Checkbox>
+              <Input
+                v-model="file.afterConten"
+                :disabled="!showb"
+                @on-blur="checkValue(showb,4,file.afterConten)"
+                style="width: 300px"
+              />
             </div>
           </Form>
         </div>
@@ -96,7 +109,12 @@
             <div class="frame">
               <!-- <p class="titles">备份过滤选项</p> -->
               <FormItem label="备份前检查" class="marleft48">
-                <Select v-model="sqlserver.frontResult" style="width:160px" :label-in-value="true">
+                <Select
+                  v-model="sqlserver.frontResult"
+                  style="width:160px"
+                  :label-in-value="true"
+                  @on-change="sqlAfter(15,parseInt(sqlserver.frontResult))"
+                >
                   <Option
                     v-for="item in sqlserver.front"
                     :label="item.name"
@@ -106,7 +124,12 @@
                 </Select>
               </FormItem>
               <FormItem label="备份后检查" class="marleft48">
-                <Select v-model="sqlserver.afterResult" style="width:160px" :label-in-value="true">
+                <Select
+                  v-model="sqlserver.afterResult"
+                  style="width:160px"
+                  :label-in-value="true"
+                  @on-change="sqlAfter(16,parseInt(sqlserver.frontResult))"
+                >
                   <Option
                     v-for="item in sqlserver.after"
                     :label="item.name"
@@ -115,11 +138,9 @@
                   ></Option>
                 </Select>
               </FormItem>
-              <CheckboxGroup v-model="sqlserver.other">
-                <Checkbox label="备份检验数据有效性（仅SQL 2005或以上版本）"></Checkbox>
-                <p class="blanks"></p>
-                <Checkbox label="检查失败后仍继续备份（如果不勾选,检查失败后将中止备份）"></Checkbox>
-              </CheckboxGroup>
+              <Checkbox v-model="showe" @on-change="checkType(showe,17)">备份检验数据有效性（仅SQL 2005或以上版本）</Checkbox>
+              <p class="blanks"></p>
+              <Checkbox v-model="showf" @on-change="checkType(showf,18)">检查失败后仍继续备份（如果不勾选,检查失败后将中止备份）</Checkbox>
             </div>
           </Form>
         </div>
@@ -160,34 +181,14 @@ export default {
   created() {
     this.showtest = this.show2;
   },
-  methods: {
-    fileBefore() {
-      this.showa = !this.showa;
-      if (!this.showa) {
-        this.adds(5, this.file.beforeConten);
-      } else {
-        this.deletes(5);
-      }
-      console.log(this.options);
-    },
-    fileAfter(num){
-      console.log(num)
-    },
-    adds(num, conten) {
-      this.options.push({ type: num, value: conten });
-    },
-    deletes(num) {
-      function filters(element) {
-        return element.type !== num;
-      }
-      this.options = this.options.filter(filters);
-    }
-  },
-  computed: {},
   data() {
     return {
-      showa: true,
-      showb: true,
+      showa: false,
+      showb: false,
+      showc: false,
+      showd: false,
+      showe: false,
+      showf: false,
       showtest: "",
       options: [],
       basic: {
@@ -203,8 +204,6 @@ export default {
         exclude: "",
         fail: "",
         other: [],
-        before: [],
-        after: [],
         beforeConten: "",
         afterConten: ""
       },
@@ -242,6 +241,81 @@ export default {
         other: []
       }
     };
+  },
+  methods: {
+    sqlAfter(num, conten) {
+      this.deletes(num);
+      this.adds(num, conten);
+    },
+    failType(num) {
+      if (num == 9) {
+        this.deletes(num);
+        this.adds(num);
+      } else {
+        this.deletes(9);
+      }
+    },
+    filterType(num) {
+      this.deletes(6);
+      this.deletes(7);
+      var conten;
+      if (num == "6") {
+        conten = this.file.only;
+      }
+      if (num == "7") {
+        conten = this.file.exclude;
+      }
+      this.adds(num, conten);
+    },
+    filterValue(num, conten) {
+      if (this.file.filter == num) {
+        this.deletes(num);
+        this.adds(num, conten);
+      }
+    },
+    checkType(state, num, conten) {
+      if (state) {
+        this.adds(num, conten);
+      } else {
+        this.deletes(num);
+      }
+    },
+    adds(num, conten) {
+      if (conten == undefined) {
+        this.options.push({ type: num });
+      } else {
+        this.options.push({ type: num, value: conten });
+      }
+      console.log(this.options);
+    },
+    deletes(num) {
+      function filters(element) {
+        return element.type !== num;
+      }
+      this.options = this.options.filter(filters);
+      console.log(this.options);
+    },
+    checkValue(state, num, conten) {
+      function filters(element) {
+        return element.type !== num;
+      }
+      this.options = this.options.filter(filters);
+      if (state) {
+        this.options.push({ type: num, value: conten });
+      }
+      console.log(this.options);
+    }
+  },
+  computed: {
+    showNum() {},
+    showNow() {
+      return this.show2;
+    }
+  },
+  watch: {
+    showNow(num) {
+      console.log(num);
+    }
   }
 };
 </script> 

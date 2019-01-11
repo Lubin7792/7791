@@ -6,10 +6,10 @@
             <Input v-model="serverItem.name" placeholder="请输入介质池名称"></Input>
         </FormItem>
         <FormItem label="保留周期">
-            <InputNumber v-model="serverItem.Protected" placeholder="请输入保留周期"></InputNumber>
+            <InputNumber v-model="serverItem.Protected"></InputNumber><span>( 天 )</span>
         </FormItem>
         <FormItem label="覆盖周期">
-            <InputNumber width="100%" v-model="serverItem.Cover" placeholder="请输入覆盖周期"></InputNumber>
+            <InputNumber width="100%" v-model="serverItem.Cover"></InputNumber><span>( 天 )</span>
         </FormItem>
     </Form>
   </Modal>
@@ -23,8 +23,8 @@ export default {
       modal: false,
       serverItem: {
         name: '',
-        Protected: null,
-        Cover: null,
+        Protected: 30,
+        Cover: 30,
       },
     }
   },

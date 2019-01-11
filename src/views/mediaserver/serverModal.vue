@@ -8,7 +8,7 @@
                 <Input v-model="serverItem.name" placeholder="请输入介质服务器名称"></Input>
             </FormItem>
             <FormItem label="选择存储服务器">
-              <Select v-model="serverItem.id" @on-open-change="server" placeholder="请选择选择存储服务器">
+              <Select v-model="serverItem.id" @on-change="serverlChanges">
                 <Option v-for="item in selServiceList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
               </Select>
             </FormItem>
@@ -19,6 +19,12 @@
 import util from '../../libs/util.js'
 export default {
   // inject:['getmediumInfo'],
+  props: {
+      // 下拉框内容
+        selServiceList: {
+            type: Array
+        }
+    },
   data() {
     return {
       serverItem: {
@@ -26,29 +32,17 @@ export default {
         id: ''
       },
       modal: false,
-      // 下拉框内容
-      selServiceList: [],
 
     }
   },
   methods: {
-    server:function(open,merge) {
-      if(open == true) util.restfullCall('/rest-ful/v3.0/vrtsserver?type=2', null, 'get', this.goback)
-    },
-    
+    // 接收父组件
     showMoadl: function() {
       this.modal = true
+      if(this.selServiceList[0]) this.serverItem.id = this.selServiceList[0].id
     },
-    goback: function(obj) {
-      //  console.log("5555",obj)
-      var array = new Array()
-      for (let i = 0; i < obj.data.length; i++) {
-        array.push({
-          id: obj.data[i].id,
-          machine: obj.data[i].machine
-        })
-      }
-      this.selServiceList = array
+    serverlChanges: function(id) {
+      this.serverItem.id = id
     },
     // 点击确定把添加的名字传给服务器
     ok() {
@@ -61,8 +55,7 @@ export default {
       if(callback.data.code === 0) util.restfullCall('/rest-ful/v3.0/mediaservers',null,'get',this.senddata)
     },
     // 添加成功的表格数据传递给父组件
-    senddata: function(obj) {
-                console.log(obj)                
+    senddata: function(obj) {             
         var array = new Array()
         for (let i = 0; i < obj.data.length; i++) {
             array.push({
@@ -82,7 +75,6 @@ export default {
       },
     cancel() {
       this.modal = false
-      // this.$store.commit('getModal', false)
     }
   }
 }
