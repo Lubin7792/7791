@@ -56,6 +56,9 @@
   width: 50%;
   float: left;
 }
+.newconten .oar {
+  width: 80%;
+}
 .newconten .list {
   float: left;
   padding: 10px 20px 10px;

@@ -44,12 +44,12 @@
         </FormItem>
         <FormItem label="启用压缩" class="h30">
           <CheckboxGroup v-model="basic.compress">
-            <Checkbox label=""></Checkbox>
+            <Checkbox label></Checkbox>
           </CheckboxGroup>
         </FormItem>
         <FormItem label="启用加密" class="h30">
-           <CheckboxGroup v-model="basic.encryption">
-            <Checkbox label=""></Checkbox>
+          <CheckboxGroup v-model="basic.encryption">
+            <Checkbox label></Checkbox>
           </CheckboxGroup>
         </FormItem>
         <FormItem label="加密算法">
@@ -77,7 +77,7 @@
       </div>
     </div>
     <div v-show="show==='备份选项'">
-      <backupoption :show2="policyTypekey"></backupoption>
+      <backupoption :show2="policyTypekey" v-if="hackReset"></backupoption>
     </div>
     <div v-show="show==='调度计划'" class="planinfo">
       <Form ref="schedule" :model="schedule" :label-width="80">
@@ -202,6 +202,7 @@ export default {
           onCheck: this.zTreeOnCheck
         }
       },
+      hackReset: true,
       policyTypekey: "",
       zNodes: [],
       timevalue1: "",
@@ -417,6 +418,9 @@ export default {
     };
   },
   computed: {
+    hackOne() {
+      return this.policyTypekey;
+    },
     databack() {
       return this.$store.state.policyData;
     },
@@ -460,7 +464,13 @@ export default {
     }
   },
   watch: {
-    databack: function(newdata, olddata) {}
+    databack: function(newdata, olddata) {},
+    hackOne: function() {
+      this.hackReset = false;
+      this.$nextTick(() => {
+        this.hackReset = true;
+      });
+    }
   },
   methods: {
     startDate: function(value) {
@@ -503,7 +513,12 @@ export default {
             exclude: 0
           }
         ],
-        option: [{ type: 5, value: "xx" },{ type: 6 },{ type: 7, value: "xx" },{ type: 4, value: "xx" }],
+        option: [
+          { type: 5, value: "xx" },
+          { type: 6 },
+          { type: 7, value: "xx" },
+          { type: 4, value: "xx" }
+        ],
         schedule: [
           {
             scheduletype: parseInt(

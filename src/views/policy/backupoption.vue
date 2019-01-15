@@ -61,26 +61,29 @@
           </Form>
         </div>
         <div v-if="show2 === '131072'">
-          <Form ref="basic" :model="basic" :label-width="120">
-            <FormItem label="使用多通道">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="开启ORACLE压缩">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="数据片中文件个数">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="全库备份时备份归档">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="归档备份范围">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="删除已经备份的归档">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-          </Form>
+          <Checkbox v-model="showf" @on-change="checkType(showa,4,file.afterConten)">指定脚本备份</Checkbox>
+          <Input
+            v-model="file.afterConten"
+            :disabled="!showb"
+            @on-blur="checkValue(showb,4,file.afterConten)"
+            style="width: 300px"
+          />
+          <p class="blanks"></p>
+          <p class="blanks"></p>
+          <div class="frame oar">
+            <p class="titles">备份选项</p>
+            <Checkbox v-model="showa" @on-change="checkType(showb,4)">全库备份时备份归档日志</Checkbox>
+            <p class="blanks"></p>
+            <Checkbox v-model="showb" @on-change="checkType(showb,4)">删除已经备份的归档日志</Checkbox>
+            <p class="blanks"></p>
+            <Checkbox v-model="showc" @on-change="checkType(showb,4,file.afterConten)">配置通道个数</Checkbox>
+         <InputNumber :max="10" :min="1" v-model="oracle.numberA"></InputNumber>
+            <p class="blanks"></p>
+ <Checkbox v-model="showd" @on-change="checkType(showb,4,file.afterConten)">指定(filesperset参数)</Checkbox>
+         <InputNumber :max="5" :min="1" v-model="oracle.numberB"></InputNumber>
+            <p class="blanks"></p>
+ <Checkbox v-model="showe" @on-change="checkType(showb,4,file.afterConten)">启动ORACLE压缩</Checkbox>
+          </div>
         </div>
         <div v-if="show2 === '196608'">
           <Form ref="basic" :model="basic" :label-width="120">
@@ -113,7 +116,7 @@
                   v-model="sqlserver.frontResult"
                   style="width:160px"
                   :label-in-value="true"
-                  @on-change="sqlAfter(15,parseInt(sqlserver.frontResult))"
+                  @on-change="sqlAfter(16,parseInt(sqlserver.frontResult))"
                 >
                   <Option
                     v-for="item in sqlserver.front"
@@ -128,7 +131,7 @@
                   v-model="sqlserver.afterResult"
                   style="width:160px"
                   :label-in-value="true"
-                  @on-change="sqlAfter(16,parseInt(sqlserver.frontResult))"
+                  @on-change="sqlAfter(17,parseInt(sqlserver.frontResult))"
                 >
                   <Option
                     v-for="item in sqlserver.after"
@@ -138,9 +141,12 @@
                   ></Option>
                 </Select>
               </FormItem>
-              <Checkbox v-model="showe" @on-change="checkType(showe,17)">备份检验数据有效性（仅SQL 2005或以上版本）</Checkbox>
+              <Checkbox v-model="showa" @on-change="checkType(showa,18)">备份检验数据有效性（仅SQL 2005或以上版本）</Checkbox>
               <p class="blanks"></p>
-              <Checkbox v-model="showf" @on-change="checkType(showf,18)">检查失败后仍继续备份（如果不勾选,检查失败后将中止备份）</Checkbox>
+              <Checkbox
+                v-model="showb"
+                @on-change="checkType(showb,19)"
+              >检查失败后仍继续备份（如果不勾选,检查失败后将中止备份）</Checkbox>
             </div>
           </Form>
         </div>
@@ -180,6 +186,10 @@ export default {
   },
   created() {
     this.showtest = this.show2;
+    console.log("created");
+  },
+  destroyed() {
+    console.log("destroyed");
   },
   data() {
     return {
@@ -239,6 +249,15 @@ export default {
         ],
         afterResult: "",
         other: []
+      },
+      oracle:{
+        numberA:1,
+        numberB:5,
+        number:'',
+        number:'',
+        number:'',
+        number:'',
+        number:''
       }
     };
   },
@@ -313,9 +332,7 @@ export default {
     }
   },
   watch: {
-    showNow(num) {
-      console.log(num);
-    }
+    showNow(num) {}
   }
 };
 </script> 
