@@ -43,3 +43,8 @@ margin-bottom: 10px;
 .policy .ivu-switch-checked:after{
     left: 37px;
 }
+button{
+outline:none;
+}
+ :focus{outline:0;} 
+ 

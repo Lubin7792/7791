@@ -21,12 +21,13 @@ import newPolicy from "./newPolicy.vue";
 export default {
   data() {
     return {
-      modalss: true,
+      modalss: false,
       modal: false,
       _index: Number,
       policyColumns: [
         {
           title: "ID",
+          width: 80,
           key: "id",
           sortable: true
         },
@@ -41,10 +42,6 @@ export default {
         {
           title: "优先级",
           key: "privilege"
-        },
-        {
-          title: "状态",
-          key: "state"
         },
         {
           title: "介质池",
@@ -63,9 +60,8 @@ export default {
           key: "ip"
         },
         {
-          title: "操作栏",
-          width: 260,
-          key: "operation",
+          title: "状态",
+          key: "enable",
           render: (h, params) => {
             return h(
               "div",
@@ -86,7 +82,7 @@ export default {
                     props: {
                       type: "primary",
                       value:
-                        this.policiesData[params.index].state === 1
+                        this.policiesData[params.index].enable === 1
                           ? true
                           : false
                     },
@@ -117,52 +113,176 @@ export default {
                       "禁用"
                     )
                   ]
+                )
+              ]
+            );
+          }
+        },
+        {
+          title: "操作栏",
+          width: 400,
+          key: "operation",
+          render: (h, params) => {
+            var data = this.policiesData[params.index];
+            return h(
+              "div",
+              {
+                class: {
+                  lubin: true
+                },
+                data() {
+                  return {
+                    status: true
+                  };
+                }
+              },
+              [
+                h(
+                  "Button",
+                  {
+                    props: {
+                      type: "error",
+                      size: "small"
+                    },
+                    on: {
+                      click: () => {
+                        util.restfullCalls(
+                          "/rest-ful/v3.0/policy/scheduletype/" +
+                            this.policiesData[params.index].id,
+                          null,
+                          "get",
+                          this.scheduletype,
+                          params
+                        );
+                      }
+                    },
+                    style: {
+                      verticalAlign: "middle",
+                      backgroundColor: "#ed3f14",
+                      padding: "2px",
+                      marginLeft: "-4px",
+                      color: "#fff",
+                      borderRadius: "4px 0 0 4px"
+                    }
+                  },
+                  "立即调度"
                 ),
-                this.policiesData[params.index].state == 1
-                  ? h(
-                      "Button",
-                      {
+                h(
+                  "Dropdown",
+                  {
+                    props: {
+                      trigger: "click"
+                    },
+                    style:{
+                    },
+                    on: {
+                      "on-click": name => {
+                        let url =
+                          "/rest-ful/v3.0/policy/schedule/" +
+                          params.row.id +
+                          "?type=" +
+                          data.scheduletypes.type;
+                        util.restfullCall(url, null, "get", this.nowCallBack);
+                      }
+                    }
+                  },
+                  [
+                    h("Button", {
+                      style:{
+                          margin: "0 4px 0 1px",
+                         borderColor:"#FFF",
+                         padding:"0"
+                      }
+                    },[
+                      h("Icon", {
                         props: {
-                          type: "error",
-                          size: "small"
+                          type: "arrow-down-b"
+                          
                         },
                         style: {
-                          marginRight: "5px"
-                        },
-                        on: {
-                          click: () => {
-                            this.nowCall(params);
-                          }
+                          lineHeight: "24px",
+                          verticalAlign: "middle",
+                          backgroundColor: "#ed3f14",
+                          padding: "0 7px",
+                          fontSize:"20px",
+                          lineHeight:"26px",
+                          color: "#fff",
+                          height:"24px",
+                          borderRadius: " 0 4px 4px  0"
                         }
-                      },
-                      "立即调用"
-                    )
-                  : "",
-                this.policiesData[params.index].state == 1
-                  ? h(
-                      "i-select",
+                      })
+                    ]),
+                    h(
+                      "DropdownMenu",
                       {
-                        style: { width: "80px" },
-                        on: {
-                          "on-change": (v, row) => {
-                            var i = v;
-                            this.selectOptions(i, params);
-                          }
-                        }
+                        slot: "list"
                       },
                       [
-                         this.policiesData[params.index].scheduletypes == 1 ?'':h(
-                            "Option",
-                            {
-                              props: {
-                                value:this.policiesData[params.index].scheduletypes.type
-                              }
-                            },
-                            this.policiesData[params.index].scheduletypes.name
-                          )
+                        h(
+                          "DropdownItem",
+                          {
+                            props: {
+                              name: data.scheduletypes.type
+                            }
+                          },
+                          data.scheduletypes.name
+                            ? data.scheduletypes.name
+                            : "请立即调度"
+                        )
                       ]
                     )
-                  : ""
+                  ]
+                ),
+
+                h(
+                  "Button",
+                  {
+                    props: {
+                      type: "error",
+                      size: "small"
+                    },
+                    style: {
+                      marginRight: "4px"
+                    }
+                  },
+                  "删除策略"
+                ),
+                h(
+                  "Button",
+                  {
+                    props: {
+                      type: "error",
+                      size: "small"
+                    }
+                  },
+                  "修改策略"
+                )
+                // h(
+                //   "i-select",
+                //   {
+                //     style: { width: "80px" },
+                //     on: {
+                //       "on-change": (v, row) => {
+                //         var i = v;
+                //         this.selectOptions(i, params);
+                //       }
+                //     }
+                //   },
+                //   [
+                //     this.policiesData[params.index].scheduletypes == 1
+                //       ? ""
+                //       : h(
+                //           "Option",
+                //           {
+                //             props: {
+                //               value: this.policiesData[params.index]
+                //                 .scheduletypes.type
+                //             }
+                //           },
+                //           this.policiesData[params.index].scheduletypes.name
+                //         )
+                //   ]
+                // )
               ]
             );
           }
@@ -184,18 +304,17 @@ export default {
     }
   },
   methods: {
-    scheduletype(obj, parameter) {
-      this.$set(this.policiesData[parameter.index], "scheduletypes", {
+    // 修改列表备份类型数据
+    scheduletype(obj, scheduletype) {
+      console.log(obj, scheduletype);
+      this.$set(this.policiesData[scheduletype.index], "scheduletypes", {
         name: obj.data[0].name,
         type: obj.data[0].type
       });
     },
-    selectOptions(v, params) {
-      let url =
-        "/rest-ful/v3.0/policy/schedule/" + params.row.id + "?type=" + v;
-      util.restfullCall(url, null, "get", this.nowCallBack);
+    nowCall: function(params) {
+      console.log(params);
     },
-    nowCall: function(params) {},
     nowCallBack: function(params) {
       alert(params.data.message);
     },
@@ -228,7 +347,7 @@ export default {
           server: objj[i].server,
           servername: objj[i].servername,
           enable: objj[i].enable,
-          status: objj[i].status,
+          status: objj[i].status
         });
       }
       this.$store.commit("saveDevicesData", devicesList);
@@ -247,18 +366,10 @@ export default {
     },
     switch(params, value) {
       if (value) {
-        this.policiesData[params.index].state = 1;
+        this.policiesData[params.index].enable = 1;
       } else {
-        this.policiesData[params.index].state = 0;
+        this.policiesData[params.index].enable = 0;
       }
-      util.restfullCalls(
-        "/rest-ful/v3.0/policy/scheduletype/" +
-          this.policiesData[params.index].id,
-        null,
-        "get",
-        this.scheduletype,
-        params
-      );
     }
     // //更新反馈信息某一字段
     // updateFeedbackMessage(id, key, value) {

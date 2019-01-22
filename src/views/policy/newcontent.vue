@@ -77,7 +77,7 @@
       </div>
     </div>
     <div v-show="show==='备份选项'">
-      <backupoption :show2="policyTypekey" v-if="hackReset"></backupoption>
+      <backupoption :show2="policyTypekey" v-if="hackReset" ref="backupOption"></backupoption>
     </div>
     <div v-show="show==='调度计划'" class="planinfo">
       <Form ref="schedule" :model="schedule" :label-width="80">
@@ -465,14 +465,25 @@ export default {
   },
   watch: {
     databack: function(newdata, olddata) {},
-    hackOne: function() {
+    hackOne: function(type) {
+      if (type == 131072) {
+        this.$refs.backupOption.setOptins(14, 0);
+      }
       this.hackReset = false;
       this.$nextTick(() => {
         this.hackReset = true;
       });
+      if (type == 196608) {
+   this.$parent.$parent.delTabList()
+      }else{
+        this.$parent.$parent.addTabList()
+      }
     }
   },
   methods: {
+    showOptions() {
+      console.log(this.$refs.backupOption.showOption());
+    },
     startDate: function(value) {
       this.schedule.startday = value;
     },
@@ -513,12 +524,7 @@ export default {
             exclude: 0
           }
         ],
-        option: [
-          { type: 5, value: "xx" },
-          { type: 6 },
-          { type: 7, value: "xx" },
-          { type: 4, value: "xx" }
-        ],
+        option: this.$refs.backupOption.showOption(),
         schedule: [
           {
             scheduletype: parseInt(
@@ -543,6 +549,7 @@ export default {
           }
         ]
       };
+      console.log(tests);
       util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
     },
     senddata: function(value) {

@@ -61,32 +61,62 @@
           </Form>
         </div>
         <div v-if="show2 === '131072'">
-          <Checkbox v-model="showf" @on-change="checkType(showa,4,file.afterConten)">指定脚本备份</Checkbox>
+          <Checkbox v-model="showf" @on-change="checkType(showf,24,oracle.script)">指定脚本备份</Checkbox>
           <Input
-            v-model="file.afterConten"
-            :disabled="!showb"
-            @on-blur="checkValue(showb,4,file.afterConten)"
+            v-model="oracle.script"
+            :disabled="!showf"
+            @on-blur="checkValue(showf,4,oracle.script)"
             style="width: 300px"
           />
           <p class="blanks"></p>
           <p class="blanks"></p>
           <div class="frame oar">
             <p class="titles">备份选项</p>
-            <Checkbox v-model="showa" @on-change="checkType(showb,4)">全库备份时备份归档日志</Checkbox>
+            <Checkbox v-model="showa" @on-change="checkType(showa,13)">全库备份时备份归档日志</Checkbox>
             <p class="blanks"></p>
-            <Checkbox v-model="showb" @on-change="checkType(showb,4)">删除已经备份的归档日志</Checkbox>
+            <Checkbox v-model="showb" @on-change="checkType(showb,15)">删除已经备份的归档日志</Checkbox>
             <p class="blanks"></p>
-            <Checkbox v-model="showc" @on-change="checkType(showb,4,file.afterConten)">配置通道个数</Checkbox>
-         <InputNumber :max="10" :min="1" v-model="oracle.numberA"></InputNumber>
+            <span>归档备份范围</span>
+            <Select
+              v-model="oracle.rangeValue"
+              style="width:160px"
+              :label-in-value="true"
+              @on-change="select(14,parseInt(oracle.rangeValue))"
+              placeholder="备份所有归档"
+            >
+              <Option
+                v-for="item in oracle.range"
+                :label="item.name"
+                :value="item.key"
+                :key="item.key"
+              ></Option>
+            </Select>
             <p class="blanks"></p>
- <Checkbox v-model="showd" @on-change="checkType(showb,4,file.afterConten)">指定(filesperset参数)</Checkbox>
-         <InputNumber :max="5" :min="1" v-model="oracle.numberB"></InputNumber>
+            <Checkbox v-model="showc" @on-change="checkType(showc,10,oracle.numberA)">配置通道个数</Checkbox>
+            <InputNumber
+              :max="10"
+              :min="1"
+              v-model="oracle.numberA"
+              @on-change="checkValue(showc,10,oracle.numberA)"
+            ></InputNumber>
             <p class="blanks"></p>
- <Checkbox v-model="showe" @on-change="checkType(showb,4,file.afterConten)">启动ORACLE压缩</Checkbox>
+            <Checkbox
+              v-model="showd"
+              @on-change="checkType(showd,12,oracle.numberB)"
+            >指定(filesperset参数)</Checkbox>
+            <InputNumber
+              :max="5"
+              :min="1"
+              v-model="oracle.numberB"
+              @on-change="checkValue(showd,12,oracle.numberB)"
+            ></InputNumber>
+            <p class="blanks"></p>
+            <Checkbox v-model="showe" @on-change="checkType(showe,11)">启动ORACLE压缩</Checkbox>
           </div>
         </div>
         <div v-if="show2 === '196608'">
-          <Form ref="basic" :model="basic" :label-width="120">
+          <p>暂无</p>
+          <!-- <Form ref="basic" :model="basic" :label-width="120">
             <FormItem label="使用多通道">
               <Input v-model="basic.state"></Input>
             </FormItem>
@@ -105,7 +135,7 @@
             <FormItem label="删除已经备份的归档">
               <Input v-model="basic.state"></Input>
             </FormItem>
-          </Form>
+          </Form> -->
         </div>
         <div v-if="show2 === '262144'">
           <Form ref="sqlserver" :model="sqlserver" :label-width="120">
@@ -116,7 +146,7 @@
                   v-model="sqlserver.frontResult"
                   style="width:160px"
                   :label-in-value="true"
-                  @on-change="sqlAfter(16,parseInt(sqlserver.frontResult))"
+                  @on-change="select(16,parseInt(sqlserver.frontResult))"
                 >
                   <Option
                     v-for="item in sqlserver.front"
@@ -131,7 +161,7 @@
                   v-model="sqlserver.afterResult"
                   style="width:160px"
                   :label-in-value="true"
-                  @on-change="sqlAfter(17,parseInt(sqlserver.frontResult))"
+                  @on-change="select(17,parseInt(sqlserver.frontResult))"
                 >
                   <Option
                     v-for="item in sqlserver.after"
@@ -186,10 +216,8 @@ export default {
   },
   created() {
     this.showtest = this.show2;
-    console.log("created");
   },
   destroyed() {
-    console.log("destroyed");
   },
   data() {
     return {
@@ -250,21 +278,39 @@ export default {
         afterResult: "",
         other: []
       },
-      oracle:{
-        numberA:1,
-        numberB:5,
-        number:'',
-        number:'',
-        number:'',
-        number:'',
-        number:''
+      oracle: {
+        numberA: 1,
+        numberB: 5,
+        number: "",
+        number: "",
+        number: "",
+        number: "",
+        script: "",
+        rangeValue: 0,
+        range: [
+          {
+            name: "备份所有归档",
+            key: "0"
+          },
+          {
+            name: "备份最近三天归档",
+            key: "3"
+          },
+          {
+            name: "备份最近七天归档",
+            key: "7"
+          }
+        ]
       }
     };
   },
   methods: {
-    sqlAfter(num, conten) {
+    select(num, conten) {
       this.deletes(num);
       this.adds(num, conten);
+    },
+    setOptins(num, conten){
+       this.adds(num, conten);
     },
     failType(num) {
       if (num == 9) {
@@ -292,6 +338,7 @@ export default {
         this.adds(num, conten);
       }
     },
+    //多选
     checkType(state, num, conten) {
       if (state) {
         this.adds(num, conten);
@@ -299,21 +346,24 @@ export default {
         this.deletes(num);
       }
     },
+    //添加内数据
     adds(num, conten) {
       if (conten == undefined) {
         this.options.push({ type: num });
       } else {
         this.options.push({ type: num, value: conten });
       }
-      console.log(this.options);
+      // console.log(this.options);
     },
+    //删除数据
     deletes(num) {
       function filters(element) {
         return element.type !== num;
       }
       this.options = this.options.filter(filters);
-      console.log(this.options);
+      // console.log(this.options);
     },
+    //输入框添加数据
     checkValue(state, num, conten) {
       function filters(element) {
         return element.type !== num;
@@ -322,17 +372,16 @@ export default {
       if (state) {
         this.options.push({ type: num, value: conten });
       }
-      console.log(this.options);
+    },
+    showOption() {
+      return this.options;
     }
   },
   computed: {
-    showNum() {},
-    showNow() {
-      return this.show2;
-    }
+   
   },
   watch: {
-    showNow(num) {}
+   
   }
 };
 </script> 

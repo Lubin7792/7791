@@ -131,6 +131,7 @@ import icon from "./iconfont.js";
 export default {
   name: "navigation",
   computed: {
+    //新建成功
     policyState() {
       return this.$store.state.policySwitch;
     }
@@ -163,9 +164,10 @@ export default {
           mediaserver: objj[i].mediaserver,
           key: objj[i].device,
           savedays: objj[i].savedays,
-          key: objj[i].enable,
-          state: objj[i].maxtasks,
-          scheduletypes: {type:'',name:''}
+          enable: objj[i].enable,
+          maxtasks: objj[i].maxtasks,
+          scheduletypes: {type:'',name:''},
+          showS:false
 
         });
       }
