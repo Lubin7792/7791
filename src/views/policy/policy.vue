@@ -176,7 +176,7 @@ export default {
                     style: {},
                     on: {
                       "on-click": name => {
-                        
+                        console.log("111");
                         if (data.scheduletypes.name) {
                           let url =
                             "/rest-ful/v3.0/policy/schedule/" +
@@ -196,6 +196,11 @@ export default {
                           margin: "0 4px 0 1px",
                           borderColor: "#FFF",
                           padding: "0"
+                        },
+                        on: {
+                          click: () => {
+                            this.buttonPost(params);
+                          }
                         }
                       },
                       [
@@ -311,10 +316,35 @@ export default {
   methods: {
     // 修改列表备份类型数据
     scheduletype(obj, scheduletype) {
-      this.$set(this.policiesData[scheduletype.index], "scheduletypes", {
-        name: obj.data[0].name,
-        type: obj.data[0].type
-      });
+      // this.$nextTick(() => {
+        // this.$set(this.policiesData[scheduletype.index], "scheduletypes", {
+        //   name: obj.data[0].name,
+        //   type: obj.data[0].type
+        // });
+        // console.log(
+        //   this.policiesData[scheduletype.index].scheduletypes.name,
+        //   this.policiesData[scheduletype.index].scheduletypes.type
+        // );
+      // });
+
+
+  this.policiesData[scheduletype.index].scheduletypes.name=obj.data[0].name;
+  this.policiesData[scheduletype.index].scheduletypes.type=obj.data[0].type;
+ console.log(
+          this.policiesData[scheduletype.index].scheduletypes.name,
+          this.policiesData[scheduletype.index].scheduletypes.type
+        );
+this.$forceUpdate();
+    },
+    buttonPost(params) {
+      util.restfullCalls(
+        "/rest-ful/v3.0/policy/scheduletype/" +
+          this.policiesData[params.index].id,
+        null,
+        "get",
+        this.scheduletype,
+        params
+      );
     },
     nowCallBack: function(params) {
       alert(params.data.message);
