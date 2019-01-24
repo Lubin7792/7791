@@ -24,6 +24,21 @@ export default {
       modalss: false,
       modal: false,
       _index: Number,
+      shiliS: [
+        {
+          enable: 1,
+          id: 12,
+          key: "阿萨德",
+          maxtasks: 0,
+          mediaserver: "testmediaserver",
+          name: "增量",
+          pool: "空白介质池",
+          privilege: "",
+          savedays: 0,
+          scheduletypes: { name: "", type: "" },
+          type: "文件备份"
+        }
+      ],
       policyColumns: [
         {
           title: "ID",
@@ -310,41 +325,48 @@ export default {
   },
   computed: {
     policiesData() {
-      return this.$store.state.policiesData;
+      // console.log(this.$store.state.policiesData)
+      // return this.$store.state.policiesData;
+      // 假数据
+      return this.shiliS;
     }
   },
   methods: {
     // 修改列表备份类型数据
     scheduletype(obj, scheduletype) {
-      // this.$nextTick(() => {
-        // this.$set(this.policiesData[scheduletype.index], "scheduletypes", {
-        //   name: obj.data[0].name,
-        //   type: obj.data[0].type
-        // });
-        // console.log(
-        //   this.policiesData[scheduletype.index].scheduletypes.name,
-        //   this.policiesData[scheduletype.index].scheduletypes.type
-        // );
+      // this.$set(this.policiesData[scheduletype.index], "scheduletypes", {
+      //   name: obj.data[0].name,
+      //   type: obj.data[0].type
       // });
-
-
-  this.policiesData[scheduletype.index].scheduletypes.name=obj.data[0].name;
-  this.policiesData[scheduletype.index].scheduletypes.type=obj.data[0].type;
- console.log(
-          this.policiesData[scheduletype.index].scheduletypes.name,
-          this.policiesData[scheduletype.index].scheduletypes.type
-        );
-this.$forceUpdate();
+      console.log(
+        this.policiesData[scheduletype.index].scheduletypes.name,
+        this.policiesData[scheduletype.index].scheduletypes.type
+      );
+      this.policiesData[scheduletype.index].scheduletypes.name =
+        obj.data[0].name;
+      this.policiesData[scheduletype.index].scheduletypes.type =
+        obj.data[0].type;
+      console.log(
+        this.policiesData[scheduletype.index].scheduletypes.name,
+        this.policiesData[scheduletype.index].scheduletypes.type
+      );
+      // this.$forceUpdate();
     },
     buttonPost(params) {
-      util.restfullCalls(
-        "/rest-ful/v3.0/policy/scheduletype/" +
-          this.policiesData[params.index].id,
-        null,
-        "get",
-        this.scheduletype,
-        params
-      );
+      // util.restfullCalls(
+      //   "/rest-ful/v3.0/policy/scheduletype/" +
+      //     this.policiesData[params.index].id,
+      //   null,
+      //   "get",
+      //   this.scheduletype,
+      //   params
+      // );
+      // 假数据
+     this.policiesData[0].scheduletypes.name =
+       "增量备份";
+      this.policiesData[0].scheduletypes.type =
+        2 ;
+
     },
     nowCallBack: function(params) {
       alert(params.data.message);
