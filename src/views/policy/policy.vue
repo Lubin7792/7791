@@ -365,7 +365,7 @@ export default {
      this.policiesData[0].scheduletypes.name =
        "增量备份";
       this.policiesData[0].scheduletypes.type =
-        2 ;
+        2 
 
     },
     nowCallBack: function(params) {
