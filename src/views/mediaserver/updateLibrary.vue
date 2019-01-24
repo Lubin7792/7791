@@ -95,14 +95,11 @@ export default {
       this.modal = true
     },
     address:function(changer) {
-      console.log("changer",changer)
       if(changer.data.code !== 0) return
       this.driver=changer.data.changer.driverlist
       this.slot=changer.data.changer.slotlist
       this.changer.name = this.name
       Object.assign(this.changer, this.changer, changer.data.changer)
-      // this.changer = changer.data.changer
-      console.log(this.changer)
     },
   }
 }

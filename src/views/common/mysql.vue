@@ -30,14 +30,6 @@
 	        		</FormItem>
         		</Col>
     	</Row>
-    	<Row>
-    		<Col span="24">
-        			<span style='height:33px;line-height: 33px'>Bin-Log</span>
-        			<FormItem label="路径:">
-	            		<Input v-model="mysql.path" class="mysql-path"></Input>
-	        		</FormItem>
-        		</Col>
-    	</Row>
     	<Row class="mysql-btn">
 		 <Button type="info" @click="updateInstance">保存修改</Button>
 		 <Button type="info" @click="newInstance">添加实例</Button>
@@ -88,7 +80,7 @@
 			}
 		},
 		mounted:function(){
-			let url='rest-ful/v3.0/client/agent/instances?cid='+this.clientId+'&type='+this.clientList[2].key;
+			let url='rest-ful/v3.0/client/agent/instances?cid='+this.clientId+'&type='+this.clientList[1].key;
 			let mysqlData=[];
 			  util.restfullCall(url, null, 'get',(obj)=>{
                     for(let i=0;i<obj.data.length;i++){
@@ -213,7 +205,7 @@
 				let conf=JSON.stringify(instance);
 				let postData={};
 				postData.cid=this.clientId;
-				postData.type=this.clientList[2].key;
+				postData.type=this.clientList[1].key;
 				postData.conf=conf;
 				util.restfullCall('rest-ful/v3.0/client/agent/instance',postData,'post',(obj)=>{
 					console.log(obj.data.id);

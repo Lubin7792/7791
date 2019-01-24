@@ -17,10 +17,10 @@
         <FormItem label="储存设备">
           <Select style="width:200px" v-model="basic.deviceval" @on-change="showNow">
             <Option
-              v-for="item in basic.device"
-              :label="item.servername"
+              v-for="item in this.devicesList"
+              :label="item.name"
               :value="item.id"
-              :key="item.Level"
+              :key="item.id"
             ></Option>
           </Select>
         </FormItem>
@@ -284,16 +284,6 @@ export default {
       basic: {
         name: "",
         deviceval: "",
-        device: [
-          {
-            id: 2,
-            type: 0,
-            name: "test",
-            server: 1,
-            servername: "teststorageserver",
-            enable: 1
-          }
-        ],
         poolval: "",
         pool: [
           {
@@ -378,15 +368,15 @@ export default {
         backuptype: [
           {
             value: "全备",
-            level: 0
-          },
-          {
-            value: "增量",
             level: 1
           },
           {
-            value: "差量",
+            value: "增量",
             level: 2
+          },
+          {
+            value: "差量",
+            level: 3
           }
         ],
         intervalTime: "",
@@ -428,6 +418,10 @@ export default {
     },
     policyTyep() {
       return this.$store.state.policyType;
+    },
+     devicesList() {
+      return this.$store.state.devicesList;
+      console.log(this.$store.state.devicesList)
     },
     data3() {
       let data1 = [];
@@ -489,7 +483,7 @@ export default {
       let tests = {
         base: {
           name: this.basic.name,
-          type: 65536,
+          type: this.basictype,
           privilege: parseInt(
             this.basic.privilegekey ? this.basic.privilegekey : 0
           ),

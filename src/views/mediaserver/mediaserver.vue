@@ -21,7 +21,7 @@
                 <Button type="info" @click="newDisk">新建磁盘</Button>
                 <Button type="info" @click="delDisk">删除磁盘</Button>
                 <Button type="info" @click="modifyDisk">修改磁盘</Button>
-                <diskModal ref="diskModal"  @diskReturn="diskReturn"></diskModal>
+                <diskModal ref="diskModal" @diskReturn="diskReturn"></diskModal>
                 <updateDisk :modalDisk="modalDisk" ref="updateDisk" @listModify="listModify"></updateDisk>
             </div>
         </TabPane>
@@ -81,9 +81,9 @@ export default {
       disks: [
         { title: '名称', key: 'name' },
         { title: '设备路径', key: 'path' },
-        { title: '介质服务器', key: 'server' },
-        { title: '存储容量', key: 'enable' },
-        { title: '状态', key: 'type' }
+        { title: '介质服务器', key: 'servername' },
+        { title: '存储容量', key: 'filesize' },
+        { title: '状态', key: 'status' }
       ],
       tapes: [
         { title: '名称', key: 'name' },
@@ -152,19 +152,23 @@ export default {
       var array = new Array()
       for (let i = 0; i < diskobj.data.length; i++) {
         array.push({
-          name: diskobj.data[i].name,
           id: diskobj.data[i].id,
+          name: diskobj.data[i].name,
+          type: diskobj.data[i].type,
           server: diskobj.data[i].server,
           servername: diskobj.data[i].servername,
           enable: diskobj.data[i].enable,
-          type: diskobj.data[i].type,
+          status: diskobj.data[i].status,
+          path: diskobj.data[i].path,
+          filesize: diskobj.data[i].filesize,
+          maxtasks: diskobj.data[i].maxtasks,
+          lowlimit: diskobj.data[i].lowlimit,
         })
         this.disk = array
       }
     },
      // 查询添加成功的磁带库表
     tapesdata: function(typeobj) {
-      console.log("磁带库表",typeobj)
       var array = new Array()
       for (let i = 0; i < typeobj.data.length; i++) {
         array.push({
@@ -244,7 +248,6 @@ export default {
     },
     // 修改成功的回调接收
     listModify(listDisk) {
-      console.log("aaa",listDisk)
       this.disk.forEach(item => {
         if (item.id === listDisk.id) item.name=listDisk.name
       })
@@ -257,12 +260,10 @@ export default {
     },
     // 接收添加成功的磁带库信息赋值给磁带库表
     libraryReturn(librardata) {
-      console.log("cida",librardata)
       util.restfullCall('/rest-ful/v3.0/devices?type='+librardata.type, null, 'get', this.tapesdata)
     },
     // 选中点击的磁带库数据
     librayData:function(livrayRow) {
-      console.log("磁带库",livrayRow)
       this.modalLibrary = livrayRow
     },
     // 删除磁盘
@@ -302,4 +303,16 @@ export default {
 .btn {
   margin-top: 15px;
 }
+/* .ivu-tabs {
+  height: 100%;
+}
+.ivu-tabs-no-animation>.ivu-tabs-content {
+  height: 100%;
+}
+.ivu-tabs .ivu-tabs-tabpane {
+  height: 100%;
+}
+.ivu-table-wrapper {
+  height: 80%;
+} */
 </style>

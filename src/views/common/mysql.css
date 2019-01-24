@@ -38,7 +38,7 @@
 	& .mysql-table{
 		margin-top:calc(var(--font)*15.5);
 		& .mysqlInstance{
-			max-height:185px;
+			max-height:230px;
 			overflow: auto;
 		}
 	}

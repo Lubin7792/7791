@@ -155,7 +155,7 @@ export default {
       let arrays = new Array();
       for (let i = 0; i < objj.length; i++) {
         arrays.push({
-          key: objj[i].id,
+          id: objj[i].id,
           name: objj[i].name,
           type: objj[i].type,
           privilege: objj[i].privilege,
@@ -164,7 +164,9 @@ export default {
           key: objj[i].device,
           savedays: objj[i].savedays,
           key: objj[i].enable,
-          state: objj[i].maxtasks
+          state: objj[i].maxtasks,
+          scheduletypes: {type:'',name:''}
+
         });
       }
       this.$store.commit("policiesData", arrays);

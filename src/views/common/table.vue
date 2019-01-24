@@ -1,8 +1,8 @@
 <template>
     <div>
-        <Table  border :columns="columns" :data="data" @on-row-click="getRowData" @add="addFromChild"></Table>
+        <Table  border :columns="columns" :data="data" @on-row-click="getRowData" ></Table>
         <!-- 新增组件 -->
-        <Add></Add>
+        <!-- <Add></Add> -->
         <!-- 修改组件 -->
         <Update></Update>
     </div>
@@ -30,8 +30,6 @@ export default {
   data() {
     return {
       //title
-      columns: [],
-      data: this.getData,
       message: this.message,
       addData: {},
       updateData: {},

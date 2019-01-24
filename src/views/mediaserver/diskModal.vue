@@ -2,14 +2,14 @@
 @import './diskModal.css';
 </style>
 <template>
-	<div>
+  <div>
     <Modal title="添加磁盘设备" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="540" :mask-closable="false">
 		  <Form :model="diskItem" :label-width="120">
 			<FormItem label="设备名称">
 				<Input v-model="diskItem.name" placeholder="请输入设备名称"></Input>
 			</FormItem>
       <FormItem label="设备类型">
-        <Select @on-change="dislChanges" v-model="diskItem.type"  @on-open-change="typeDisk"> 
+        <Select @on-change="dislChanges" v-model="diskItem.type"> 
           <Option v-for="item in selectType" :value="item.type" :key="item.type">{{ item.name }}</Option>
 				</Select>
       </FormItem>
@@ -31,7 +31,7 @@
 			<Row type="flex" justify="space-around">
 				<Col span="12">
 					<FormItem label="最大并发数">
-            <InputNumber :max="100" :min="1" v-model="diskItem.maxjobs"></InputNumber>
+            <InputNumber :max="100" :min="1" v-model="diskItem.maxtasks"></InputNumber>
 					</FormItem>
 				</Col>
 				<Col span="12">
@@ -46,16 +46,14 @@
 				</Col>
 				<Col span="12">
 					<FormItem label="介质文件容量" >
-            <InputNumber :max="100" :min="1" v-model="diskItem.filesize"></InputNumber>
-                <span slot="append">(M)</span>
-            </Input>
+            <InputNumber :max="100" :min="1" v-model="diskItem.filesize" :disabled="!single"></InputNumber> (M)
 					</FormItem>
 				</Col>
 			</Row>	
 		  </Form>
 	  </Modal>
     <!-- glance浏览目录弹框 -->
-    <Glance ref="Glance" :device="device"></Glance>
+    <Glance ref="Glance" @glanceReturn="glanceReturn" :device="device" :pathlista="pathlist"></Glance>
   </div>
 </template>
 <script>
@@ -68,11 +66,12 @@ export default {
       single: false,
       selectType:[],
       cityList:[],
-      device:[],
+      device:null,
+      pathlist:[],
       diskItem: {
         name: '',
         path: '',
-        maxjobs: null,
+        maxtasks: null,
         lowlimit: null,
         filesize: null,
         server: '',
@@ -81,10 +80,8 @@ export default {
     }
   },
   created(){
-    // 获取创建好的介质服务数据
-    // util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     // 获取设备类型
-    // util.restfullCall('/rest-ful/v3.0/devicetype', null, 'get', this.selType)
+    util.restfullCall('/rest-ful/v3.0/devicetype', null, 'get', this.selType)
   },
   components: {
     Glance
@@ -93,20 +90,6 @@ export default {
     // 点击下拉框获取介质服务器信息
     serverDisk:function(openServer) {
       if(openServer == true) util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
-    },
-    // 点击下拉框获取设备类型信息
-    typeDisk:function(openType) {
-      if(openType == true) util.restfullCall('/rest-ful/v3.0/devicetype', null, 'get', this.selType)
-    },
-    selType:function(arr) {
-      var array = new Array
-      for(let i = 0;i < arr.data.length;i++ ){
-        array.push({
-          type:arr.data[i].type,
-          name:arr.data[i].name
-        })
-      }
-      this.selectType = array
     },
     // 拿到介质服务数据里的ID及machine赋给路径下拉框
     senddata:function(obj){
@@ -119,18 +102,30 @@ export default {
       }
       this.cityList = array
     },
-    // 回调地址赋值并传给子组件
-    address: function(ob) {
-      if(ob.data.code===0) this.device=ob.data.pathlist
+    // 接收下拉框设备回调并渲染下拉框
+    selType:function(arr) {
+      var array = new Array
+      for(let i = 0;i < arr.data.length;i++ ){
+        array.push({
+          type:arr.data[i].type,
+          name:arr.data[i].name
+        })
+      }
+      this.selectType = array
+      this.diskItem.type = array[0].type
     },
     // 选中的设备名称type赋值给diskItem里type
     dislChanges: function(types) {
-      this.type = types 
+      this.diskItem.type = types 
     },
     // 选中下拉内容获取选中数据id传给后台，并返回回调地址
     changes: function(datas) {
-      this.server = datas
-      util.restfullCall('/rest-ful/v3.0/devicepath?server=' + datas, null, 'get', this.address)
+      this.device = datas
+      util.restfullCall('/rest-ful/v3.0/devicepath?server=' + datas + '&path=', null, 'get', this.address)
+    },
+    // 回调地址赋值并传给子组件
+    address: function(ob) {
+      this.pathlist=ob.data.pathlist
     },
     // 点击浏览弹出浏览框
     browse: function() {
@@ -150,13 +145,15 @@ export default {
     add: function(adds) {
       if(adds.data.code===0) console.log("添加成功")
     },
+    // 接收选中的path路径
+    glanceReturn(pathReturn){
+      this.diskItem.path = pathReturn
+    },
     cancel() {
       this.modal = false
-      // this.$store.commit('getModalDisk', false)
     },
     glance: function() {
       this.modal = false
-      // this.$store.commit('getModalGlance', true)
     }
   }
 }

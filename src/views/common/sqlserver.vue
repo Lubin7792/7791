@@ -29,7 +29,7 @@
         </Row>
         <Row>
             <span>认证方式</span>
-            <Select v-model="type" style="width:200px" class='selection' @on-change="changeOption">
+            <Select v-model="type" style="width:200px" class='selection' >
                 <Option v-for="item in authtype" :value="item.value" :key="item.value"></Option>
             </Select>
         </Row>
@@ -101,18 +101,16 @@ export default {
         }
       ],
       type: '',
-      instanceId: '',
       code: '',
       param: false
     }
   },
   mounted: function() {
-    // console.log(this.clientList);
     let url =
       'rest-ful/v3.0/client/agent/instances?cid=' +
       this.clientId +
       '&type=' +
-      this.clientList[3].key
+      this.clientList[1].key
     util.restfullCall(url, null, 'get', obj => {
       let data = []
       for (let i = 0; i < obj.data.length; i++) {
@@ -198,14 +196,14 @@ export default {
     newSqlserver: function() {
       let message = {}
       message.server = this.sqlserver.server
-      message.user = this.sqlserver.user
+      message.user = this.sqlserver.users
       message.password = this.sqlserver.password
       message.timeout = this.sqlserver.timeout
       message.authtype = this.type
       let conf = JSON.stringify(message)
       let postData = {}
       postData.cid = this.clientId
-      postData.type = this.clientList[3].key
+      postData.type = this.clientList[1].key
       postData.conf = conf
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance',

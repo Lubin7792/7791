@@ -1,5 +1,4 @@
 <style>
-@import './diskModal.css';
 </style>
 <template>
   <Modal title="修改磁盘设备" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="540" :mask-closable="false">
@@ -22,7 +21,7 @@
       <Row type="flex" justify="space-around">
 				<Col span="12">
 					<FormItem label="最大并发数">
-					<Input v-model="modalDisk.maxjobs" style="width: 100px"></Input>
+					<Input v-model="modalDisk.maxtasks" style="width: 100px"></Input>
 					</FormItem>
 				</Col>
 				<Col span="12">
@@ -56,6 +55,15 @@ export default {
   },
   data() {
     return {
+      // diskItem: {
+      //   name: '',
+      //   path: '',
+      //   maxjobs: null,
+      //   lowlimit: null,
+      //   filesize: null,
+      //   server: '',
+      //   type: '',
+      // },
       modal: false,
       single: false
     }
@@ -66,14 +74,29 @@ export default {
     },
     // 点击保存时把修改的数据传给后台
     ok() {
-      util.restfullCall('/rest-ful/v3.0/device/'+this.modalDisk.id,{name:this.modalDisk.name,enable:this.modalDisk.enable,type:this.modalDisk.type},'PUT',this.upload);
+      util.restfullCall('/rest-ful/v3.0/device/'+this.modalDisk.id,{
+        name:this.modalDisk.name,
+        enable:this.modalDisk.enable,
+        type:this.modalDisk.type,
+        maxtasks:this.modalDisk.maxtasks-0,
+        lowlimit:this.modalDisk.lowlimit-0,
+        filesize:this.modalDisk.filesize-0
+        },'PUT',this.upload);
+        console.log("444",{
+        name:this.modalDisk.name,
+        enable:this.modalDisk.enable,
+        type:this.modalDisk.type,
+        maxtasks:this.modalDisk.maxtasks-0,
+        lowlimit:this.modalDisk.lowlimit-0,
+        filesize:this.modalDisk.filesize-0
+        })
       this.modal = false
     },
     upload(callback){
-      console.log("999",callback)
       if(callback.data.code === 0) this.$emit('listModify', this.modalDisk)
     },
     cancel() {
+      console.log("修改",this.modalDisk)
       // this.$emit('close', false)
       this.modal = false
     },
