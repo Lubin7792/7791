@@ -645,11 +645,11 @@ export default {
     //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
       let path = this.build_path_by_tree_node(treeNode);
-      let pathList = path.name + "_" + path.path;
-      this.pathConten.push({ name: pathList });
+      var pathList = path.name + "_" + path.path;
+      this.pathConten.push({ name: pathList.slice(0,-1) });
       this.resources.clientId = path.client;
-      this.resources.pathValue = path.path;
-      console.log(pathList, this.pathConten);
+      this.resources.pathValue = path.path.slice(0,-1);
+      console.log(pathList);
     }
   }
 };

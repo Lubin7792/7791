@@ -42,7 +42,6 @@ import Vmware from './vmware.vue';
 		},
 		computed:{
 			show(){
-				console.log(this.$store.state.clientList)
 				return this.$store.state.clientTitle;
 			}
 		},

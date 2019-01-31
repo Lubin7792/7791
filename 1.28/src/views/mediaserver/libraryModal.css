@@ -1,0 +1,30 @@
+/* :root{
+	--max:{
+		position:relative;
+		top:-15px;
+		left:200px;
+	}
+	--implement:{
+		position: relative;
+		top:15px;
+	}
+}
+.checkbox{
+	@apply --implement;
+}
+.maxTask{
+	@apply --max;
+} */
+
+.parent {
+	border: 1px solid #ccc;
+    height: 120px;
+    padding: 10px;
+}
+.parent div {
+	width: 49%;
+	float: left;
+}
+.titl {
+	font-weight: 700;
+}

@@ -1,0 +1,50 @@
+.policy .lubin .run{
+    background: url(../../images/run.svg)  no-repeat center center;
+    background-size: 20px;
+}
+.policy .lubin .stop{
+    background: url(../../images/stop.svg)  no-repeat center center;
+
+}
+.policy .lubin .icon:hover{
+     background-size: 22px;
+}
+.policy .lubin .icon{
+    height: 20px;
+    width: 20px;
+    background-size: 20px;
+    display: inline-block;
+}
+.newconten .basicinfo{
+    display: inline-block;
+}
+.newconten .basicinfo .ivu-form-item{
+    width: 50%;
+    float: left;
+    margin-bottom: 12px;
+}
+
+.newconten .optionconten{
+    max-height: 300px;
+    overflow: auto;
+}
+.policyModal .ivu-modal{
+    width: 800px !important;
+}
+.policyModal .ivu-modal-body{
+    height: 400px;
+    overflow: auto;
+}
+.policy .buttonC{
+width: 100%;
+text-align: right;
+margin-bottom: 10px;
+}
+.policy .ivu-switch-checked:after{
+    left: 37px;
+}
+button{
+outline:none;
+}
+ :focus{outline:0;} 
+ 

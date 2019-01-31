@@ -197,6 +197,7 @@ export default {
           }
         }
       )
+      console.log(postData,this.clientList)
     },
     changeOption: function(value) {
       this.catalog = value
@@ -270,6 +271,7 @@ export default {
           }
         }
       )
+      console.log(postData)
     }
   }
 }
