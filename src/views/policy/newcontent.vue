@@ -455,7 +455,9 @@ export default {
         array.push(
           (item = {
             id: item.id,
+          iconSkin:"client",
             name: item.machine,
+             nocheck:true,
             nodetype: 0
           })
         );
