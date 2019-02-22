@@ -64,7 +64,7 @@
     <div v-show="show==='备份资源列表'">
       <div id="areaTree">
         <div class="box-title">
-          <span @click="freshArea">列表</span>
+          <span>列表</span>
         </div>
         <div class="tree-box">
           <div class="zTreeDemoBackground left">
@@ -421,30 +421,11 @@ export default {
     hackOne() {
       return this.policyTypekey;
     },
-    databack() {
-      return this.$store.state.policyData;
-    },
     policyTyep() {
       return this.$store.state.policyType;
     },
     devicesList() {
       return this.$store.state.devicesList;
-    },
-    data3() {
-      let data1 = [];
-      data1 = this.$store.state.policyData;
-      const array = [];
-      for (let i = 0; i < data1.length; i++) {
-        let item = data1[i];
-        array.push(
-          (item = {
-            id: item.id,
-            name: item.machine,
-            nodetype: 0
-          })
-        );
-      }
-      return array;
     },
     lconten() {
       let data1 = [];
@@ -480,6 +461,9 @@ export default {
       }else{
         this.$parent.$parent.addTabList()
       }
+
+
+
     }
   },
   methods: {
@@ -587,9 +571,6 @@ export default {
       this.show3 = value;
       this.timeFormate();
     },
-    freshArea: function() {
-      $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
-    },
     build_path_by_tree_node: function(treeNode) {
       //获取路径
       var path = "";
@@ -615,9 +596,8 @@ export default {
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-      console.log(11);
       if (!treeNode.hasOwnProperty("children")) {
-        let typeId = "65536";
+        let typeId = this.basictype;
         let path = this.build_path_by_tree_node(treeNode);
         // console.log(treeNode, treeNode.hasOwnProperty("children"));
         let str =

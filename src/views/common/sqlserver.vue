@@ -6,7 +6,7 @@
         <Row>
             <Col span="12">
             <FormItem label="实例名:">
-                <input v-model="sqlserver.host"></input>
+                <input v-model="sqlserver.server"></input>
             </FormItem>
             </Col>
               <Col span="12">
@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       sqlserver: {
-        host: '',
+        server: '',
         user: '',
         password: '',
         timeout: ''
