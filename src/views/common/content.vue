@@ -39,7 +39,9 @@ import Vmware from './vmware.vue';
 			Vmware
 		},
 		created() {
+
 		},
+		
 		computed:{
 			show(){
 				return this.$store.state.clientTitle;

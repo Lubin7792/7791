@@ -1,9 +1,11 @@
 <template>
-    <Tabs  :animated="false" @on-click="recallName" on-tab-remove="close" :value="values">
+ <div>
+      <Tabs  :animated="false" @on-click="recallName" on-tab-remove="close" :value="values">
 		<TabPane    :label="list.title" v-for="(list,index) in clientList" :name="list.name" :key="index">
-			<Content ></Content>
 		</TabPane>
 	</Tabs>
+			<Content ></Content>
+ </div>
 </template>
 <script>
 import Content from './content.vue'

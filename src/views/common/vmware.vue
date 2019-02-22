@@ -6,19 +6,19 @@
 		<Row>
 			<Col span="12">
 			<FormItem label="服务地址:">
-				<Input v-model="vmware.server"></Input>
+				<Input v-model="vmware.host"></Input>
 			</FormItem>
 			</Col>
 		</Row>
 		<Row>
 			<Col span="12">
-			<FormItem label="密码:">
-				<Input v-model="vmware.password" class="vmware-password"></Input>
-			</FormItem>
-			</Col>
-			<Col span="12">
 			<FormItem label="用户名:">
 				<Input v-model="vmware.user" class="user-input"></Input>
+			</FormItem>
+			</Col>
+      	<Col span="12">
+			<FormItem label="密码:">
+				<Input v-model="vmware.password" class="vmware-password"  type="password"></Input>
 			</FormItem>
 			</Col>
 		</Row>
@@ -35,7 +35,7 @@
 			<Button type="info" @click="test">测试连接</Button>
 			<Button type="info" @click="modalDelete = true">删除</Button>
 			<Modal v-model="modalDelete" @on-ok="ok" @on-cancel="cancel" ok-text="确认删除" cancel-text="取消" class-name="vertical-center-modal">
-				<p style="color:#f60;text-align:center;font-size:19px;">确认是否删除该实例，如果确认删除请点击删除，否认点击取消。</p>
+				<p style="color:#f60;text-align:center;font-size:19px;">确认是否删除{{ this.vmware.host}}实例，如果确认删除请点击删除，否认点击取消。</p>
 			</Modal>
 		</Row>
 		<Row class="vmware-table">
@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       vmware: {
-        server: '',
+        host: '',
         user: '',
         password: '',
         ssl: ''
@@ -58,7 +58,7 @@ export default {
       columns: [
         {
           title: '服务地址',
-          key: 'server'
+          key: 'host'
         },
         {
           title: '用户名',
@@ -85,7 +85,7 @@ export default {
       'rest-ful/v3.0/client/agent/instances?cid=' +
       this.clientId +
       '&type=' +
-      this.clientList[1].key
+     this.$store.state.clientTitle
     util.restfullCall(url, null, 'get', obj => {
       let data = []
       for (let i = 0; i < obj.data.length; i++) {
@@ -102,17 +102,7 @@ export default {
   methods: {
     ok: function() {
       let url = 'rest-ful/v3.0/client/agent/instance/' + this.vmware.id
-      let message = {}
-      message.server = this.vmware.server
-      message.user = this.vmware.user
-      message.password = this.vmware.password
-      message.ssl = this.vmware.ssl
-      let conf = JSON.stringify(message)
-      let postData = {}
-      postData.cid = this.clientId
-      postData.conf = conf
-      postData.id = this.vmware.id
-      util.restfullCall(url, postData, 'delete', obj => {
+      util.restfullCall(url, null, 'delete', obj => {
         if (obj.data.code == 0) {
           this.data.forEach((item, index) => {
             if (item.id == this.vmware.id) {
@@ -131,7 +121,7 @@ export default {
       let conf = JSON.stringify(message)
       let postData = {}
       postData.cid = this.clientId
-      postData.type = this.clientList[1].key
+      postData.type = parseInt(this.$store.state.clientTitle)
       postData.conf = conf
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance',
@@ -140,7 +130,7 @@ export default {
         obj => {
           if (obj.data.code == 0) {
             this.data.push({
-              server: this.vmware.server,
+              host: this.vmware.host,
               user: this.vmware.user,
               password: this.vmware.password,
               ssl: this.vmware.ssl,
@@ -159,6 +149,7 @@ export default {
       let postData = {}
       postData.cid = this.clientId
       postData.conf = conf
+      postData.type = parseInt(this.$store.state.clientTitle)
       postData.id = this.vmware.id
       util.restfullCall(url, postData, 'put', obj => {
         // console.log(obj);
@@ -167,7 +158,7 @@ export default {
         if (obj.data.code == 0) {
           this.data.map(x => {
             if (x.id == this.vmware.id) {
-              x.server = message.server
+              x.host = message.host
               x.user = message.user
               x.password = message.password
               x.ssl = message.ssl
@@ -186,6 +177,7 @@ export default {
       let postData = {}
       postData.cid = this.clientId
       postData.conf = conf
+      postData.type = parseInt(this.$store.state.clientTitle)
       postData.id = this.vmware.id
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance/test',
@@ -194,13 +186,11 @@ export default {
         obj => {
           if (obj.data.code == 0) {
             alert('测试连接成功')
-          }
-          if (obj.data.code == 1) {
+          }else {
             alert('测试连接失败')
           }
         }
       )
-      this.vmware = []
     }
   }
 }
