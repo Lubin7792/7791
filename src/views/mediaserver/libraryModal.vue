@@ -16,7 +16,7 @@
         </Col>
         <Col span="12">
           <FormItem label="机械肩">
-            <Select placeholder="请选择选择机械臂" @on-change="changes">
+            <Select v-model="Mechanics" placeholder="请选择选择机械臂" @on-change="changes">
               <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
 			    </FormItem>
@@ -39,6 +39,7 @@ export default {
       driver:[],
       slot:[],
       modal: false,
+      Mechanics:"",
       libraryItem: {
         name: '',
         path: '',
@@ -120,6 +121,9 @@ export default {
       this.modal = false
       util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', null)
       this.$emit('libraryReturn',this.libraryItem)
+      this.libraryItem.name = null
+      this.libraryItem.server = null
+      this.Mechanics = null
     },
     cancel() {
       this.modal = false

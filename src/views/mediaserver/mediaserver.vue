@@ -8,7 +8,7 @@
                 <Button type="info" @click="newServer">新建介质服务器</Button>
                 <Button type="info" @click="delServer">删除介质服务器</Button>
                 <Button type="info" @click="providerServer">修改介质服务器</Button>
-                <serverModal ref="serverModal" @Return="Return"></serverModal>
+                <serverModal :selServiceList="selServiceList" ref="serverModal" @Return="Return"></serverModal>
                 <updateServer :putDatas="putDatas" ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
             </div>
         </TabPane>
@@ -89,9 +89,9 @@ export default {
         { title: '名称', key: 'name' },
         { title: '介质服务器', key: 'servername' },
         { title: '设备序列号', key: 'serialno' },
-        { title: '槽位数', key: 'sltos' },
+        { title: '槽位数', key: 'slots' },
         { title: '驱动器数量', key: 'drivers' },
-        { title: '状态', key: 'state' },
+        { title: '状态', key: 'status' },
         {title: '操作',key: 'operation',align: 'center',
           render: (h, params) => {
             return h('div', [
@@ -117,6 +117,7 @@ export default {
       putDatas: {},
       modalDisk: {},
       modalLibrary: {},
+      selServiceList:[]
     }
   },
 
@@ -190,7 +191,22 @@ export default {
   // 介质服务器部分代码
     // 点击新建服务器触发事件
     newServer: function() {
+      util.restfullCall('/rest-ful/v3.0/vrtsserver?type=2', null, 'get', this.goback)
+      // this.$refs.serverModal.showMoadl()
+    },
+    goback: function(obj) {
+      //  console.log("5555",obj)
+      var array = new Array()
+      for (let i = 0; i < obj.data.length; i++) {
+        array.push({
+          id: obj.data[i].id,
+          machine: obj.data[i].machine
+        })
+      }
+      this.selServiceList = array
+      this.$nextTick(() => {
       this.$refs.serverModal.showMoadl()
+      })
     },
     // 接收添加成功的数据并附给介质表
     Return(datas) {
@@ -227,20 +243,23 @@ export default {
     },
     //接收添加成功的数据并附给磁盘表
     diskReturn(diskdatas) {
-      util.restfullCall('/rest-ful/v3.0/devices?type='+diskdatas.type, null, 'get', this.diskdata)
+      this.disk = diskdatas
+      util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     },
     // 选中行数据
     diskData: function(diskRow) {
+      console.log("磁盘选中数据",diskRow)
       this.modalDisk = diskRow
     },
     // 删除磁盘
     delDisk:function() {
-      if (confirm('确认删除数据')) { util.restfullCall( '/rest-ful/v3.0/device/' + this.modalDisk.id, null, 'DELETE', this.deldisks) }
+      if (confirm('确认删除数据')){ util.restfullCall( '/rest-ful/v3.0/device/' + this.modalDisk.id, null, 'DELETE', this.deldisks) }
     },
     // 删除磁盘成功之后的回调判断
     deldisks(calback) {
       if (calback.data.code === 0)
-      util.restfullCall('/rest-ful/v3.0/devices?type=0', null, 'get', this.diskdata)   
+      util.restfullCall('/rest-ful/v3.0/devices?type=0', null, 'get', this.diskdata)
+      util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     },
     // 点击修改磁盘
     modifyDisk: function() {

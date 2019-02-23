@@ -42,11 +42,15 @@
         <FormItem label="策略最大调度任务">
           <Input v-model="basic.maxtasks"></Input>
         </FormItem>
-        <FormItem label="启用压缩">
-          <Input v-model="basic.compress"></Input>
+        <FormItem label="启用压缩" class="h30">
+          <CheckboxGroup v-model="basic.compress">
+            <Checkbox label></Checkbox>
+          </CheckboxGroup>
         </FormItem>
-        <FormItem label="启用加密">
-          <Input v-model="basic.encryption"></Input>
+        <FormItem label="启用加密" class="h30">
+          <CheckboxGroup v-model="basic.encryption">
+            <Checkbox label></Checkbox>
+          </CheckboxGroup>
         </FormItem>
         <FormItem label="加密算法">
           <Input v-model="basic.algorithm"></Input>
@@ -73,7 +77,7 @@
       </div>
     </div>
     <div v-show="show==='备份选项'">
-      <backupoption :show2="policyTypekey"></backupoption>
+      <backupoption :show2="policyTypekey" v-if="hackReset" ref="backupOption"></backupoption>
     </div>
     <div v-show="show==='调度计划'" class="planinfo">
       <Form ref="schedule" :model="schedule" :label-width="80">
@@ -198,6 +202,7 @@ export default {
           onCheck: this.zTreeOnCheck
         }
       },
+      hackReset: true,
       policyTypekey: "",
       zNodes: [],
       timevalue1: "",
@@ -220,7 +225,7 @@ export default {
         }
       ],
       plan1: "",
-      basictype: "",
+      basictype: [null],
       options2: {
         shortcuts: [
           {
@@ -331,8 +336,8 @@ export default {
           }
         ],
         maxtasks: "",
-        compress: "",
-        encryption: "",
+        compress: [],
+        encryption: [],
         algorithm: "",
         savedays: ""
       },
@@ -413,15 +418,17 @@ export default {
     };
   },
   computed: {
+    hackOne() {
+      return this.policyTypekey;
+    },
     databack() {
       return this.$store.state.policyData;
     },
     policyTyep() {
       return this.$store.state.policyType;
     },
-     devicesList() {
+    devicesList() {
       return this.$store.state.devicesList;
-      console.log(this.$store.state.devicesList)
     },
     data3() {
       let data1 = [];
@@ -457,9 +464,26 @@ export default {
     }
   },
   watch: {
-    databack: function(newdata, olddata) {}
+    databack: function(newdata, olddata) {},
+    hackOne: function(type) {
+      if (type == 131072) {
+        this.$refs.backupOption.setOptins(14, 0);
+      }
+      this.hackReset = false;
+      this.$nextTick(() => {
+        this.hackReset = true;
+      });
+      if (type == 196608) {
+   this.$parent.$parent.delTabList()
+      }else{
+        this.$parent.$parent.addTabList()
+      }
+    }
   },
   methods: {
+    showOptions() {
+      console.log(this.$refs.backupOption.showOption());
+    },
     startDate: function(value) {
       this.schedule.startday = value;
     },
@@ -476,9 +500,7 @@ export default {
       let test = value;
       this.schedule.freqval = test.label;
     },
-    showNow: function() {
-      console.log(this.basic.privilegekey);
-    },
+    showNow: function() {},
     policypost: function() {
       let tests = {
         base: {
@@ -502,7 +524,7 @@ export default {
             exclude: 0
           }
         ],
-        option: [{ type: 0, value: "xx" }],
+        option: this.$refs.backupOption.showOption(),
         schedule: [
           {
             scheduletype: parseInt(
@@ -527,6 +549,7 @@ export default {
           }
         ]
       };
+      console.log(tests);
       util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
     },
     senddata: function(value) {

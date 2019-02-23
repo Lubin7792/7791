@@ -13,7 +13,6 @@
   <div>
     <Modal v-model="browse" title="浏览磁盘设备目录" @on-ok="ok" @on-cancel="cancel">
         <div class="tree-box">
-          <span @click="click">点击</span>
           <div class="tree">
             <ul id="treeDemo" class="ztree"></ul>
           </div>
@@ -28,7 +27,10 @@ export default {
     return {
       setting: {
         check: {
-          enable: true
+          enable: true,
+        },
+        view: {
+          selectedMulti: false
         },
         callback: {
           onClick: this.zTreeOnClick,
@@ -36,45 +38,41 @@ export default {
         }
       },
       browse: false,
-      pathlist:[],
       glancePath:''
     }
   },
- 
   props: {
     device: {
-      type:Number
-    },
-    pathlista: {
-      type:[Array, Object]
+      type:Array
     },
   },
   computed: {
-    pathlists(){
-      return this.pathlista
-    },
     data3() {
-      let data1 = this.pathlista;
+      let data1 = [];
+      data1 = this.device;
       const array = [];
-      for(var i=0;i<data1.length;i++){
+      for (var i=0;i<data1.length;i++){
         array.push({
-          name: data1[i],
+          name: data1[i].name,
+          iconSkin:"diy02",
+          id: data1[i].id,
+          nocheck:true,
           nodetype: 0
         })
       }
       return array;
     }
   },
-  created:function() {
-    // $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
+  watch: {
+    data3: {
+      handler(newVal, oldVal) {
+        console.log('newVal', newVal)
+        $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
+      },
+    }
   },
+  
   methods: {
-    click:function () {
-       $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
-    },
-    address: function(addr) {
-      this.pathlist = addr.data.pathlist
-    },
     build_path_by_tree_node: function(treeNode) {
       //获取路径  
       var path = "";
@@ -105,9 +103,8 @@ export default {
     zTreeOnClick: function(event, treeId, treeNode) {
       if (!treeNode.hasOwnProperty("children")) {
         let path = this.build_path_by_tree_node(treeNode);
-        // console.log(treeNode, treeNode.hasOwnProperty("children"));
         let str =
-          "/rest-ful/v3.0/devicepath?server=" + this.device + "&path=" + path.path;
+          "/rest-ful/v3.0/devicepath?server=" +  path.client + "&path=" + path.path;
         util.restfullCall(str, null, "get", function(obj) {
           //返回数据处理
           var arrays = new Array();
@@ -128,7 +125,6 @@ export default {
       let path = this.build_path_by_tree_node(treeNode);
       // let pathList = path.path;
       this.glancePath = path.path
-      console.log(this.glancePath);
     },
     ok() {
       this.$emit('glanceReturn',this.glancePath)

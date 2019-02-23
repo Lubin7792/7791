@@ -9,7 +9,7 @@
 		            <Input v-model="formItem.input" placeholder="Enter something..."></Input>
 		        </FormItem> -->
         			<FormItem label="服务地址:">
-        				<Input v-model="mysql.serverName"></Input>
+        				<Input v-model="mysql.hsot"></Input>
 	        		</FormItem>
         		</Col>
         		<Col span="12">
@@ -55,7 +55,7 @@
 		data(){
 			return{
 				mysql:{
-					serverName:'',
+					host:'',
 					userName:'',
 					password:'',
 					port:'',
@@ -63,16 +63,13 @@
 				},
 				columns:[{
 					title:'服务地址',
-					key:'serverName'
+					key:'host'
 				},{
 					title:'用户名',
 					key:'userName'
 				},{
 					title:'端口号',
 					key:'port'
-				},{
-					title:'Bin-Log路径',
-					key:'path'
 				}
 				],
 				data:[],
@@ -90,11 +87,10 @@
                     }
                     for(let i=0;i<mysqlData.length;i++){
 					this.data.push({
-						'serverName':mysqlData[i].serverName,
+						'host':mysqlData[i].host,
 			            'userName':mysqlData[i].user,
 			            'password':mysqlData[i].password,
 			            'port':mysqlData[i].port,
-			            'path':mysqlData[i]["bin-log"],
 			            'id':mysqlData[i].id
 					});
 
@@ -133,11 +129,10 @@
 			ok () {
                 let url='rest-ful/v3.0/client/agent/instance/'+this.mysql.id;
                 let instance={
-					"serverName":this.mysql.serverName,
+					"host":this.mysql.host,
 					"user":this.mysql.userName,
 					"password":this.mysql.password,
-					"port":this.mysql.port,
-					"bin-log":this.mysql.path
+					"port":this.mysql.port
 				};
 				let conf=JSON.stringify(instance);
 				let postData={};
@@ -168,7 +163,7 @@
 				let url ='rest-ful/v3.0/client/agent/instance/'+this.mysql.id;	
 				// console.log(this.mysql.id);			
 				let instance={
-					"serverName":this.mysql.serverName,
+					"host":this.mysql.host,
 					"user":this.mysql.userName,
 					"password":this.mysql.password,
 					"port":this.mysql.port,
@@ -183,7 +178,7 @@
              		if(obj.data.code==0){
 						this.data.map(x=>{
 							if(x.id==postData.id){
-								x.serverName=instance.serverName;
+								x.host=instance.host;
 								x.userName=instance.user;
 								x.password=instance.password;
 								x.port=instance.port;
@@ -196,7 +191,7 @@
 			},
 			newInstance:function(){
 				let instance={
-					"serverName":this.mysql.serverName,
+					"host":this.mysql.host,
 					"user":this.mysql.userName,
 					"password":this.mysql.password,
 					"port":this.mysql.port,
@@ -211,7 +206,7 @@
 					console.log(obj.data.id);
                   if(obj.data.code==0){
                      this.data.push({
-                        'serverName':this.mysql.serverName,
+                        'host':this.mysql.host,
 			            'userName':this.mysql.userName,
 			            'password':this.mysql.password,
 			            'port':this.mysql.port,

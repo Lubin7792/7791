@@ -14,7 +14,7 @@
 				</Select>
       </FormItem>
 			<FormItem label="介质服务器">
-					<Select v-model="diskItem.server" @on-change="changes" @on-open-change="serverDisk">
+					<Select v-model="diskItem.server" @on-change="changes" @on-open-change="serverDisk" :label-in-value="true">
             <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
 					</Select>
 			</FormItem>
@@ -42,7 +42,7 @@
 			</Row>
 			<Row type="flex" justify="space-around">
 				<Col span="6">
-					<Checkbox on-change="checkchange" v-model="single">定制介质文件</Checkbox>
+					<Checkbox v-model="single">定制介质文件</Checkbox>
 				</Col>
 				<Col span="12">
 					<FormItem label="介质文件容量" >
@@ -53,7 +53,7 @@
 		  </Form>
 	  </Modal>
     <!-- glance浏览目录弹框 -->
-    <Glance ref="Glance" @glanceReturn="glanceReturn" :device="device" :pathlista="pathlist"></Glance>
+    <Glance ref="Glance" @glanceReturn="glanceReturn" :device="device"></Glance>
   </div>
 </template>
 <script>
@@ -66,8 +66,7 @@ export default {
       single: false,
       selectType:[],
       cityList:[],
-      device:null,
-      pathlist:[],
+      device: [],
       diskItem: {
         name: '',
         path: '',
@@ -120,12 +119,12 @@ export default {
     },
     // 选中下拉内容获取选中数据id传给后台，并返回回调地址
     changes: function(datas) {
-      this.device = datas
-      util.restfullCall('/rest-ful/v3.0/devicepath?server=' + datas + '&path=', null, 'get', this.address)
-    },
-    // 回调地址赋值并传给子组件
-    address: function(ob) {
-      this.pathlist=ob.data.pathlist
+      var ar = []
+        ar.push({
+          name: datas.label,
+          id: datas.value
+        })
+      this.device = ar
     },
     // 点击浏览弹出浏览框
     browse: function() {
@@ -138,12 +137,39 @@ export default {
     // 点击确认按钮，把信息传给后台
     ok() {
       util.restfullCall('/rest-ful/v3.0/device',JSON.stringify(this.diskItem), 'post', this.add)
-      this.$emit('diskReturn',this.diskItem)
       this.modal = false
+      // Object.keys(this.diskItem).forEach(key => this.diskItem[key] = null)
     },
     // 添加成功的回调
     add: function(adds) {
-      if(adds.data.code===0) console.log("添加成功")
+      if(adds.data.code===0) util.restfullCall('/rest-ful/v3.0/devices?type='+this.diskItem.type, null, 'get', this.diskdata)
+    },
+    // 添加成功的磁盘数据传递给父组件
+    diskdata: function(diskobj) {
+      var array = new Array()
+      for (let i = 0; i < diskobj.data.length; i++) {
+        array.push({
+          id: diskobj.data[i].id,
+          name: diskobj.data[i].name,
+          type: diskobj.data[i].type,
+          server: diskobj.data[i].server,
+          servername: diskobj.data[i].servername,
+          enable: diskobj.data[i].enable,
+          status: diskobj.data[i].status,
+          path: diskobj.data[i].path,
+          filesize: diskobj.data[i].filesize,
+          maxtasks: diskobj.data[i].maxtasks,
+          lowlimit: diskobj.data[i].lowlimit,
+        })
+        this.$emit('diskReturn',array)
+        // Object.keys(this.diskItem).forEach(key => this.diskItem[key] = null)
+        this.diskItem.name = null
+        this.diskItem.path = null
+        this.diskItem.maxtasks = null
+        this.diskItem.lowlimit = null
+        this.diskItem.filesize = null
+        this.single = false
+      }
     },
     // 接收选中的path路径
     glanceReturn(pathReturn){
