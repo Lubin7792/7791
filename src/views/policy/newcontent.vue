@@ -101,17 +101,20 @@
             ></Option>
           </Select>
         </FormItem>
-        <FormItem label="开始日期" class="plandate">
-          <DatePicker
-            type="date"
-            :value="schedule.startday"
-            format="dd"
-            show-week-numbers
-            placement="bottom-end"
-            placeholder="Select date"
-            @on-change="startDate"
-          ></DatePicker>
+        <div v-if="show3==='日期'">
+          <FormItem label="开始日期" class="plandate">
+          <Select v-model="schedule.startday" style="width:120px">
+            <Option
+              v-for="item in schedule.startWeekList"
+              :value="item.value"
+              :label="item.name"
+              :key="item.value"
+            >{{ item.name }}</Option>
+          </Select>
         </FormItem>
+        </div>
+        <div if="show3===周"></div>
+        
         <FormItem label="开始时间" width="100px">
           <TimePicker
             :value="schedule.starttime"
@@ -141,7 +144,6 @@
             style="width: 168px"
           ></TimePicker>
         </FormItem>
-        <!-- <div v-if="show3==='周'"></div> -->
         <!-- <div v-if="show3==='时间间隔'"> </div> -->
         <FormItem label="间隔类型" style="width:100%">
           <Select
@@ -202,15 +204,19 @@ export default {
           onCheck: this.zTreeOnCheck
         }
       },
+      treeNod: {},
+      treeId: "",
       hackReset: true,
       policyTypekey: "",
       zNodes: [],
+      checkArrays: [],
       timevalue1: "",
       timevalue2: "",
       nowTime: "",
       nowDate: "",
       ztreeObj: {},
       pathConten: [],
+      checkType: false,
       columns4: [
         {
           title: "已选地址",
@@ -226,46 +232,6 @@ export default {
       ],
       plan1: "",
       basictype: [null],
-      options2: {
-        shortcuts: [
-          {
-            text: "1 周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
-              return [start, end];
-            }
-          },
-          {
-            text: "2 周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 14);
-              return [start, end];
-            }
-          },
-          {
-            text: "3 周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 21);
-              return [start, end];
-            }
-          },
-          {
-            text: "4 周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 28);
-              return [start, end];
-            }
-          }
-        ]
-      },
       planlist: [
         {
           title: "调度类型",
@@ -343,6 +309,10 @@ export default {
       },
       schedule: {
         typelevel: "",
+        startdayList:[{value:"1"},{value:"2"},{value:"3"},{value:"4"},{value:"5"},{value:"6"},{value:"7"},{value:"8"},{value:"9"},{value:"10"},{value:"11"},{value:"12"},{value:"13"},{value:"14"},{value:"15"},{value:"16"},{value:"17"},{value:"18"},{value:"19"},{value:"20"},{value:"21"},{value:"22"},{value:"23"},{value:"24"},{value:"25"},{value:"26"},{value:"27"},{value:"28"},{value:"29"},{value:"30"},{value:"31"}],
+        startWeekList:[
+            {value:"1",name:"周一"},{value:"2",name:"周二"},{value:"3",name:"周三"},{value:"4",name:"周四"},{value:"5",name:"周五"},{value:"6",name:"周六"},{value:"7",name:"周日"}
+        ],
         type: [
           {
             value: "日期",
@@ -436,9 +406,9 @@ export default {
         array.push(
           (item = {
             id: item.id,
-          iconSkin:"client",
+            iconSkin: "client",
             name: item.machine,
-             nocheck:true,
+            nocheck: true,
             nodetype: 0
           })
         );
@@ -457,13 +427,10 @@ export default {
         this.hackReset = true;
       });
       if (type == 196608) {
-   this.$parent.$parent.delTabList()
-      }else{
-        this.$parent.$parent.addTabList()
+        this.$parent.$parent.delTabList();
+      } else {
+        this.$parent.$parent.addTabList();
       }
-
-
-
     }
   },
   methods: {
@@ -505,7 +472,7 @@ export default {
             client: parseInt(
               this.resources.clientId ? this.resources.clientId : 1
             ),
-            type: 65538,
+            type: parseInt(this.basictype),
             path: this.resources.pathValue,
             exclude: 0
           }
@@ -573,8 +540,29 @@ export default {
     },
     build_path_by_tree_node: function(treeNode) {
       //获取路径
+      let path = "";
+      let cid = 0;  
+      do {
+          let parent = treeNode.getParentNode();
+          if (!parent) {
+            cid = treeNode.id;
+            name = treeNode.name;
+            break;
+          }
+
+          if (parent.nodetype != 0) {
+              console.log(  path)
+
+              path = "/" + treeNode.name + path;
+              console.log(  path)
+          }
+          else {
+             path = treeNode.name + path;
+          }
+          treeNode = parent
+      }while(true);
+      /*
       var path = "";
-      var cid = 0;
       let name = "";
       let current_node = treeNode;
       let parent = treeNode.getParentNode();
@@ -582,57 +570,69 @@ export default {
       while (true) {
         parent = current_node.getParentNode();
         if (!parent) {
-          cid = current_node.id;
           name = current_node.name;
           break;
         }
-        if (parent.nodetype) {
+        if (this.checkType) {
           path = "/" + path;
-        }
-        path = current_node.name + path;
-        current_node = parent;
-      }
+           path =current_node.name+path ;
+          current_node = parent;
+          console.log(path,current_node.name)
+        }else{
+          path = current_node.name + path;
+          current_node = parent;
+
+        }         
+      }*/
+
       return { client: cid, path: path, name: name };
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-      if (!treeNode.hasOwnProperty("children")) {
-        let typeId = this.basictype;
-        let path = this.build_path_by_tree_node(treeNode);
-        // console.log(treeNode, treeNode.hasOwnProperty("children"));
-        let str =
-          "/rest-ful/v3.0/client/resource/browse?" +
-          "client=" +
-          path.client +
-          "&type=" +
-          typeId +
-          "&path=" +
-          path.path;
-        util.restfullCall(str, null, "get", function(obj) {
-          //返回数据处理
-          var arrays = new Array();
-          let objj = obj.data.resources;
-          for (let i = 0; i < objj.length; i++) {
-            arrays.push({
-              ResType: objj[i].ResType,
-              name: objj[i].Name,
-              nodetype: 1
-            });
-          }
-          let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
-          ztreeobj.addNodes(treeNode, arrays);
+      if (typeof this.basictype == "number") {
+        if (!treeNode.hasOwnProperty("children")) {
+          this.treeNode = treeNode;
+          this.treeId = treeId;
+          let typeId = treeNode.ResType?treeNode.ResType : this.basictype;
+          let path = this.build_path_by_tree_node(treeNode);
+          let str =
+            "/rest-ful/v3.0/client/resource/browse?" +
+            "client=" +
+            path.client +
+            "&type=" +
+            typeId +
+            "&path=" +
+            path.path;
+          util.restfullCall(str, null, "get", this.callData);
+        }
+      }
+    },
+    callData: function(obj) {
+      let treeNode = this.treeNode;
+      let treeId = this.treeId;
+      //返回数据处理
+      var arrays = new Array();
+      // console.log( obj.data.resources)
+      let objj = obj.data.resources;
+      for (let i = 0; i < objj.length; i++) {
+        arrays.push({
+          ResType: objj[i].ResType,
+          name: objj[i].Name,
+          nodetype: 1
         });
       }
+      let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
+      ztreeobj.addNodes(treeNode, arrays);
+      this.checkType=treeNode.ResType
     },
     //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
       let path = this.build_path_by_tree_node(treeNode);
       var pathList = path.name + "_" + path.path;
-      this.pathConten.push({ name: pathList.slice(0,-1) });
+      this.pathConten.push({ name: pathList });
       this.resources.clientId = path.client;
-      this.resources.pathValue = path.path.slice(0,-1);
-      console.log(pathList);
-    }
+      this.resources.pathValue = path.path;
+    },
   }
 };
 </script>
