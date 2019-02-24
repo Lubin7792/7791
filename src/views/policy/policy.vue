@@ -334,15 +334,12 @@ export default {
     newPolicy
   },
   created() {
-    // util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
-    // util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);
+    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
+    util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);
   },
   computed: {
     policiesData() {
-      // console.log(this.$store.state.policiesData)
       return this.$store.state.policiesData;
-      // 假数据
-      // return this.shiliS;
     }
   },
   methods: {

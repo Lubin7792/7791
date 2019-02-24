@@ -183,20 +183,20 @@ export default {
       this.$store.commit("policiesData", arrays);
     }
   },
-  // created() {
-  //   util.restfullCall(
-  //     "/rest-ful/v3.0/policytype",
-  //     null,
-  //     "get",
-  //     this.policyData
-  //   );
-  //   util.restfullCall(
-  //     "/rest-ful/v3.0/policies",
-  //     null,
-  //     "get",
-  //     this.policiesData
-  //   );
-  // },
+  created() {
+    util.restfullCall(
+      "/rest-ful/v3.0/policytype",
+      null,
+      "get",
+      this.policyData
+    );
+    util.restfullCall(
+      "/rest-ful/v3.0/policies",
+      null,
+      "get",
+      this.policiesData
+    );
+  },
   watch: {
     policyState: function() {
       util.restfullCall(

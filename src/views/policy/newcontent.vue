@@ -142,8 +142,8 @@
           </Select>
         </FormItem>
         <div v-if="show3 == '0'" class="block250">
-          <FormItem label="开始日期" class="plandate">
-            <Select v-model="schedule.startday" style="width:120px">
+              <FormItem label="开始日期" class="plandate">
+            <Select v-model="schedule.startday" style="width:120px" @on-change=showNows>
               <Option
                 v-for="item in schedule.dayList"
                 :value="item.value"
@@ -154,12 +154,11 @@
           </FormItem>
         </div>
         <div v-if="show3 == '1'" class="block250">
-          <FormItem label="开始日期" class="plandate">
+          <FormItem label="开始周" class="plandate">
             <Select v-model="schedule.startday" style="width:120px">
               <Option
                 v-for="item in schedule.weekList"
                 :value="item.value"
-                :label="item.name"
                 :key="item.value"
                 >{{ item.name }}</Option
               >
@@ -191,10 +190,11 @@
         </FormItem>
         <div v-if="show3 == '0'" class="block250">
           <FormItem label="结束日期" class="plandate">
-            <Select v-model="schedule.endday" style="width:120px">
+            <Select v-model="schedule.endday" style="width:120px"  @on-change=showNows>
               <Option
                 v-for="item in schedule.dayList"
                 :value="item.value"
+                :label="item.name"
                 :key="item.value"
                 >{{ item.name }}</Option
               >
@@ -202,7 +202,7 @@
           </FormItem>
         </div>
         <div v-if="show3 == '1'" class="block250">
-          <FormItem label="结束日期" class="plandate">
+          <FormItem label="结束周" class="plandate">
             <Select v-model="schedule.endday" style="width:120px">
               <Option
                 v-for="item in schedule.weekList"
@@ -210,7 +210,7 @@
                 :key="item.value"
                 >{{ item.name }}</Option
               >
-            </Select>
+            </Select> 
           </FormItem>
         </div>
         <div v-if="show3 == '2'" class="block250">
@@ -258,7 +258,7 @@
         </FormItem>
         <div class="button">
           <Button type="warning" @click="addPlan">添加计划</Button>
-          <Button type="warning" @click="revisePlan">修改计划</Button>
+          <Button type="warning" @click="revisePlan">保存修改</Button>
           <Button type="warning" @click="deletePlan">删除计划</Button>
         </div>
         <div class="planlist">
@@ -323,7 +323,7 @@ export default {
       planlist: [
         {
           title: "调度类型",
-          key: "scheduletype"
+          key: "typelevelCh"
         },
         {
           title: "备份类型",
@@ -492,7 +492,8 @@ export default {
         endday: "",
         endtime: "",
         planList: [],
-        planListIndex:''
+        planListIndex:'',
+        addLists:{}
       },
       resources: {
         equipment: "",
@@ -567,26 +568,33 @@ export default {
   },
   methods: {
     planListIndex:function(value,index){
-      console.log(value)
+       this.show3 = value.scheduletype.toString();
+       console.log(value, this.show3 )
+       this.schedule.startday="",
+       this.schedule.endday="",
       this.schedule.planListIndex=index;
       this.schedule.typelevel=value.scheduletype;
       this.schedule.backuptlevel=value.backuptype;
       this.schedule.freqtypelevel=value.freqtype;
       this.schedule.intervalTime=value.freqval;
-      this.schedule.startday=value.startday;
+      this.$nextTick(()=>{
+      this.schedule.startday=value.startday.toString();
+      this.schedule.endday=value.endday.toString();
+      })
       this.schedule.starttime=value.starttime;
-      this.schedule.endday=value.endday;
       this.schedule.endtime=value.endtime;
 
     },
-    addPlan: function() {
-      let addList = {
-        scheduletype: parseInt(
+    addList:function(){
+      let typelevelNum= parseInt(
           this.schedule.typelevel ? this.schedule.typelevel : 0
-        ),
-        backuptype: parseInt(
+        );
+     let backupNum= parseInt(
           this.schedule.backuptlevel ? this.schedule.backuptlevel : 0
-        ),
+        );
+      let addList = {
+        backuptype: backupNum,
+        scheduletype: typelevelNum,
         freqtype: parseInt(
           this.schedule.freqtypelevel ? this.schedule.freqtypelevel : 0
         ),
@@ -598,12 +606,19 @@ export default {
         starttime: this.schedule.starttime,
         endday: parseInt(this.schedule.endday),
         endtime: this.schedule.endtime,
+        typelevelCh:typelevelNum==0?"日期":typelevelNum==1?"周":"间隔时间",
+        backupCh:backupNum==0?"q全备":backupNum==1?"增量":"差量",
         duration: 0
       };
-      this.schedule.planList.push(addList);
-      console.log(addList);
+      this.schedule.addLists=addList
+    },
+    addPlan: function() {
+      this.addList();
+      this.schedule.planList.push(this.schedule.addLists);
     },
     revisePlan: function() {
+      this.addList();
+       this.schedule.planList.splice(this.schedule.planListIndex,1,this.schedule.addLists)
     },
     deletePlan: function() {
       // let array =  this.schedule.planList
@@ -630,6 +645,9 @@ export default {
       this.schedule.freqval = test.label;
     },
     showNow: function() {},
+    showNows: function(value) {
+      console.log(value)
+    },
     policypost: function() {
       let tests = {
         base: {
@@ -711,8 +729,15 @@ export default {
     },
     onplantype: function(value) {
       this.show3 = value;
-      this.schedule.startday = "";
+      // console.log( this.schedule.startday, this.schedule.endtday,"1")
+     this.$nextTick(()=>{
+        this.schedule.startday = "";
       this.schedule.endday = "";
+      // console.log( this.schedule.startday, this.schedule.endtday,"3")
+
+     })
+      // console.log( this.schedule.startday, this.schedule.endtday,"2")
+
       // this.timeFormate();
     },
     build_path_by_tree_node: function(treeNode) {
