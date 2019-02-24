@@ -18,7 +18,7 @@
 		<Row>
 			<Col span="12">
 			<FormItem label="密码:">
-				<input v-model="formItem.password" class="password-input"></input>
+				<input v-model="formItem.password" class="password-input" type="password"></input>
 			</FormItem>
 			</Col>
 			<Col span="12">
@@ -39,7 +39,7 @@
 			<Button type="info" @click="test">测试连接</Button>
 			<Button type="info" @click="modalDelete = true">删除</Button>
 			<Modal v-model="modalDelete" @on-ok="ok" @on-cancel="cancel" ok-text="确认删除" cancel-text="取消" class-name="vertical-center-modal">
-				<p style="color:#f60;text-align:center;font-size:19px;">确认是否删除该实例，如果确认删除请点击删除，否认点击取消。</p>
+				<p style="color:#f60;text-align:center;font-size:19px;">确认是否删除{{this.formItem.instanceName}}实例，如果确认删除请点击删除，否认点击取消。</p>
 			</Modal>
 		</Row>
 		<Row class="row-table">
@@ -67,7 +67,7 @@ export default {
       'rest-ful/v3.0/client/agent/instances?cid=' +
       this.clientId +
       '&type=' +
-      this.clientList[1].key
+     this.$store.state.clientTitle
     util.restfullCall(url, null, 'get', obj => {
       let data = []
       for (let i = 0; i < obj.data.length; i++) {
@@ -138,7 +138,7 @@ export default {
       let conf = JSON.stringify(message)
       let postData = {}
       postData.cid = this.clientId
-      postData.type = this.clientList[1].key
+      postData.type = parseInt(this.$store.state.clientTitle)
       postData.conf = conf
       util.restfullCall(url, postData, 'delete', obj => {
         if (obj.data.code == 0) {
@@ -172,7 +172,7 @@ export default {
       let conf = JSON.stringify(message)
       let postData = {}
       postData.cid = this.clientId
-      postData.type = this.clientList[1].key
+      postData.type =  parseInt(this.$store.state.clientTitle)
       postData.conf = conf
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance',
@@ -192,11 +192,12 @@ export default {
               value: this.formItem.instanceName,
               label: this.formItem.instanceName
             })
-            this.formItem = []
-            this.model1 = ''
+            // this.formItem = []
+            // this.model1 = ''
           }
         }
       )
+      console.log(postData,this.clientList)
     },
     changeOption: function(value) {
       this.catalog = value
@@ -224,6 +225,7 @@ export default {
       let postData = {}
       postData.cid = this.clientId
       postData.conf = conf
+      postData.type =  parseInt(this.$store.state.clientTitle)
       postData.id = this.formItem.id
       util.restfullCall(url, postData, 'put', obj => {
         if (obj.data.code == 0) {
@@ -251,6 +253,7 @@ export default {
       let conf = JSON.stringify(message)
       let postData = {}
       postData.cid = this.clientId
+      postData.type =  parseInt(this.$store.state.clientTitle)
       postData.conf = conf
       postData.id = this.formItem.id
       util.restfullCall(
@@ -260,13 +263,8 @@ export default {
         obj => {
           if (obj.data.code == 0) {
             alert('测试连接成功')
-            this.formItem = []
-            this.model1 = ''
-          }
-          if (obj.data.code == 1) {
+          }else {
             alert('测试连接失败')
-            this.formItem = []
-            this.model1 = ''
           }
         }
       )

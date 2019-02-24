@@ -1,5 +1,5 @@
 <style lang="less">
-.vertical-center-modal {
+.vertical-center-modals {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,7 +18,7 @@
   <div>
     <Modal
       v-model="updateModal"
-      class-name="vertical-center-modal"
+      class-name="vertical-center-modals"
       :title="title"
       @on-ok="ok"
       @on-cancel="cancel"

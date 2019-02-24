@@ -39,10 +39,11 @@ import Vmware from './vmware.vue';
 			Vmware
 		},
 		created() {
+
 		},
+		
 		computed:{
 			show(){
-				console.log(this.$store.state.clientList)
 				return this.$store.state.clientTitle;
 			}
 		},

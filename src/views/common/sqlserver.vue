@@ -5,33 +5,37 @@
     <Form class="sqlserver" :model="sqlserver">
         <Row>
             <Col span="12">
-            <FormItem label="主机名:">
+            <FormItem label="实例名:">
                 <input v-model="sqlserver.server"></input>
             </FormItem>
             </Col>
-            <Col span="12">
-            <FormItem label="用户名:">
-                <input v-model="sqlserver.user" class="user-input"></input>
-            </FormItem>
-            </Col>
+              <Col span="12">
+            <span>认证方式</span>
+            <Select v-model="type" style="width:170px" class='selection' >
+                <Option v-for="item in authtype" :label="item.name" :value="item.type" :key="item.value"></Option>
+            </Select>
+              </Col>
         </Row>
         <Row>
-            <Col span="12">
-            <FormItem label="密码:">
-                <input v-model="sqlserver.password" class="sqlserver-password"></input>
+           <Col span="12">
+            <FormItem label="用户名:">
+                <input v-model="sqlserver.user" class="user-input" :disabled="disableds"></input>
             </FormItem>
             </Col>
+            <Col span="12">
+            <FormItem label="密码:">
+                <input v-model="sqlserver.password" class="sqlserver-password" type="password" :disabled="disableds"></input>
+            </FormItem>
+            </Col>
+          
+        </Row>
+        <Row>
             <Col span="12">
             <FormItem label="超时时间:">
                 <input v-model="sqlserver.timeout"></input>
             </FormItem>
             </Col>
-        </Row>
-        <Row>
-            <span>认证方式</span>
-            <Select v-model="type" style="width:200px" class='selection' >
-                <Option v-for="item in authtype" :value="item.value" :key="item.value"></Option>
-            </Select>
+           
         </Row>
         <Row class="sqlserver-btn">
             <Button type="info" @click="updateSqlserver">保存修改</Button>
@@ -39,7 +43,7 @@
             <Button type="info" @click="test">测试连接</Button>
             <Button type="info" @click="modalDelete = true">删除</Button>
             <Modal v-model="modalDelete" @on-ok="ok" @on-cancel="cancel" ok-text="确认删除" cancel-text="取消" class-name="vertical-center-modal">
-                <p style="color:#f60;text-align:center;font-size:19px;">确认是否删除该实例，如果确认删除请点击删除，否认点击取消。</p>
+                <p style="color:#f60;text-align:center;font-size:19px;">确认是否删除{{this.sqlserver.server}}实例，如果确认删除请点击删除，否认点击取消。</p>
             </Modal>
         </Row>
         <Row class="sqlserver-table">
@@ -60,7 +64,11 @@ export default {
     },
     clientList() {
       return this.$store.state.clientList
+    },
+    thisType(){
+      return this.type
     }
+
   },
   data() {
     return {
@@ -73,72 +81,90 @@ export default {
       modalDelete: false,
       columns: [
         {
-          title: '服务地址',
+          title: '服务地址',  
           key: 'server'
         },
         {
+          width: 100,
           title: '用户名',
           key: 'user'
         },
         {
           title: '超时时间',
+          width: 90,
           key: 'timeout'
         },
         {
           title: '认证方式',
+          width: 170,
           key: 'authtype'
         }
       ],
       data: [],
-      authtype: [
-        {
-          value: '操作系统认证',
-          label: '0'
-        },
-        {
-          value: 'SQLSERVER认证',
-          label: '1'
-        }
-      ],
+      authtype: [],
       type: '',
       code: '',
-      param: false
+      param: false,
+      disableds:false
     }
+  },
+  created(){
+    let url ="rest-ful/v3.0/MSSQLAuthType"
+    util.restfullCall(url,null,"get",this.callAuthType)
   },
   mounted: function() {
     let url =
       'rest-ful/v3.0/client/agent/instances?cid=' +
       this.clientId +
       '&type=' +
-      this.clientList[1].key
+     this.$store.state.clientTitle
     util.restfullCall(url, null, 'get', obj => {
       let data = []
       for (let i = 0; i < obj.data.length; i++) {
         let object = JSON.parse(obj.data[i].conf)
+        let num = object.authtype;
+         object.authtype = this.findType(num)
         object.id = obj.data[i].id
         data.push(object)
-      }
-      for (let i = 0; i < data.length; i++) {
         this.data.push(data[i])
       }
+      // for (let i = 0; i < data.length; i++) {
+      //   this.data.push(data[i])
+      // }
+
     })
+   this.type =1;
+  },
+  watch: {
+    thisType:function (type) {
+      if(type == 1){
+        this.disableds = true;
+      }else{
+        this.disableds = false;
+      }
+    }
   },
   methods: {
+  findType:function (num) {
+    function findCherries(fruit) { 
+    return fruit.type ===num;
+   }
+ return this.authtype.find(findCherries).name
+  },
+   findName:function (name) {
+    function findCherries(fruit) { 
+    return fruit.name ===name;
+   }
+ return this.authtype.find(findCherries).type
+  },
+    // 认证方式
+    callAuthType:function (obj) {
+       this.authtype= obj.data;
+    },
     //删除实例
     ok() {
       let url = 'rest-ful/v3.0/client/agent/instance/' + this.sqlserver.id
-      let message = {}
-      message.server = this.sqlserver.server
-      message.user = this.sqlserver.user
-      message.password = this.sqlserver.password
-      message.timeout = this.sqlserver.timeout
-      message.authtype = this.type
-      let conf = JSON.stringify(message)
-      let postData = {}
-      postData.cid = this.clientId
-      postData.conf = conf
-      postData.id = this.sqlserver.id
-      util.restfullCall(url, postData, 'delete', obj => {
+      util.restfullCall(url, null, 'delete', obj => {
         // state.commit('getCode',obj.data.code);
         // state.commit('getInstanceId',obj.data.id);
         if (obj.data.code == 0) {
@@ -149,7 +175,9 @@ export default {
           })
           this.sqlserver = []
           this.type = ''
-        }
+        }else{
+			alert(删除失败)
+		}
       })
     },
     cancel() {
@@ -161,7 +189,7 @@ export default {
       this.sqlserver.user = item.user
       this.sqlserver.password = item.password
       this.sqlserver.timeout = item.timeout
-      this.type = item.authtype
+      this.type = this.findName(item.authtype)
       this.sqlserver.id = item.id
     },
     updateSqlserver: function() {
@@ -176,6 +204,7 @@ export default {
       let postData = {}
       postData.cid = this.clientId
       postData.conf = conf
+      postData.type = parseInt(this.$store.state.clientTitle)
       postData.id = this.sqlserver.id
       util.restfullCall(url, postData, 'put', obj => {
         if (obj.data.code == 0) {
@@ -185,25 +214,23 @@ export default {
               x.user = message.user
               x.password = message.password
               x.timeout = message.timeout
-              x.authtype = message.authtype
+              x.authtype =this.findType(message.authtype)
             }
           })
-          this.sqlserver = []
-          this.type = ''
         }
       })
     },
     newSqlserver: function() {
       let message = {}
       message.server = this.sqlserver.server
-      message.user = this.sqlserver.users
+      message.user = this.sqlserver.user
       message.password = this.sqlserver.password
-      message.timeout = this.sqlserver.timeout
-      message.authtype = this.type
+      message.timeout = parseInt(this.sqlserver.timeout)
+      message.authtype = parseInt(this.type)
       let conf = JSON.stringify(message)
       let postData = {}
       postData.cid = this.clientId
-      postData.type = this.clientList[1].key
+      postData.type = parseInt(this.$store.state.clientTitle)
       postData.conf = conf
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance',
@@ -215,8 +242,8 @@ export default {
               server: this.sqlserver.server,
               user: this.sqlserver.user,
               password: this.sqlserver.password,
-              timeout: this.sqlserver.timeout,
-              authtype: this.type,
+              timeout:parseInt( this.sqlserver.timeout),
+              authtype:this.findType( parseInt(this.type)),
               id: obj.data.id
             })
             this.sqlserver = []
@@ -224,6 +251,7 @@ export default {
           }
         }
       )
+      console.log(postData)
     },
     test: function() {
       let message = {}
@@ -237,6 +265,7 @@ export default {
       postData.cid = this.clientId
       postData.conf = conf
       postData.id = this.sqlserver.id
+      postData.type = parseInt(this.$store.state.clientTitle)
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance/test',
         postData,
@@ -245,14 +274,15 @@ export default {
           if (obj.data.code == 0) {
             alert('测试连接成功')
           }
-          if (obj.data.code == 1) {
-            alert('测试连接失败')
+   else {
+            alert(obj.data.message)
           }
+          
         }
       )
-      this.sqlserver = []
-      this.type = ''
-    }
+      // this.sqlserver = []
+      // this.type = ''
+    },
   }
 }
 </script>

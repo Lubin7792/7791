@@ -95,16 +95,16 @@ const store = new Vuex.Store({
       });
       for (let i = 0; i < obj[0].data.agents.length; i++) {
         // if (!(obj[0].data.agents[0].type === 65536)) {
-          clientList.push({
-            title: obj[0].data.agents[i].name,
-            name: obj[0].data.agents[i].type.toString(),
-            key: obj[0].data.agents[i].type
-          });
+        clientList.push({
+          title: obj[0].data.agents[i].name,
+          name: obj[0].data.agents[i].type.toString(),
+          key: obj[0].data.agents[i].type
+        });
         // }
       }
       //删除列表中的文件系统
       function clientl(element) {
-        return element.key !== 65536;
+        return element.key !== 65536 && element.key !== 393216;
       }
       state.clientList = clientList.filter(clientl);
     },

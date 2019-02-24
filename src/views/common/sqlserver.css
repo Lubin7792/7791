@@ -11,23 +11,23 @@
 	}
 	& input{
 		border-radius: calc(var(--font) *5);
-    		border: 1px solid gray;
+    		border: 1px solid #dddee1;
 	}
 	& .ivu-form-item{
 		display: inline-block;
 		margin-bottom:calc(var(--font)*15);
 	}
 	& .sqlserver-password{
-		margin-left:calc(var(--font)*11);
+		margin-left:calc(var(--font)*18);
 	}
 	& .user-input{
-		margin-left:calc(var(--font)*12);
+		/* margin-left:calc(var(--font)*5); */
 	}
 	/*& .password-input{
 		margin-left:calc(var(--font)*11);
 	}*/
 	& .selection{
-		margin-left:calc(var(--font)*25);
+		margin-left:calc(var(--font)*6);
 	}
 	& .sqlserver-btn{
 		margin-top:calc(var(--font)*11);

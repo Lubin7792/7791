@@ -9,7 +9,7 @@
       <Button type="error" style="margin-top:15px;">删除策略</Button>
       <Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
     </div>
-    <Table border :columns="policyColumns" :data="policiesData" ref= "exp"></Table>
+    <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
     <updatePolicy :upmodal="modal" @close="close"></updatePolicy>
   </div>
@@ -334,66 +334,38 @@ export default {
     newPolicy
   },
   created() {
-    util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
-    util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);
+    // util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
+    // util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);
   },
   computed: {
     policiesData() {
       // console.log(this.$store.state.policiesData)
-      // return this.$store.state.policiesData;
+      return this.$store.state.policiesData;
       // 假数据
-      return this.shiliS;
+      // return this.shiliS;
     }
   },
   methods: {
     // 修改列表备份类型数据
     scheduletype(obj, scheduletype) {
-      // this.$set(this.policiesData[scheduletype.index], "scheduletypes", {
-      //   name: obj.data[0].name,
-      //   type: obj.data[0].type
-      // });
-      console.log(
-        this.policiesData[scheduletype.index].scheduletypes.name,
-        this.policiesData[scheduletype.index].scheduletypes.type
-      );
       this.policiesData[scheduletype.index].scheduletypes.name =
         obj.data[0].name;
       this.policiesData[scheduletype.index].scheduletypes.type =
         obj.data[0].type;
-      console.log(
-        this.policiesData[scheduletype.index].scheduletypes.name,
-        this.policiesData[scheduletype.index].scheduletypes.type
-      );
-      // 
+      this.$nextTick(()=>{
+       this.$refs.exp.$children[1].$children[scheduletype.index].$children[9].$children[1].currentVisible = true;
+      })
+      console.log(obj, scheduletype)
     },
     buttonPost(params) {
-      // util.restfullCalls(
-      //   "/rest-ful/v3.0/policy/scheduletype/" +
-      //     this.policiesData[params.index].id,
-      //   null,
-      //   "get",
-      //   this.scheduletype,
-      //   params
-      // );
-      // 假数据
-  // console.log(this.policiesData[0].scheduletypes.name)
-     this.policiesData[params.index].scheduletypes.name =
-       "增量备份";
-      this.policiesData[params.index].scheduletypes.type =
-        2 ;
-  // this.$set(this.$refs.exp.$children[1].$children[0].$children[9].$children[1],"currentVisible","true")
-  // this.$forceUpdate();
-  console.log(this.$refs.exp)
-  //  this.$refs.exp.$children[1].$children[0].$children[9].$children[1].currentVisible = true;
-
-    this.$nextTick(() => {
-      // console.log(params.index)
-      var num = params.index
-   this.$refs.exp.$children[1].$children[num].$children[9].$children[1].currentVisible = true;
-
-    })
-  // console.log(this.$refs.exp.$children[1].$children[0].$children[9].$children[1].currentVisible)
-
+      util.restfullCalls(
+        "/rest-ful/v3.0/policy/scheduletype/" +
+          this.policiesData[params.index].id,
+        null,
+        "get",
+        this.scheduletype,
+        params
+      );
     },
     nowCallBack: function(params) {
       alert(params.data.message);

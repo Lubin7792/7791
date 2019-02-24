@@ -4,18 +4,32 @@
 
 <template>
   <div class="newconten">
-    <div v-show="show==='基本信息'" class="basicinfo">
+    <div v-show="show === '基本信息'" class="basicinfo">
       <Form ref="basic" :model="basic" :label-width="120">
         <FormItem label="策略名称">
           <Input v-model="basic.name"></Input>
         </FormItem>
         <FormItem label="策略类型">
-          <Select v-model="basictype" style="width:160px" @on-change="alick" :label-in-value="true">
-            <Option v-for="item in policyTyep" :label="item.name" :value="item.key" :key="item.key"></Option>
+          <Select
+            v-model="basictype"
+            style="width:160px"
+            @on-change="alick"
+            :label-in-value="true"
+          >
+            <Option
+              v-for="item in policyTyep"
+              :label="item.name"
+              :value="item.key"
+              :key="item.key"
+            ></Option>
           </Select>
         </FormItem>
         <FormItem label="储存设备">
-          <Select style="width:200px" v-model="basic.deviceval" @on-change="showNow">
+          <Select
+            style="width:200px"
+            v-model="basic.deviceval"
+            @on-change="showNow"
+          >
             <Option
               v-for="item in this.devicesList"
               :label="item.name"
@@ -25,12 +39,25 @@
           </Select>
         </FormItem>
         <FormItem label="介质池">
-          <Select style="width:200px" v-model="basic.poolval" @on-change="showNow">
-            <Option v-for="item in basic.pool" :label="item.name" :value="item.id" :key="item.name"></Option>
+          <Select
+            style="width:200px"
+            v-model="basic.poolval"
+            @on-change="showNow"
+          >
+            <Option
+              v-for="item in basic.pool"
+              :label="item.name"
+              :value="item.id"
+              :key="item.name"
+            ></Option>
           </Select>
         </FormItem>
         <FormItem label="优先级">
-          <Select style="width:200px" v-model="basic.privilegekey" @on-change="showNow">
+          <Select
+            style="width:200px"
+            v-model="basic.privilegekey"
+            @on-change="showNow"
+          >
             <Option
               v-for="item in basic.privilege"
               :label="item.Name"
@@ -59,12 +86,12 @@
           <Input v-model="basic.savedays"></Input>
         </FormItem>
       </Form>
-      <div style="display:none">{{lconten}}</div>
+      <div style="display:none">{{ lconten }}</div>
     </div>
-    <div v-show="show==='备份资源列表'">
+    <div v-show="show === '备份资源列表'">
       <div id="areaTree">
         <div class="box-title">
-          <span @click="freshArea">列表</span>
+          <span>列表</span>
         </div>
         <div class="tree-box">
           <div class="zTreeDemoBackground left">
@@ -72,17 +99,30 @@
           </div>
         </div>
         <div class="tree-conten">
-          <Table border ref="selection" :columns="columns4" :data="pathConten"></Table>
+          <Table
+            border
+            ref="selection"
+            :columns="columns4"
+            :data="pathConten"
+          ></Table>
         </div>
       </div>
     </div>
-    <div v-show="show==='备份选项'">
-      <backupoption :show2="policyTypekey" v-if="hackReset" ref="backupOption"></backupoption>
+    <div v-show="show === '备份选项'">
+      <backupoption
+        :show2="policyTypekey"
+        v-if="hackReset"
+        ref="backupOption"
+      ></backupoption>
     </div>
-    <div v-show="show==='调度计划'" class="planinfo">
+    <div v-show="show === '调度计划'" class="planinfo">
       <Form ref="schedule" :model="schedule" :label-width="80">
         <FormItem label="调度类型">
-          <Select style="width:120px" @on-change="onplantype" v-model="schedule.typelevel">
+          <Select
+            style="width:120px"
+            @on-change="onplantype"
+            v-model="schedule.typelevel"
+          >
             <Option
               v-for="item in schedule.type"
               :label="item.value"
@@ -101,17 +141,45 @@
             ></Option>
           </Select>
         </FormItem>
-        <FormItem label="开始日期" class="plandate">
-          <DatePicker
-            type="date"
-            :value="schedule.startday"
-            format="dd"
-            show-week-numbers
-            placement="bottom-end"
-            placeholder="Select date"
-            @on-change="startDate"
-          ></DatePicker>
-        </FormItem>
+        <div v-if="show3 == '0'" class="block250">
+          <FormItem label="开始日期" class="plandate">
+            <Select v-model="schedule.startday" style="width:120px">
+              <Option
+                v-for="item in schedule.dayList"
+                :value="item.value"
+                :key="item.value"
+                >{{ item.name }}</Option
+              >
+            </Select>
+          </FormItem>
+        </div>
+        <div v-if="show3 == '1'" class="block250">
+          <FormItem label="开始日期" class="plandate">
+            <Select v-model="schedule.startday" style="width:120px">
+              <Option
+                v-for="item in schedule.weekList"
+                :value="item.value"
+                :label="item.name"
+                :key="item.value"
+                >{{ item.name }}</Option
+              >
+            </Select>
+          </FormItem>
+        </div>
+        <div v-if="show3 == '2'" class="block250">
+          <FormItem label="开始日期" class="plandate">
+            <DatePicker
+              :value="schedule.startday"
+              type="date"
+              format="dd"
+              show-week-numbers
+              placement="bottom-end"
+              placeholder="Select date"
+              @on-change="startDate"
+            ></DatePicker>
+          </FormItem>
+        </div>
+
         <FormItem label="开始时间" width="100px">
           <TimePicker
             :value="schedule.starttime"
@@ -121,17 +189,43 @@
             @on-change="startTime"
           ></TimePicker>
         </FormItem>
-        <FormItem label="结束日期" class="plandate">
-          <DatePicker
-            :value="schedule.endday"
-            type="date"
-            format="dd"
-            show-week-numbers
-            placement="bottom-end"
-            placeholder="Select date"
-            @on-change="endDate"
-          ></DatePicker>
-        </FormItem>
+        <div v-if="show3 == '0'" class="block250">
+          <FormItem label="结束日期" class="plandate">
+            <Select v-model="schedule.endday" style="width:120px">
+              <Option
+                v-for="item in schedule.dayList"
+                :value="item.value"
+                :key="item.value"
+                >{{ item.name }}</Option
+              >
+            </Select>
+          </FormItem>
+        </div>
+        <div v-if="show3 == '1'" class="block250">
+          <FormItem label="结束日期" class="plandate">
+            <Select v-model="schedule.endday" style="width:120px">
+              <Option
+                v-for="item in schedule.weekList"
+                :value="item.value"
+                :key="item.value"
+                >{{ item.name }}</Option
+              >
+            </Select>
+          </FormItem>
+        </div>
+        <div v-if="show3 == '2'" class="block250">
+          <FormItem label="结束日期" class="plandate">
+            <DatePicker
+              :value="schedule.endday"
+              type="date"
+              format="dd"
+              show-week-numbers
+              placement="bottom-end"
+              placeholder="Select date"
+              @on-change="endDate"
+            ></DatePicker>
+          </FormItem>
+        </div>
         <FormItem label="结束时间" width="100px">
           <TimePicker
             :value="schedule.endtime"
@@ -141,8 +235,6 @@
             style="width: 168px"
           ></TimePicker>
         </FormItem>
-        <!-- <div v-if="show3==='周'"></div> -->
-        <!-- <div v-if="show3==='时间间隔'"> </div> -->
         <FormItem label="间隔类型" style="width:100%">
           <Select
             style="width:150px"
@@ -157,16 +249,20 @@
               :key="item.value"
             ></Option>
           </Select>
-          <Input v-model="schedule.intervalTime" placeholder="输入时间" style="width: 100px"></Input>
+          <Input
+            v-model="schedule.intervalTime"
+            placeholder="输入时间"
+            style="width: 100px"
+          ></Input>
           <span>{{ schedule.freqval }}</span>
         </FormItem>
         <div class="button">
-          <Button type="warning">添加计划</Button>
-          <Button type="warning">保存计划</Button>
-          <Button type="warning">删除计划</Button>
+          <Button type="warning" @click="addPlan">添加计划</Button>
+          <Button type="warning" @click="revisePlan">修改计划</Button>
+          <Button type="warning" @click="deletePlan">删除计划</Button>
         </div>
         <div class="planlist">
-          <Table border :columns="planlist" :data="schedule.list"></Table>
+          <Table highlight-row border :columns="planlist" @on-row-click="planListIndex" :data="schedule.planList"></Table>
         </div>
       </Form>
     </div>
@@ -202,15 +298,13 @@ export default {
           onCheck: this.zTreeOnCheck
         }
       },
+      treeNod: {},
+      treeId: "",
       hackReset: true,
       policyTypekey: "",
-      zNodes: [],
-      timevalue1: "",
-      timevalue2: "",
-      nowTime: "",
-      nowDate: "",
       ztreeObj: {},
       pathConten: [],
+      checkType: false,
       columns4: [
         {
           title: "已选地址",
@@ -226,66 +320,30 @@ export default {
       ],
       plan1: "",
       basictype: [null],
-      options2: {
-        shortcuts: [
-          {
-            text: "1 周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
-              return [start, end];
-            }
-          },
-          {
-            text: "2 周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 14);
-              return [start, end];
-            }
-          },
-          {
-            text: "3 周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 21);
-              return [start, end];
-            }
-          },
-          {
-            text: "4 周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 28);
-              return [start, end];
-            }
-          }
-        ]
-      },
       planlist: [
         {
           title: "调度类型",
-          key: "plantype"
+          key: "scheduletype"
         },
         {
-          title: "备份类型"
+          title: "备份类型",
+          key: "backuptype"
         },
         {
-          title: "开始时间"
+          title: "开始时间",
+          key: "starttime"
         },
         {
-          title: "结束时间"
+          title: "结束时间",
+          key: "endtime"
         },
         {
-          title: "间隔时间"
+          title: "间隔时间",
+          key: "freqval"
         }
       ],
 
-      show3: "",
+      show3: "0",
       basic: {
         name: "",
         deviceval: "",
@@ -342,7 +400,49 @@ export default {
         savedays: ""
       },
       schedule: {
-        typelevel: "",
+        typelevel: 0,
+        dayList: [
+          { name: "1号", value: "1" },
+          { name: "2号", value: "2" },
+          { name: "3号", value: "3" },
+          { name: "4号", value: "4" },
+          { name: "5号", value: "5" },
+          { name: "6号", value: "6" },
+          { name: "7号", value: "7" },
+          { name: "8号", value: "8" },
+          { name: "9号", value: "9" },
+          { name: "10号", value: "10" },
+          { name: "11号", value: "11" },
+          { name: "12号", value: "12" },
+          { name: "13号", value: "13" },
+          { name: "14号", value: "14" },
+          { name: "15号", value: "15" },
+          { name: "16号", value: "16" },
+          { name: "17号", value: "17" },
+          { name: "18号", value: "18" },
+          { name: "19号", value: "19" },
+          { name: "20号", value: "20" },
+          { name: "21号", value: "21" },
+          { name: "22号", value: "22" },
+          { name: "23号", value: "23" },
+          { name: "24号", value: "24" },
+          { name: "25号", value: "25" },
+          { name: "26号", value: "26" },
+          { name: "27号", value: "27" },
+          { name: "28号", value: "28" },
+          { name: "29号", value: "29" },
+          { name: "30号", value: "30" },
+          { name: "31号", value: "31" }
+        ],
+        weekList: [
+          { value: "1", name: "周一" },
+          { value: "2", name: "周二" },
+          { value: "3", name: "周三" },
+          { value: "4", name: "周四" },
+          { value: "5", name: "周五" },
+          { value: "6", name: "周六" },
+          { value: "7", name: "周日" }
+        ],
         type: [
           {
             value: "日期",
@@ -390,7 +490,9 @@ export default {
         startday: "",
         starttime: "",
         endday: "",
-        endtime: ""
+        endtime: "",
+        planList: [],
+        planListIndex:''
       },
       resources: {
         equipment: "",
@@ -421,30 +523,11 @@ export default {
     hackOne() {
       return this.policyTypekey;
     },
-    databack() {
-      return this.$store.state.policyData;
-    },
     policyTyep() {
       return this.$store.state.policyType;
     },
     devicesList() {
       return this.$store.state.devicesList;
-    },
-    data3() {
-      let data1 = [];
-      data1 = this.$store.state.policyData;
-      const array = [];
-      for (let i = 0; i < data1.length; i++) {
-        let item = data1[i];
-        array.push(
-          (item = {
-            id: item.id,
-            name: item.machine,
-            nodetype: 0
-          })
-        );
-      }
-      return array;
     },
     lconten() {
       let data1 = [];
@@ -455,7 +538,9 @@ export default {
         array.push(
           (item = {
             id: item.id,
+            iconSkin: "client",
             name: item.machine,
+            nocheck: true,
             nodetype: 0
           })
         );
@@ -474,13 +559,57 @@ export default {
         this.hackReset = true;
       });
       if (type == 196608) {
-   this.$parent.$parent.delTabList()
-      }else{
-        this.$parent.$parent.addTabList()
+        this.$parent.$parent.delTabList();
+      } else {
+        this.$parent.$parent.addTabList();
       }
     }
   },
   methods: {
+    planListIndex:function(value,index){
+      console.log(value)
+      this.schedule.planListIndex=index;
+      this.schedule.typelevel=value.scheduletype;
+      this.schedule.backuptlevel=value.backuptype;
+      this.schedule.freqtypelevel=value.freqtype;
+      this.schedule.intervalTime=value.freqval;
+      this.schedule.startday=value.startday;
+      this.schedule.starttime=value.starttime;
+      this.schedule.endday=value.endday;
+      this.schedule.endtime=value.endtime;
+
+    },
+    addPlan: function() {
+      let addList = {
+        scheduletype: parseInt(
+          this.schedule.typelevel ? this.schedule.typelevel : 0
+        ),
+        backuptype: parseInt(
+          this.schedule.backuptlevel ? this.schedule.backuptlevel : 0
+        ),
+        freqtype: parseInt(
+          this.schedule.freqtypelevel ? this.schedule.freqtypelevel : 0
+        ),
+        freqval: parseInt(
+          this.schedule.intervalTime ? this.schedule.intervalTime : 0
+        ),
+        // startday: parseInt(this.schedule.startday.replace(/'/g, "")),
+        startday: parseInt(this.schedule.startday),
+        starttime: this.schedule.starttime,
+        endday: parseInt(this.schedule.endday),
+        endtime: this.schedule.endtime,
+        duration: 0
+      };
+      this.schedule.planList.push(addList);
+      console.log(addList);
+    },
+    revisePlan: function() {
+    },
+    deletePlan: function() {
+      // let array =  this.schedule.planList
+      this.schedule.planList.splice(this.schedule.planListIndex,1)
+      // this.schedule.planList= array
+    },
     showOptions() {
       console.log(this.$refs.backupOption.showOption());
     },
@@ -519,7 +648,7 @@ export default {
             client: parseInt(
               this.resources.clientId ? this.resources.clientId : 1
             ),
-            type: 65538,
+            type: parseInt(this.basictype),
             path: this.resources.pathValue,
             exclude: 0
           }
@@ -539,12 +668,11 @@ export default {
             freqval: parseInt(
               this.schedule.intervalTime ? this.schedule.intervalTime : 0
             ),
-            startday: parseInt(this.schedule.startday.replace(/'/g, "")),
+            // startday: parseInt(this.schedule.startday.replace(/'/g, "")),
+            startday: parseInt(this.schedule.startday),
             starttime: this.schedule.starttime,
             endday: parseInt(this.schedule.endday),
-            endtime: this.schedule.endtime
-              ? this.schedule.endtime
-              : this.schedule.endNow,
+            endtime: this.schedule.endtime,
             duration: 0
           }
         ]
@@ -583,15 +711,34 @@ export default {
     },
     onplantype: function(value) {
       this.show3 = value;
-      this.timeFormate();
-    },
-    freshArea: function() {
-      $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
+      this.schedule.startday = "";
+      this.schedule.endday = "";
+      // this.timeFormate();
     },
     build_path_by_tree_node: function(treeNode) {
       //获取路径
+      let path = "";
+      let cid = 0;
+      do {
+        let parent = treeNode.getParentNode();
+        if (!parent) {
+          cid = treeNode.id;
+          name = treeNode.name;
+          break;
+        }
+
+        if (parent.nodetype != 0) {
+          console.log(path);
+
+          path = "/" + treeNode.name + path;
+          console.log(path);
+        } else {
+          path = treeNode.name + path;
+        }
+        treeNode = parent;
+      } while (true);
+      /*
       var path = "";
-      var cid = 0;
       let name = "";
       let current_node = treeNode;
       let parent = treeNode.getParentNode();
@@ -599,57 +746,68 @@ export default {
       while (true) {
         parent = current_node.getParentNode();
         if (!parent) {
-          cid = current_node.id;
           name = current_node.name;
           break;
         }
-        if (parent.nodetype) {
+        if (this.checkType) {
           path = "/" + path;
-        }
-        path = current_node.name + path;
-        current_node = parent;
-      }
+           path =current_node.name+path ;
+          current_node = parent;
+          console.log(path,current_node.name)
+        }else{
+          path = current_node.name + path;
+          current_node = parent;
+
+        }         
+      }*/
+
       return { client: cid, path: path, name: name };
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-      console.log(11);
-      if (!treeNode.hasOwnProperty("children")) {
-        let typeId = "65536";
-        let path = this.build_path_by_tree_node(treeNode);
-        // console.log(treeNode, treeNode.hasOwnProperty("children"));
-        let str =
-          "/rest-ful/v3.0/client/resource/browse?" +
-          "client=" +
-          path.client +
-          "&type=" +
-          typeId +
-          "&path=" +
-          path.path;
-        util.restfullCall(str, null, "get", function(obj) {
-          //返回数据处理
-          var arrays = new Array();
-          let objj = obj.data.resources;
-          for (let i = 0; i < objj.length; i++) {
-            arrays.push({
-              ResType: objj[i].ResType,
-              name: objj[i].Name,
-              nodetype: 1
-            });
-          }
-          let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
-          ztreeobj.addNodes(treeNode, arrays);
+      if (typeof this.basictype == "number") {
+        if (!treeNode.hasOwnProperty("children")) {
+          this.treeNode = treeNode;
+          this.treeId = treeId;
+          let typeId = treeNode.ResType ? treeNode.ResType : this.basictype;
+          let path = this.build_path_by_tree_node(treeNode);
+          let str =
+            "/rest-ful/v3.0/client/resource/browse?" +
+            "client=" +
+            path.client +
+            "&type=" +
+            typeId +
+            "&path=" +
+            path.path;
+          util.restfullCall(str, null, "get", this.callData);
+        }
+      }
+    },
+    callData: function(obj) {
+      let treeNode = this.treeNode;
+      let treeId = this.treeId;
+      //返回数据处理
+      var arrays = new Array();
+      // console.log( obj.data.resources)
+      let objj = obj.data.resources;
+      for (let i = 0; i < objj.length; i++) {
+        arrays.push({
+          ResType: objj[i].ResType,
+          name: objj[i].Name,
+          nodetype: 1
         });
       }
+      let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
+      ztreeobj.addNodes(treeNode, arrays);
+      this.checkType = treeNode.ResType;
     },
     //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
       let path = this.build_path_by_tree_node(treeNode);
-      let pathList = path.name + "_" + path.path;
+      var pathList = path.name + "_" + path.path;
       this.pathConten.push({ name: pathList });
       this.resources.clientId = path.client;
       this.resources.pathValue = path.path;
-      console.log(pathList, this.pathConten);
     }
   }
 };

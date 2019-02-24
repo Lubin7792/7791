@@ -6,7 +6,12 @@
   <div class="layout">
     <Layout>
       <Header class="navigation-header" style="height:50px; background:none;">
-        <Menu mode="horizontal" active-name="1" class="header" stylt="height:50px !important">
+        <Menu
+          mode="horizontal"
+          active-name="1"
+          class="header"
+          stylt="height:50px !important"
+        >
           <div class="layout-logo"></div>
           <span class="title">THE VRTS备份软件</span>
           <div class="layout-nav">
@@ -19,13 +24,13 @@
           </div>
         </Menu>
       </Header>
-      <Layout :style="{height:'100%'}">
-        <Content :style="{background: '#fff',height:'100%'}">
+      <Layout :style="{ height: '100%' }">
+        <Content :style="{ background: '#fff', height: '100%' }">
           <Layout>
-            <Sider hide-trigger :style="{background: '#fff'}">
+            <Sider hide-trigger :style="{ background: '#fff' }">
               <Menu
                 active-name="1-2"
-                :style="{background:'#4a4949',height:'100%'}"
+                :style="{ background: '#4a4949', height: '100%' }"
                 width="282px"
                 :open-names="['1']"
                 @on-select="changeUrl"
@@ -115,7 +120,12 @@
               </Menu>
             </Sider>
             <Content
-              :style="{padding: '24px', minHeight: '280px', background: '#fff',width:'1000px'}"
+              :style="{
+                padding: '24px',
+                minHeight: '280px',
+                background: '#fff',
+                width: '1000px'
+              }"
             >
               <router-view></router-view>
             </Content>
@@ -166,28 +176,27 @@ export default {
           savedays: objj[i].savedays,
           enable: objj[i].enable,
           maxtasks: objj[i].maxtasks,
-          scheduletypes: {type:'',name:''},
-          showS:false
-
+          scheduletypes: { type: "", name: "" },
+          showS: false
         });
       }
       this.$store.commit("policiesData", arrays);
     }
   },
-  created() {
-    util.restfullCall(
-      "/rest-ful/v3.0/policytype",
-      null,
-      "get",
-      this.policyData
-    );
-    util.restfullCall(
-      "/rest-ful/v3.0/policies",
-      null,
-      "get",
-      this.policiesData
-    );
-  },
+  // created() {
+  //   util.restfullCall(
+  //     "/rest-ful/v3.0/policytype",
+  //     null,
+  //     "get",
+  //     this.policyData
+  //   );
+  //   util.restfullCall(
+  //     "/rest-ful/v3.0/policies",
+  //     null,
+  //     "get",
+  //     this.policiesData
+  //   );
+  // },
   watch: {
     policyState: function() {
       util.restfullCall(

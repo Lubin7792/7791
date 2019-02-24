@@ -11,7 +11,7 @@
 	}
 	& input{
 		border-radius: calc(var(--font) *5);
-    		border: 1px solid gray;
+    		border: 1px solid #dddee1;
 	}
 	& .ivu-form-item{
 		display: inline-block;

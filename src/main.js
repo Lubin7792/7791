@@ -12,14 +12,20 @@ import Routers from './router/router.js';
 import 'babel-polyfill';
 import Vuex from 'vuex';
 import store from './store/store.js';
+import {
+    Table,
+    TableColumn
+} from 'element-ui';
 
 import 'babel-polyfill';
 Vue.use(VueRouter);
 Vue.use(iView);
+Vue.use(Table);
+Vue.use(TableColumn);
 // The routing configuration
 const RouterConfig = {
-  // 使用 HTML5 的 History 路由模式
-//   mode: "history",
+    // 使用 HTML5 的 History 路由模式
+    //   mode: "history",
     routes: Routers
 };
 const router = new VueRouter(RouterConfig);
@@ -33,7 +39,7 @@ router.afterEach((to, from, next) => {
 });
 new Vue({
     el: '#app',
-   router:router,
-   store:store, 
+    router: router,
+    store: store,
     render: h => h(App)
 });

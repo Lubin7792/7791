@@ -24,6 +24,10 @@
   height: 300px;
   overflow: auto;
 }
+.newconten .block250{
+  width: 250px;
+  display: inline-block;
+}
 .newconten .tree-conten {
   width: 39%;
   float: right;

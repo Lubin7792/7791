@@ -15,6 +15,9 @@
     background-size: 20px;
     display: inline-block;
 }
+.newconten .planinfo{
+    width: 98%;
+}
 .newconten .basicinfo{
     display: inline-block;
 }
