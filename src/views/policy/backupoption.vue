@@ -2,8 +2,8 @@
 @import "./newcontent.css";
 </style>
 <template>
-  <!-- <div> -->
-    <!-- <div v-if="show2"> -->
+  <div>
+    <div v-if="show2">
       <div>
         <div v-show="show2 === '65536'" class="file">
           <Form ref="file" :model="file" :label-width="120">
@@ -135,7 +135,7 @@
             <FormItem label="删除已经备份的归档">
               <Input v-model="basic.state"></Input>
             </FormItem>
-          </Form> -->
+          </Form>-->
         </div>
         <div v-if="show2 === '262144'">
           <Form ref="sqlserver" :model="sqlserver" :label-width="120">
@@ -181,14 +181,24 @@
           </Form>
         </div>
         <div v-if="show2 === '327680'">
-          <Form ref="basic" :model="basic" :label-width="120">
-            <FormItem label="跳过失败的虚拟机">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="跳过关机的虚拟机">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-          </Form>
+          <Checkbox v-model="showa" @on-change="checkType(showa,21)">跳过失败的虚拟机</Checkbox>
+          <p class="blanks"></p>
+          <Checkbox v-model="showb" @on-change="checkType(showb,29)">跳过关机的虚拟机</Checkbox>
+          <p class="blanks"></p>
+          <span>数据传输模式</span>
+          <Select
+            v-model="vmware.mode"
+            style="width:200px"
+            :label-in-value="true"
+            @on-change="select(28,parseInt(vmware.mode))"
+          >
+            <Option
+              v-for="item in vmware.modeList"
+              :label="item.name"
+              :value="item.key"
+              :key="item.key"
+            ></Option>
+          </Select>
         </div>
         <div v-if="show2 === '393216'">
           <Form ref="basic" :model="basic" :label-width="120">
@@ -198,11 +208,11 @@
           </Form>
         </div>
       </div>
-    <!-- </div> -->
-    <!-- <div v-else>
+    </div>
+    <div v-else>
       <p>请先选择策略类型</p>
-    </div> -->
-  <!-- </div> -->
+    </div>
+  </div>
 </template>
 <script>
 export default {
@@ -217,8 +227,7 @@ export default {
   created() {
     this.showtest = this.show2;
   },
-  destroyed() {
-  },
+  destroyed() {},
   data() {
     return {
       showa: false,
@@ -301,16 +310,33 @@ export default {
             key: "7"
           }
         ]
+      },
+      vmware: {
+        fail: "",
+        off: "",
+        mode: "",
+        modeList: [
+          { name: "NMBD", key: "0" },
+          { name: "HOTADD", key: "1" },
+          { name: "SAN", key: "2" },
+          { name: "DEFAULT", key: "3" }
+        ]
       }
     };
   },
   methods: {
     select(num, conten) {
-      this.deletes(num);
-      this.adds(num, conten);
+      if (num == 28 && conten == 3) {
+        this.deletes(num);
+      } else {
+        this.deletes(num);
+        this.adds(num, conten);
+      }
+      console.log( this.options
+      )
     },
-    setOptins(num, conten){
-       this.adds(num, conten);
+    setOptins(num, conten) {
+      this.adds(num, conten);
     },
     failType(num) {
       if (num == 9) {
@@ -340,6 +366,7 @@ export default {
     },
     //多选
     checkType(state, num, conten) {
+      console.log(state);
       if (state) {
         this.adds(num, conten);
       } else {
@@ -351,7 +378,7 @@ export default {
       if (conten == undefined) {
         this.options.push({ type: num });
       } else {
-        this.options.push({ type: num, value: conten });
+        this.options.push({ type: num, value: conten.toString() });
       }
       // console.log(this.options);
     },
@@ -370,18 +397,14 @@ export default {
       }
       this.options = this.options.filter(filters);
       if (state) {
-        this.options.push({ type: num, value: conten });
+        this.options.push({ type: num, value: conten.toString() });
       }
     },
     showOption() {
       return this.options;
     }
   },
-  computed: {
-   
-  },
-  watch: {
-   
-  }
+  computed: {},
+  watch: {}
 };
 </script> 

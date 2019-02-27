@@ -34,9 +34,13 @@ const store = new Vuex.Store({
     policyData: [],
     policyType: [],
     policiesData: [],
-    devicesList: []
+    devicesList: [],
+    detailData:{}
   },
   mutations: {
+    existData(state,data){
+      state.detailData= data
+    },
     //更改updateModal的函数,使控件出现
     updateTrue(state) {
       state.updateModal = true;

@@ -6,12 +6,10 @@
   <div class="policy">
     <div class="buttonC">
       <Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
-      <Button type="error" style="margin-top:15px;">删除策略</Button>
-      <Button type="error" style="margin-top:15px;" @click="updatePolicy">修改策略</Button>
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
-    <updatePolicy :upmodal="modal" @close="close"></updatePolicy>
+    <updatePolicy :upmodal="modal" @close="revise"></updatePolicy>
   </div>
 </template>
 <script>
@@ -85,7 +83,7 @@ export default {
         },
         {
           title: "设备",
-          key: "ip"
+          key: "device"
         },
         {
           title: "状态",
@@ -292,36 +290,23 @@ export default {
                     props: {
                       type: "error",
                       size: "small"
+                    },
+                    on:{
+                      click:()=>{
+                        this.modal= true;
+                          util.restfullCall(
+                          "/rest-ful/v3.0/policy/detail/" +
+                            params.row.id,
+                          null,
+                          "get",
+                          this.detailData
+                        );
+                      }
                     }
+
                   },
                   "修改策略"
                 )
-                // h(
-                //   "i-select",
-                //   {
-                //     style: { width: "80px" },
-                //     on: {
-                //       "on-change": (v, row) => {
-                //         var i = v;
-                //         this.selectOptions(i, params);
-                //       }
-                //     }
-                //   },
-                //   [
-                //     this.policiesData[params.index].scheduletypes == 1
-                //       ? ""
-                //       : h(
-                //           "Option",
-                //           {
-                //             props: {
-                //               value: this.policiesData[params.index]
-                //                 .scheduletypes.type
-                //             }
-                //           },
-                //           this.policiesData[params.index].scheduletypes.name
-                //         )
-                //   ]
-                // )
               ]
             );
           }
@@ -352,7 +337,6 @@ export default {
       this.$nextTick(()=>{
        this.$refs.exp.$children[1].$children[scheduletype.index].$children[9].$children[1].currentVisible = true;
       })
-      console.log(obj, scheduletype)
     },
     buttonPost(params) {
       util.restfullCalls(
@@ -401,9 +385,6 @@ export default {
       }
       this.$store.commit("saveDevicesData", devicesList);
     },
-    updatePolicy: function() {
-      this.modal = true;
-    },
     enableCall(obj) {
       alert(obj.data.message);
     },
@@ -416,8 +397,10 @@ export default {
     closePolicy: function(modalss) {
       this.modalss = modalss;
     },
+     revise: function(show) {
+      this.modal = show;
+    },
     switch(params, value) {
-      console.log(params);
       if (value) {
         this.policiesData[params.index].enable = 1;
         util.restfullCall(
@@ -435,6 +418,9 @@ export default {
           this.enableCall
         );
       }
+    },
+    detailData:function(obj){
+        this.$store.commit("existData",obj.data.policy)
     }
     // //更新反馈信息某一字段
     // updateFeedbackMessage(id, key, value) {

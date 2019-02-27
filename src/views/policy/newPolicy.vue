@@ -60,6 +60,7 @@ export default {
     this.name = "调度计划";
   },
   methods: {
+    //子组件调用  
     delTabList: function() {
       this.tabList.splice(2, 1);
     },

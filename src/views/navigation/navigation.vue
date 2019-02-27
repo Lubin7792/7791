@@ -175,6 +175,7 @@ export default {
           key: objj[i].device,
           savedays: objj[i].savedays,
           enable: objj[i].enable,
+          device: objj[i].device,
           maxtasks: objj[i].maxtasks,
           scheduletypes: { type: "", name: "" },
           showS: false

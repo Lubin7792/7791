@@ -11,7 +11,7 @@
         </FormItem>
         <FormItem label="策略类型">
           <Select
-            v-model="basictype"
+            v-model="basic.type"
             style="width:160px"
             @on-change="alick"
             :label-in-value="true"
@@ -95,7 +95,7 @@
         </div>
         <div class="tree-box">
           <div class="zTreeDemoBackground left">
-            <ul id="treeDemo" class="ztree"></ul>
+            <ul id="treeDemoA" class="ztree"></ul>
           </div>
         </div>
         <div class="tree-conten">
@@ -147,7 +147,7 @@
               <Option
                 v-for="item in schedule.dayList"
                 :value="item.value"
-                :key="item.value"
+                :key="item.name"
                 >{{ item.name }}</Option
               >
             </Select>
@@ -155,11 +155,11 @@
         </div>
         <div v-if="show3 == '1'" class="block250">
           <FormItem label="开始周" class="plandate">
-            <Select v-model="schedule.startday" style="width:120px">
+            <Select v-model="schedule.startday" style="width:120px"  @on-change=showNows>
               <Option
                 v-for="item in schedule.weekList"
                 :value="item.value"
-                :key="item.value"
+                :key="item.name"
                 >{{ item.name }}</Option
               >
             </Select>
@@ -195,7 +195,7 @@
                 v-for="item in schedule.dayList"
                 :value="item.value"
                 :label="item.name"
-                :key="item.value"
+                :key="item.name"
                 >{{ item.name }}</Option
               >
             </Select>
@@ -203,11 +203,11 @@
         </div>
         <div v-if="show3 == '1'" class="block250">
           <FormItem label="结束周" class="plandate">
-            <Select v-model="schedule.endday" style="width:120px">
+            <Select v-model="schedule.endday" style="width:120px"  @on-change=showNows>
               <Option
                 v-for="item in schedule.weekList"
                 :value="item.value"
-                :key="item.value"
+                :key="item.name"
                 >{{ item.name }}</Option
               >
             </Select> 
@@ -285,7 +285,7 @@ export default {
   },
   // beforeUpdate() {
   //   //回填
-  //   this.basictype = this.basicty;
+  //   this.basic.type = this.basicty;
   // },
   data() {
     return {
@@ -298,10 +298,11 @@ export default {
           onCheck: this.zTreeOnCheck
         }
       },
-      treeNod: {},
+      treeNodeA: {},
       treeId: "",
       hackReset: true,
       policyTypekey: "",
+      ztreeTyep:'',
       ztreeObj: {},
       pathConten: [],
       checkType: false,
@@ -318,16 +319,14 @@ export default {
           children: []
         }
       ],
-      plan1: "",
-      basictype: [null],
-      planlist: [
+        planlist: [
         {
           title: "调度类型",
           key: "typelevelCh"
         },
         {
           title: "备份类型",
-          key: "backuptype"
+          key: "backupCh"
         },
         {
           title: "开始时间",
@@ -345,6 +344,7 @@ export default {
 
       show3: "0",
       basic: {
+        type:'',
         name: "",
         deviceval: "",
         poolval: "",
@@ -546,11 +546,10 @@ export default {
           })
         );
       }
-      $.fn.zTree.init($("#treeDemo"), this.setting, array);
+      $.fn.zTree.init($("#treeDemoA"), this.setting, array);
     }
   },
   watch: {
-    databack: function(newdata, olddata) {},
     hackOne: function(type) {
       if (type == 131072) {
         this.$refs.backupOption.setOptins(14, 0);
@@ -607,7 +606,7 @@ export default {
         endday: parseInt(this.schedule.endday),
         endtime: this.schedule.endtime,
         typelevelCh:typelevelNum==0?"日期":typelevelNum==1?"周":"间隔时间",
-        backupCh:backupNum==0?"q全备":backupNum==1?"增量":"差量",
+        backupCh:backupNum==1?"全备":backupNum==2?"增量":"差量",
         duration: 0
       };
       this.schedule.addLists=addList
@@ -626,7 +625,6 @@ export default {
       // this.schedule.planList= array
     },
     showOptions() {
-      console.log(this.$refs.backupOption.showOption());
     },
     startDate: function(value) {
       this.schedule.startday = value;
@@ -646,13 +644,12 @@ export default {
     },
     showNow: function() {},
     showNows: function(value) {
-      console.log(value)
     },
     policypost: function() {
       let tests = {
         base: {
           name: this.basic.name,
-          type: this.basictype,
+          type: this.basic.type,
           privilege: parseInt(
             this.basic.privilegekey ? this.basic.privilegekey : 0
           ),
@@ -666,45 +663,26 @@ export default {
             client: parseInt(
               this.resources.clientId ? this.resources.clientId : 1
             ),
-            type: parseInt(this.basictype),
+            type: parseInt(this.ztreeTyep),
             path: this.resources.pathValue,
             exclude: 0
           }
         ],
         option: this.$refs.backupOption.showOption(),
-        schedule: [
-          {
-            scheduletype: parseInt(
-              this.schedule.typelevel ? this.schedule.typelevel : 0
-            ),
-            backuptype: parseInt(
-              this.schedule.backuptlevel ? this.schedule.backuptlevel : 0
-            ),
-            freqtype: parseInt(
-              this.schedule.freqtypelevel ? this.schedule.freqtypelevel : 0
-            ),
-            freqval: parseInt(
-              this.schedule.intervalTime ? this.schedule.intervalTime : 0
-            ),
-            // startday: parseInt(this.schedule.startday.replace(/'/g, "")),
-            startday: parseInt(this.schedule.startday),
-            starttime: this.schedule.starttime,
-            endday: parseInt(this.schedule.endday),
-            endtime: this.schedule.endtime,
-            duration: 0
-          }
-        ]
+        schedule:this.schedule.planList
       };
       console.log(tests);
       util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
     },
     senddata: function(value) {
-      alert(value.data.message);
       if (value.data.code === 0) {
         this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
+      }else{
+        alert(value.data.message)
       }
     },
     alick: function(value) {
+     this.basic.type=value.value
       this.policyTypekey = String(value.value);
     },
     timeFormate: function() {
@@ -733,11 +711,7 @@ export default {
      this.$nextTick(()=>{
         this.schedule.startday = "";
       this.schedule.endday = "";
-      // console.log( this.schedule.startday, this.schedule.endtday,"3")
-
      })
-      // console.log( this.schedule.startday, this.schedule.endtday,"2")
-
       // this.timeFormate();
     },
     build_path_by_tree_node: function(treeNode) {
@@ -753,13 +727,14 @@ export default {
         }
 
         if (parent.nodetype != 0) {
-          console.log(path);
 
           path = "/" + treeNode.name + path;
-          console.log(path);
         } else {
           path = treeNode.name + path;
         }
+         if (parent.nodetype != 1) {
+
+         }
         treeNode = parent;
       } while (true);
       /*
@@ -790,11 +765,11 @@ export default {
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-      if (typeof this.basictype == "number") {
+      if (typeof(this.basic.type) == "number") {
         if (!treeNode.hasOwnProperty("children")) {
-          this.treeNode = treeNode;
+          this.treeNodeA = treeNode;
           this.treeId = treeId;
-          let typeId = treeNode.ResType ? treeNode.ResType : this.basictype;
+          let typeId = treeNode.ResType ? treeNode.ResType : this.basic.type;
           let path = this.build_path_by_tree_node(treeNode);
           let str =
             "/rest-ful/v3.0/client/resource/browse?" +
@@ -809,7 +784,7 @@ export default {
       }
     },
     callData: function(obj) {
-      let treeNode = this.treeNode;
+      let treeNode = this.treeNodeA;
       let treeId = this.treeId;
       //返回数据处理
       var arrays = new Array();
@@ -832,7 +807,9 @@ export default {
       var pathList = path.name + "_" + path.path;
       this.pathConten.push({ name: pathList });
       this.resources.clientId = path.client;
+      this.ztreeTyep= treeNode.ResType
       this.resources.pathValue = path.path;
+      console.log(this.ztreeTyep)
     }
   }
 };
