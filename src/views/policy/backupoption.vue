@@ -65,7 +65,7 @@
           <Input
             v-model="oracle.script"
             :disabled="!showf"
-            @on-blur="checkValue(showf,4,oracle.script)"
+            @on-blur="checkValue(showf,24,oracle.script)"
             style="width: 300px"
           />
           <p class="blanks"></p>
@@ -332,8 +332,7 @@ export default {
         this.deletes(num);
         this.adds(num, conten);
       }
-      console.log( this.options
-      )
+     
     },
     setOptins(num, conten) {
       this.adds(num, conten);
@@ -366,7 +365,6 @@ export default {
     },
     //多选
     checkType(state, num, conten) {
-      console.log(state);
       if (state) {
         this.adds(num, conten);
       } else {
@@ -402,6 +400,9 @@ export default {
     },
     showOption() {
       return this.options;
+    },
+    callBack(key,value){
+      this.key=value
     }
   },
   computed: {},

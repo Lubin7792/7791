@@ -35,9 +35,13 @@ const store = new Vuex.Store({
     policyType: [],
     policiesData: [],
     devicesList: [],
-    detailData:{}
+    detailData:{},
+    updataShows:true
   },
   mutations: {
+    updataShow(state,data){
+      state.updataShows = data
+    },
     existData(state,data){
       state.detailData= data
     },

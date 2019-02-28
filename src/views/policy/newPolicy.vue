@@ -18,8 +18,8 @@
     ok-text="确定"
     class-name="vertical-center-modal"
   >
-    <Tabs type="card" :animated="false" @on-click="click" value>
-      <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index"></TabPane>
+    <Tabs type="card" :animated="false" @on-click="click" >
+      <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index" ></TabPane>
     </Tabs>
     <NewContent :show="show" ref="newConten"></NewContent>
   </Modal>
@@ -45,7 +45,7 @@ export default {
         }
       ],
       show: "基本信息",
-      basicty: ""
+      basicty: "",
     };
   },
   components: {

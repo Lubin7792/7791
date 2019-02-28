@@ -326,6 +326,10 @@ export default {
     policiesData() {
       return this.$store.state.policiesData;
     }
+  
+  },
+  watch: {
+
   },
   methods: {
     // 修改列表备份类型数据

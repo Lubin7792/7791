@@ -26,7 +26,7 @@
           </Select>
         </FormItem>
         <FormItem label="介质池">
-          <Select style="width:200px" v-model="basic.pool" @on-change="showNow"  disabled>
+          <Select style="width:200px" v-model="basic.pool" @on-change="showNow" disabled>
             <Option
               v-for="item in policylist.pool"
               :label="item.name"
@@ -238,7 +238,7 @@ import backupoption from "./backupoption";
 export default {
   props: {
     show: {
-      type: String,
+      type: String
     },
     model1: {
       type: [String, Object]
@@ -247,10 +247,6 @@ export default {
   components: {
     backupoption
   },
-  // beforeUpdate() {
-  //   //回填
-  //   this.basictype = this.basicty;
-  // },
   data() {
     return {
       setting: {
@@ -446,7 +442,7 @@ export default {
       },
 
       basic: {
-        type:'',
+        type: "",
         name: "",
         privilege: "",
         pool: "",
@@ -504,24 +500,64 @@ export default {
     }
   },
   watch: {
-    databack: function(newdata, olddata) {},
     backData: function(data) {
-      this.$emit('setshow', '基本信息');
+      //数据清空
+      this.schedule.scheduletype = 0;
+      this.schedule.backupType = "";
+      this.schedule.freqtype = 0;
+      this.schedule.freqval = "";
+      this.schedule.startday = "";
+      this.schedule.starttime = "";
+      this.schedule.endday = "";
+      this.schedule.endtime = "";
+      // 数据回填
       this.basic = data.base;
-      // this.schedule.scheduletype=0;
-      // this.schedule.backupType='';
-      // this.schedule.freqtype='';
-      // this.schedule.freqval='';
-      // this.schedule.startday='';
-      // this.schedule.starttime='';
-      // this.schedule.endday='';
-      // this.schedule.endtime='';
       this.temporary.planList = data.schedule;
-      for(let i =0;i<data.schedule.length;i++){
-          this.temporary.planList[i].typelevelCh=data.schedule[i].scheduletype==0?"日期":data.schedule[i].scheduletype==1?"全备":"间隔时间";
-            this.temporary.planList[i].backupCh=data.schedule[i].backupType==1?"全备":data.schedule[i].backupType==2?"增量":"差量"
+      for (let i = 0; i < data.schedule.length; i++) {
+        this.temporary.planList[i].typelevelCh =
+          data.schedule[i].scheduletype == 0
+            ? "日期"
+            : data.schedule[i].scheduletype == 1
+            ? "全备"
+            : "间隔时间";
+        this.temporary.planList[i].backupCh =
+          data.schedule[i].backupType == 1
+            ? "全备"
+            : data.schedule[i].backupType == 2
+            ? "增量"
+            : "差量";
       }
-    },
+      // this.hackReset = false;
+      // this.$nextTick(( ) => {
+        // this.hackReset = true;
+        if (data.base.type == 65536) {
+          let num = data.option.length;
+          for (let i = 0; i < num; i++) {
+            if ((data.option[i].type = 6)) {
+              this.$refs.backupOption.file.filter = true;
+              this.$refs.backupOption.file.only = data.option[i].value;
+            }
+          }
+        }
+        if (data.base.type == 131072) {
+          let num = data.option.length;
+          for (let i = 0; i < num; i++) {
+            if ((data.option[i].type = 24)) {
+              console.log( this.$refs.backupOption)
+              // this.$refs.backupOption.showf = true;
+              this.$refs.backupOption.callBack(oracle.script,"true");
+              // this.$refs.backupOption.oracle.script = data.option[i].value;
+            }
+          }
+        }
+        if (data.base.type == 393216) {
+        }
+        if (data.base.type == 262144) {
+        }
+        if (data.base.type == 327680) {
+        }
+      // });
+    }
     // hackOne: function(type) {
     //   if (type == 131072) {
     //     this.$refs.backupOption.setOptins(14, 0);
@@ -530,19 +566,29 @@ export default {
     //   this.$nextTick(() => {
     //     this.hackReset = true;
     //   });
-      // if (type == 196608) {
-      //   this.$parent.$parent.delTabList();
-      // } else {
-      //   this.$parent.$parent.addTabList();
-      // }
+    // if (type == 196608) {
+    //   this.$parent.$parent.delTabList();
+    // } else {
+    //   this.$parent.$parent.addTabList();
     // }
+    // }
+  },
+  created() {
+    console.log("chuanjian");
+    // this.show="基本信息"
+  },
+  mounted() {
+    // this.$emit("updataShow")
+  },
+  destroyed() {
+    console.log("xiaoshui ");
   },
   methods: {
     planListIndex: function(value, index) {
       this.show3 = value.scheduletype.toString();
-      this.schedule.startday = "",
-        this.schedule.endday = "",
-        this.temporary.planListIndex = index;
+      (this.schedule.startday = ""),
+        (this.schedule.endday = ""),
+        (this.temporary.planListIndex = index);
       this.schedule.scheduletype = value.scheduletype;
       this.schedule.backupType = value.backupType;
       this.schedule.freqtype = value.freqtype;
@@ -703,7 +749,7 @@ export default {
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-      if (typeof( this.basictype) == "number") {
+      if (typeof this.basictype == "number") {
         if (!treeNode.hasOwnProperty("children")) {
           this.treeNodeA = treeNode;
           this.treeId = treeId;
