@@ -502,14 +502,7 @@ export default {
   watch: {
     backData: function(data) {
       //数据清空
-      this.schedule.scheduletype = 0;
-      this.schedule.backupType = "";
-      this.schedule.freqtype = 0;
-      this.schedule.freqval = "";
-      this.schedule.startday = "";
-      this.schedule.starttime = "";
-      this.schedule.endday = "";
-      this.schedule.endtime = "";
+      this.$refs.backupOption.callBack();
       // 数据回填
       this.basic = data.base;
       this.temporary.planList = data.schedule;
@@ -527,26 +520,71 @@ export default {
             ? "增量"
             : "差量";
       }
-      // this.hackReset = false;
-      // this.$nextTick(( ) => {
-        // this.hackReset = true;
+      this.$nextTick(()=>{
+
+       let source =  this.$refs.backupOption
+       source.options=data.option
         if (data.base.type == 65536) {
           let num = data.option.length;
+          
           for (let i = 0; i < num; i++) {
-            if ((data.option[i].type = 6)) {
-              this.$refs.backupOption.file.filter = true;
-              this.$refs.backupOption.file.only = data.option[i].value;
+             if (data.option[i].type.indexOf(9)==-1) {
+               console.log("meiyou9")
             }
+            if (data.option[i].type == 6) {
+              source.valueA = "6";
+             source.valueB = data.option[i].value;
+            }
+            if (data.option[i].type == 7) {
+              source.valueA = 7;
+             source.valueC = data.option[i].value;
+            }
+             if (data.option[i].type == 9) {
+              source.valueA = "9";
+            }
+             if (data.option[i].type == 7) {
+              source.valueA = 7;
+             source.valueC = data.option[i].value;
+            }
+             if (data.option[i].type == 7) {
+              source.valueA = 7;
+             source.valueC = data.option[i].value;
+            }
+             if (data.option[i].type == 7) {
+              source.valueA = 7;
+             source.valueC = data.option[i].value;
+            }
+
           }
         }
         if (data.base.type == 131072) {
-          let num = data.option.length;
-          for (let i = 0; i < num; i++) {
-            if ((data.option[i].type = 24)) {
-              console.log( this.$refs.backupOption)
-              // this.$refs.backupOption.showf = true;
-              this.$refs.backupOption.callBack(oracle.script,"true");
-              // this.$refs.backupOption.oracle.script = data.option[i].value;
+         
+          for (let i = 0; i < data.option.length; i++) {
+            if (data.option[i].type == 24) {
+             source.showf = true;
+             source.valueA = data.option[i].value;
+             console.log(typeof(data.option[i].value))
+            }
+             if (data.option[i].type == 13) {
+             source.showa = true;
+            }
+             if (data.option[i].type == 15) {
+             source.showb = true;
+             source.valueA = data.option[i].value;
+            }
+             if (data.option[i].type == 14) {
+             source.valueB = data.option[i].value;
+            }
+             if (data.option[i].type == 10) {
+             source.showc = true;
+             source.numberA = Number(data.option[i].value);
+            }
+             if (data.option[i].type == 12) {
+             source.showd = true;
+             source.numberB = Number(data.option[i].value);
+            }
+            if (data.option[i].type == 11) {
+             source.showe = true;
             }
           }
         }
@@ -556,6 +594,14 @@ export default {
         }
         if (data.base.type == 327680) {
         }
+
+
+      })
+      // this.hackReset = false;
+      // this.$nextTick(( ) => {
+        // this.hackReset = true;
+
+        
       // });
     }
     // hackOne: function(type) {

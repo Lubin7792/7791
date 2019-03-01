@@ -9,23 +9,23 @@
           <Form ref="file" :model="file" :label-width="120">
             <div class="frame">
               <p class="titles">备份过滤选项</p>
-              <RadioGroup v-model="file.filter" @on-change="filterType(parseInt(file.filter))">
+              <RadioGroup v-model="valueA" @on-change="filterType(parseInt(valueA))">
                 <Radio label="6">只备份以下类型文件</Radio>
                 <Input
-                  v-model="file.only"
+                  v-model="valueB"
                   style="width: 300px"
                   placeholder="txt;exe;dat"
-                  @on-blur="filterValue(6,file.only)"
+                  @on-blur="filterValue(6,valueB)"
                 />
                 <p class="blanks"></p>
                 <Radio label="7">不备份以下类型文件</Radio>
-                <Input v-model="file.exclude" style="width: 300px" placeholder="txt;exe;dat"/>
+                <Input v-model="valueC" style="width: 300px" placeholder="txt;exe;dat"/>
               </RadioGroup>
             </div>
             <div class="clearfloat">
               <div class="frame fail">
                 <p class="titles">打开文件失败处理方式</p>
-                <RadioGroup v-model="file.fail" @on-change="failType(parseInt(file.fail))">
+                <RadioGroup v-model="valueF" @on-change="failType(parseInt(valueF))">
                   <Radio label="0">终止备份作业</Radio>
                   <p class="blanks"></p>
                   <Radio label="9">跳过被打开的文件</Radio>
@@ -41,31 +41,31 @@
               <Checkbox
                 label="备份前运行脚本"
                 v-model="showa"
-                @on-change="checkType(showa,3,file.beforeConten)"
+                @on-change="checkType(showa,3,valueD)"
               >备份前运行脚本</Checkbox>
               <Input
-                v-model="file.beforeConten"
+                v-model="valueD"
                 :disabled="!showa"
                 style="width: 300px"
-                @on-blur="checkValue(showa,3,file.beforeConten)"
+                @on-blur="checkValue(showa,3,valueD)"
               />
               <p class="blanks"></p>
-              <Checkbox v-model="showb" @on-change="checkType(showb,4,file.afterConten)">备份后运行脚本</Checkbox>
+              <Checkbox v-model="showb" @on-change="checkType(showb,4,valueE)">备份后运行脚本</Checkbox>
               <Input
-                v-model="file.afterConten"
+                v-model="valueE"
                 :disabled="!showb"
-                @on-blur="checkValue(showb,4,file.afterConten)"
+                @on-blur="checkValue(showb,4,valueE)"
                 style="width: 300px"
               />
             </div>
           </Form>
         </div>
         <div v-if="show2 === '131072'">
-          <Checkbox v-model="showf" @on-change="checkType(showf,24,oracle.script)">指定脚本备份</Checkbox>
+          <Checkbox v-model="showf" @on-change="checkType(showf,24,valueA)">指定脚本备份</Checkbox>
           <Input
-            v-model="oracle.script"
+            v-model="valueA"
             :disabled="!showf"
-            @on-blur="checkValue(showf,24,oracle.script)"
+            @on-blur="checkValue(showf,24,valueA)"
             style="width: 300px"
           />
           <p class="blanks"></p>
@@ -78,10 +78,10 @@
             <p class="blanks"></p>
             <span>归档备份范围</span>
             <Select
-              v-model="oracle.rangeValue"
+              v-model="valueB"
               style="width:160px"
               :label-in-value="true"
-              @on-change="select(14,parseInt(oracle.rangeValue))"
+              @on-change="select(14,parseInt(valueB))"
               placeholder="备份所有归档"
             >
               <Option
@@ -92,23 +92,20 @@
               ></Option>
             </Select>
             <p class="blanks"></p>
-            <Checkbox v-model="showc" @on-change="checkType(showc,10,oracle.numberA)">配置通道个数</Checkbox>
+            <Checkbox v-model="showc" @on-change="checkType(showc,10,numberA)">配置通道个数</Checkbox>
             <InputNumber
               :max="10"
               :min="1"
-              v-model="oracle.numberA"
-              @on-change="checkValue(showc,10,oracle.numberA)"
+              v-model="numberA"
+              @on-change="checkValue(showc,10,numberA)"
             ></InputNumber>
             <p class="blanks"></p>
-            <Checkbox
-              v-model="showd"
-              @on-change="checkType(showd,12,oracle.numberB)"
-            >指定(filesperset参数)</Checkbox>
+            <Checkbox v-model="showd" @on-change="checkType(showd,12,numberB)">指定(filesperset参数)</Checkbox>
             <InputNumber
               :max="5"
               :min="1"
-              v-model="oracle.numberB"
-              @on-change="checkValue(showd,12,oracle.numberB)"
+              v-model="numberB"
+              @on-change="checkValue(showd,12,numberB)"
             ></InputNumber>
             <p class="blanks"></p>
             <Checkbox v-model="showe" @on-change="checkType(showe,11)">启动ORACLE压缩</Checkbox>
@@ -116,37 +113,17 @@
         </div>
         <div v-if="show2 === '196608'">
           <p>暂无</p>
-          <!-- <Form ref="basic" :model="basic" :label-width="120">
-            <FormItem label="使用多通道">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="开启MYSQL备份">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="数据片中文件个数">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="全库备份时备份归档">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="归档备份范围">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-            <FormItem label="删除已经备份的归档">
-              <Input v-model="basic.state"></Input>
-            </FormItem>
-          </Form>-->
         </div>
         <div v-if="show2 === '262144'">
-          <Form ref="sqlserver" :model="sqlserver" :label-width="120">
+         <Form ref="sqlserver" :model="sqlserver" :label-width="120">
             <div class="frame">
               <!-- <p class="titles">备份过滤选项</p> -->
               <FormItem label="备份前检查" class="marleft48">
                 <Select
-                  v-model="sqlserver.frontResult"
+                  v-model="valueA"
                   style="width:160px"
                   :label-in-value="true"
-                  @on-change="select(16,parseInt(sqlserver.frontResult))"
+                  @on-change="select(16,parseInt(valueA))"
                 >
                   <Option
                     v-for="item in sqlserver.front"
@@ -158,10 +135,10 @@
               </FormItem>
               <FormItem label="备份后检查" class="marleft48">
                 <Select
-                  v-model="sqlserver.afterResult"
+                  v-model="valueB"
                   style="width:160px"
                   :label-in-value="true"
-                  @on-change="select(17,parseInt(sqlserver.frontResult))"
+                  @on-change="select(17,parseInt(valueB))"
                 >
                   <Option
                     v-for="item in sqlserver.after"
@@ -181,16 +158,16 @@
           </Form>
         </div>
         <div v-if="show2 === '327680'">
-          <Checkbox v-model="showa" @on-change="checkType(showa,21)">跳过失败的虚拟机</Checkbox>
+         <Checkbox v-model="showa" @on-change="checkType(showa,21)">跳过失败的虚拟机</Checkbox>
           <p class="blanks"></p>
           <Checkbox v-model="showb" @on-change="checkType(showb,29)">跳过关机的虚拟机</Checkbox>
           <p class="blanks"></p>
           <span>数据传输模式</span>
           <Select
-            v-model="vmware.mode"
+            v-model="valueA"
             style="width:200px"
             :label-in-value="true"
-            @on-change="select(28,parseInt(vmware.mode))"
+            @on-change="select(28,parseInt(valueA))"
           >
             <Option
               v-for="item in vmware.modeList"
@@ -201,9 +178,9 @@
           </Select>
         </div>
         <div v-if="show2 === '393216'">
-          <Form ref="basic" :model="basic" :label-width="120">
+        <Form ref="basic" :model="basic" :label-width="120">
             <FormItem label="系统备份">
-              <Input v-model="basic.state"></Input>
+              <Input v-model="valueA"></Input>
             </FormItem>
           </Form>
         </div>
@@ -236,6 +213,20 @@ export default {
       showd: false,
       showe: false,
       showf: false,
+      valueA: "",
+      valueB: "",
+      valueC: "",
+      valueD: "",
+      valueE: "",
+      valueF: "",
+      valueG: "",
+      valueH: "",
+      valueI: "",
+      valueN: "",
+      valueM: "",
+      valueQ: "",
+      numberA: 1,
+      numberB: 5,
       showtest: "",
       options: [],
       basic: {
@@ -324,6 +315,9 @@ export default {
       }
     };
   },
+  created() {
+    console.log("created")
+  },
   methods: {
     select(num, conten) {
       if (num == 28 && conten == 3) {
@@ -332,7 +326,6 @@ export default {
         this.deletes(num);
         this.adds(num, conten);
       }
-     
     },
     setOptins(num, conten) {
       this.adds(num, conten);
@@ -346,19 +339,20 @@ export default {
       }
     },
     filterType(num) {
+      console.log(this.valueA)
       this.deletes(6);
       this.deletes(7);
       var conten;
       if (num == "6") {
-        conten = this.file.only;
+        conten = this.valueB;
       }
       if (num == "7") {
-        conten = this.file.exclude;
+        conten = this.valueC;
       }
       this.adds(num, conten);
     },
     filterValue(num, conten) {
-      if (this.file.filter == num) {
+      if (this.valueA == num) {
         this.deletes(num);
         this.adds(num, conten);
       }
@@ -401,9 +395,11 @@ export default {
     showOption() {
       return this.options;
     },
-    callBack(key,value){
-      this.key=value
+    callBack(key, value) {
+      Object.assign(this.$data, this.$options.data())
     }
+  },
+  updated() {
   },
   computed: {},
   watch: {}

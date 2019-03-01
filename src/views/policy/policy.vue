@@ -278,6 +278,17 @@ export default {
                       type: "error",
                       size: "small"
                     },
+                    on:{
+                      click:()=>{
+                          util.restfullCall(
+                          "/rest-ful/v3.0/policy/" +
+                            params.row.id,
+                          null,
+                          "delete",
+                          this.deleteData
+                        );
+                      }
+                    },
                     style: {
                       marginRight: "4px"
                     }
@@ -332,6 +343,14 @@ export default {
 
   },
   methods: {
+    deleteData:function (value) {
+       if (value.data.code === 0) {
+        this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
+          alert(value.data.message)
+      }else{
+        alert(value.data.message)
+      }
+    },
     // 修改列表备份类型数据
     scheduletype(obj, scheduletype) {
       this.policiesData[scheduletype.index].scheduletypes.name =
