@@ -5,6 +5,9 @@
 <template>
   <div class="policy">
     <div class="buttonC">
+
+
+      <!-- <Button type="error" style="margin-top:15px;" @click="click">新建策略</Button> -->
       <Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
@@ -343,6 +346,11 @@ export default {
 
   },
   methods: {
+    click(){
+      let str="DESKTOP-VBD4GRU_D:/$RECYCLE.BIN"
+      let newStr = str.substring(str.indexOf("_"))
+      console.log(newStr)
+    },
     deleteData:function (value) {
        if (value.data.code === 0) {
         this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);

@@ -16,20 +16,11 @@
             @on-change="alick"
             :label-in-value="true"
           >
-            <Option
-              v-for="item in policyTyep"
-              :label="item.name"
-              :value="item.key"
-              :key="item.key"
-            ></Option>
+            <Option v-for="item in policyTyep" :label="item.name" :value="item.key" :key="item.key"></Option>
           </Select>
         </FormItem>
         <FormItem label="储存设备">
-          <Select
-            style="width:200px"
-            v-model="basic.deviceval"
-            @on-change="showNow"
-          >
+          <Select style="width:200px" v-model="basic.deviceval" @on-change="showNow">
             <Option
               v-for="item in this.devicesList"
               :label="item.name"
@@ -39,25 +30,12 @@
           </Select>
         </FormItem>
         <FormItem label="介质池">
-          <Select
-            style="width:200px"
-            v-model="basic.poolval"
-            @on-change="showNow"
-          >
-            <Option
-              v-for="item in basic.pool"
-              :label="item.name"
-              :value="item.id"
-              :key="item.name"
-            ></Option>
+          <Select style="width:200px" v-model="basic.poolval" @on-change="showNow">
+            <Option v-for="item in basic.pool" :label="item.name" :value="item.id" :key="item.name"></Option>
           </Select>
         </FormItem>
         <FormItem label="优先级">
-          <Select
-            style="width:200px"
-            v-model="basic.privilegekey"
-            @on-change="showNow"
-          >
+          <Select style="width:200px" v-model="basic.privilegekey" @on-change="showNow">
             <Option
               v-for="item in basic.privilege"
               :label="item.Name"
@@ -99,30 +77,17 @@
           </div>
         </div>
         <div class="tree-conten">
-          <Table
-            border
-            ref="selection"
-            :columns="columns4"
-            :data="pathConten"
-          ></Table>
+          <Table border ref="selection" :columns="columns4" :data="pathConten"></Table>
         </div>
       </div>
     </div>
     <div v-show="show === '备份选项'">
-      <backupoption
-        :show2="policyTypekey"
-        v-if="hackReset"
-        ref="backupOption"
-      ></backupoption>
+      <backupoption :show2="policyTypekey" v-if="hackReset" ref="backupOption"></backupoption>
     </div>
     <div v-show="show === '调度计划'" class="planinfo">
       <Form ref="schedule" :model="schedule" :label-width="80">
         <FormItem label="调度类型">
-          <Select
-            style="width:120px"
-            @on-change="onplantype"
-            v-model="schedule.typelevel"
-          >
+          <Select style="width:120px" @on-change="onplantype" v-model="schedule.typelevel">
             <Option
               v-for="item in schedule.type"
               :label="item.value"
@@ -142,26 +107,24 @@
           </Select>
         </FormItem>
         <div v-if="show3 == '0'" class="block250">
-              <FormItem label="开始日期" class="plandate">
-            <Select v-model="schedule.startday" style="width:120px" @on-change=showNows>
+          <FormItem label="开始日期" class="plandate">
+            <Select v-model="schedule.startday" style="width:120px" @on-change="showNows">
               <Option
                 v-for="item in schedule.dayList"
                 :value="item.value"
                 :key="item.name"
-                >{{ item.name }}</Option
-              >
+              >{{ item.name }}</Option>
             </Select>
           </FormItem>
         </div>
         <div v-if="show3 == '1'" class="block250">
           <FormItem label="开始周" class="plandate">
-            <Select v-model="schedule.startday" style="width:120px"  @on-change=showNows>
+            <Select v-model="schedule.startday" style="width:120px" @on-change="showNows">
               <Option
                 v-for="item in schedule.weekList"
                 :value="item.value"
                 :key="item.name"
-                >{{ item.name }}</Option
-              >
+              >{{ item.name }}</Option>
             </Select>
           </FormItem>
         </div>
@@ -190,27 +153,25 @@
         </FormItem>
         <div v-if="show3 == '0'" class="block250">
           <FormItem label="结束日期" class="plandate">
-            <Select v-model="schedule.endday" style="width:120px"  @on-change=showNows>
+            <Select v-model="schedule.endday" style="width:120px" @on-change="showNows">
               <Option
                 v-for="item in schedule.dayList"
                 :value="item.value"
                 :label="item.name"
                 :key="item.name"
-                >{{ item.name }}</Option
-              >
+              >{{ item.name }}</Option>
             </Select>
           </FormItem>
         </div>
         <div v-if="show3 == '1'" class="block250">
           <FormItem label="结束周" class="plandate">
-            <Select v-model="schedule.endday" style="width:120px"  @on-change=showNows>
+            <Select v-model="schedule.endday" style="width:120px" @on-change="showNows">
               <Option
                 v-for="item in schedule.weekList"
                 :value="item.value"
                 :key="item.name"
-                >{{ item.name }}</Option
-              >
-            </Select> 
+              >{{ item.name }}</Option>
+            </Select>
           </FormItem>
         </div>
         <div v-if="show3 == '2'" class="block250">
@@ -249,11 +210,7 @@
               :key="item.value"
             ></Option>
           </Select>
-          <Input
-            v-model="schedule.intervalTime"
-            placeholder="输入时间"
-            style="width: 100px"
-          ></Input>
+          <Input v-model="schedule.intervalTime" placeholder="输入时间" style="width: 100px"></Input>
           <span>{{ schedule.freqval }}</span>
         </FormItem>
         <div class="button">
@@ -262,7 +219,13 @@
           <Button type="warning" @click="deletePlan">删除计划</Button>
         </div>
         <div class="planlist">
-          <Table highlight-row border :columns="planlist" @on-row-click="planListIndex" :data="schedule.planList"></Table>
+          <Table
+            highlight-row
+            border
+            :columns="planlist"
+            @on-row-click="planListIndex"
+            :data="schedule.planList"
+          ></Table>
         </div>
       </Form>
     </div>
@@ -302,14 +265,15 @@ export default {
       treeId: "",
       hackReset: true,
       policyTypekey: "",
-      ztreeTyep:'',
+      ztreeTyep: "",
       ztreeObj: {},
       pathConten: [],
+      pathContens: [],
       checkType: false,
       columns4: [
         {
           title: "已选地址",
-          key: "name"
+          key: "path"
         }
       ],
       treedata: [
@@ -319,7 +283,7 @@ export default {
           children: []
         }
       ],
-        planlist: [
+      planlist: [
         {
           title: "调度类型",
           key: "typelevelCh"
@@ -344,7 +308,7 @@ export default {
 
       show3: "0",
       basic: {
-        type:'',
+        type: "",
         name: "",
         deviceval: "",
         poolval: "",
@@ -492,8 +456,8 @@ export default {
         endday: "",
         endtime: "",
         planList: [],
-        planListIndex:'',
-        addLists:{}
+        planListIndex: "",
+        addLists: {}
       },
       resources: {
         equipment: "",
@@ -566,31 +530,30 @@ export default {
     }
   },
   methods: {
-    planListIndex:function(value,index){
-       this.show3 = value.scheduletype.toString();
-       console.log(value, this.show3 )
-       this.schedule.startday="",
-       this.schedule.endday="",
-      this.schedule.planListIndex=index;
-      this.schedule.typelevel=value.scheduletype;
-      this.schedule.backuptlevel=value.backuptype;
-      this.schedule.freqtypelevel=value.freqtype;
-      this.schedule.intervalTime=value.freqval;
-      this.$nextTick(()=>{
-      this.schedule.startday=value.startday.toString();
-      this.schedule.endday=value.endday.toString();
-      })
-      this.schedule.starttime=value.starttime;
-      this.schedule.endtime=value.endtime;
-
+    planListIndex: function(value, index) {
+      this.show3 = value.scheduletype.toString();
+      console.log(value, this.show3);
+      (this.schedule.startday = ""),
+        (this.schedule.endday = ""),
+        (this.schedule.planListIndex = index);
+      this.schedule.typelevel = value.scheduletype;
+      this.schedule.backuptlevel = value.backuptype;
+      this.schedule.freqtypelevel = value.freqtype;
+      this.schedule.intervalTime = value.freqval;
+      this.$nextTick(() => {
+        this.schedule.startday = value.startday.toString();
+        this.schedule.endday = value.endday.toString();
+      });
+      this.schedule.starttime = value.starttime;
+      this.schedule.endtime = value.endtime;
     },
-    addList:function(){
-      let typelevelNum= parseInt(
-          this.schedule.typelevel ? this.schedule.typelevel : 0
-        );
-     let backupNum= parseInt(
-          this.schedule.backuptlevel ? this.schedule.backuptlevel : 0
-        );
+    addList: function() {
+      let typelevelNum = parseInt(
+        this.schedule.typelevel ? this.schedule.typelevel : 0
+      );
+      let backupNum = parseInt(
+        this.schedule.backuptlevel ? this.schedule.backuptlevel : 0
+      );
       let addList = {
         backuptype: backupNum,
         scheduletype: typelevelNum,
@@ -605,11 +568,12 @@ export default {
         starttime: this.schedule.starttime,
         endday: parseInt(this.schedule.endday),
         endtime: this.schedule.endtime,
-        typelevelCh:typelevelNum==0?"日期":typelevelNum==1?"周":"间隔时间",
-        backupCh:backupNum==1?"全备":backupNum==2?"增量":"差量",
+        typelevelCh:
+          typelevelNum == 0 ? "日期" : typelevelNum == 1 ? "周" : "间隔时间",
+        backupCh: backupNum == 1 ? "全备" : backupNum == 2 ? "增量" : "差量",
         duration: 0
       };
-      this.schedule.addLists=addList
+      this.schedule.addLists = addList;
     },
     addPlan: function() {
       this.addList();
@@ -617,15 +581,18 @@ export default {
     },
     revisePlan: function() {
       this.addList();
-       this.schedule.planList.splice(this.schedule.planListIndex,1,this.schedule.addLists)
+      this.schedule.planList.splice(
+        this.schedule.planListIndex,
+        1,
+        this.schedule.addLists
+      );
     },
     deletePlan: function() {
       // let array =  this.schedule.planList
-      this.schedule.planList.splice(this.schedule.planListIndex,1)
+      this.schedule.planList.splice(this.schedule.planListIndex, 1);
       // this.schedule.planList= array
     },
-    showOptions() {
-    },
+    showOptions() {},
     startDate: function(value) {
       this.schedule.startday = value;
     },
@@ -643,8 +610,7 @@ export default {
       this.schedule.freqval = test.label;
     },
     showNow: function() {},
-    showNows: function(value) {
-    },
+    showNows: function(value) {},
     policypost: function() {
       let tests = {
         base: {
@@ -658,18 +624,9 @@ export default {
           savedays: parseInt(this.basic.savedays ? this.basic.savedays : 0),
           maxtasks: parseInt(this.basic.maxtasks ? this.basic.maxtasks : 0)
         },
-        resource: [
-          {
-            client: parseInt(
-              this.resources.clientId ? this.resources.clientId : 1
-            ),
-            type: parseInt(this.ztreeTyep),
-            path: this.resources.pathValue,
-            exclude: 0
-          }
-        ],
+        resource: this.pathContens,
         option: this.$refs.backupOption.showOption(),
-        schedule:this.schedule.planList
+        schedule: this.schedule.planList
       };
       console.log(tests);
       util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
@@ -677,12 +634,13 @@ export default {
     senddata: function(value) {
       if (value.data.code === 0) {
         this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
-      }else{
-        alert(value.data.message)
+        alert(value.data.message);
+      } else {
+        alert(value.data.message);
       }
     },
     alick: function(value) {
-     this.basic.type=value.value
+      this.basic.type = value.value;
       this.policyTypekey = String(value.value);
     },
     timeFormate: function() {
@@ -708,10 +666,10 @@ export default {
     onplantype: function(value) {
       this.show3 = value;
       // console.log( this.schedule.startday, this.schedule.endtday,"1")
-     this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.schedule.startday = "";
-      this.schedule.endday = "";
-     })
+        this.schedule.endday = "";
+      });
       // this.timeFormate();
     },
     build_path_by_tree_node: function(treeNode) {
@@ -727,14 +685,12 @@ export default {
         }
 
         if (parent.nodetype != 0) {
-
           path = "/" + treeNode.name + path;
         } else {
           path = treeNode.name + path;
         }
-         if (parent.nodetype != 1) {
-
-         }
+        if (parent.nodetype != 1) {
+        }
         treeNode = parent;
       } while (true);
       /*
@@ -765,7 +721,7 @@ export default {
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-      if (typeof(this.basic.type) == "number") {
+      if (typeof this.basic.type == "number") {
         if (!treeNode.hasOwnProperty("children")) {
           this.treeNodeA = treeNode;
           this.treeId = treeId;
@@ -805,11 +761,23 @@ export default {
     zTreeOnCheck: function(event, treeId, treeNode) {
       let path = this.build_path_by_tree_node(treeNode);
       var pathList = path.name + "_" + path.path;
-      this.pathConten.push({ name: pathList });
+      if (treeNode.checked) {
+        this.pathConten.push({ path:pathList});
+        this.pathContens.push({ path: path.path, client: parseInt(path.client), type:treeNode.ResType,exclude:0});
+      } else {
+        function pathFilter(element){
+          return element.path !==pathList;
+        }
+          function pathFilters(element){
+          return element.path !==path.path;
+        }
+        this.pathConten= this.pathConten.filter(pathFilter)
+        this.pathContens= this.pathContens.filter(pathFilters)
+      }
+      console.log(this.pathConten,this.pathContens)
       this.resources.clientId = path.client;
-      this.ztreeTyep= treeNode.ResType
+      this.ztreeTyep = treeNode.ResType;
       this.resources.pathValue = path.path;
-      console.log(this.ztreeTyep)
     }
   }
 };

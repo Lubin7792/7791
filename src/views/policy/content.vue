@@ -270,7 +270,7 @@ export default {
       columns4: [
         {
           title: "已选地址",
-          key: "name"
+          key: "path"
         }
       ],
       treedata: [
@@ -505,7 +505,16 @@ export default {
       this.$refs.backupOption.callBack();
       // 数据回填
       this.basic = data.base;
+      this.basictype=data.base.type
       this.temporary.planList = data.schedule;
+      this.pathConten=data.resource
+  // 传递进来lientNum
+clietList = this.$store.state.policyData;
+          function findClient(element) {
+        return element.key == clientNum;
+      }
+      state.clientList = clientList.filter(findClient);
+
       for (let i = 0; i < data.schedule.length; i++) {
         this.temporary.planList[i].typelevelCh =
           data.schedule[i].scheduletype == 0
@@ -520,88 +529,106 @@ export default {
             ? "增量"
             : "差量";
       }
-      this.$nextTick(()=>{
-
-       let source =  this.$refs.backupOption
-       source.options=data.option
+      this.$nextTick(() => {
+        let source = this.$refs.backupOption;
+        source.options = data.option;
         if (data.base.type == 65536) {
           let num = data.option.length;
-          
+
           for (let i = 0; i < num; i++) {
-             if (data.option[i].type.indexOf(9)==-1) {
-               console.log("meiyou9")
-            }
+            source.valueF = "0";
             if (data.option[i].type == 6) {
               source.valueA = "6";
-             source.valueB = data.option[i].value;
+              source.valueB = data.option[i].value;
             }
             if (data.option[i].type == 7) {
               source.valueA = 7;
-             source.valueC = data.option[i].value;
+              source.valueC = data.option[i].value;
             }
-             if (data.option[i].type == 9) {
-              source.valueA = "9";
+            if (data.option[i].type == 9) {
+              source.valueF = "9";
             }
-             if (data.option[i].type == 7) {
-              source.valueA = 7;
-             source.valueC = data.option[i].value;
+            if (data.option[i].type == 5) {
+              source.showc = true;
             }
-             if (data.option[i].type == 7) {
-              source.valueA = 7;
-             source.valueC = data.option[i].value;
+            if (data.option[i].type == 8) {
+              source.showd = true;
             }
-             if (data.option[i].type == 7) {
-              source.valueA = 7;
-             source.valueC = data.option[i].value;
+            if (data.option[i].type == 3) {
+              source.showa = true;
+              source.valueD = data.option[i].value;
             }
-
+            if (data.option[i].type == 4) {
+              source.showb = true;
+              source.valueE = data.option[i].value;
+            }
           }
         }
         if (data.base.type == 131072) {
-         
           for (let i = 0; i < data.option.length; i++) {
             if (data.option[i].type == 24) {
-             source.showf = true;
-             source.valueA = data.option[i].value;
-             console.log(typeof(data.option[i].value))
+              source.showf = true;
+              source.valueA = data.option[i].value;
             }
-             if (data.option[i].type == 13) {
-             source.showa = true;
+            if (data.option[i].type == 13) {
+              source.showa = true;
             }
-             if (data.option[i].type == 15) {
-             source.showb = true;
-             source.valueA = data.option[i].value;
+            if (data.option[i].type == 15) {
+              source.showb = true;
+              source.valueA = data.option[i].value;
             }
-             if (data.option[i].type == 14) {
-             source.valueB = data.option[i].value;
+            if (data.option[i].type == 14) {
+              source.valueB = data.option[i].value;
             }
-             if (data.option[i].type == 10) {
-             source.showc = true;
-             source.numberA = Number(data.option[i].value);
+            if (data.option[i].type == 10) {
+              source.showc = true;
+              source.numberA = Number(data.option[i].value);
             }
-             if (data.option[i].type == 12) {
-             source.showd = true;
-             source.numberB = Number(data.option[i].value);
+            if (data.option[i].type == 12) {
+              source.showd = true;
+              source.numberB = Number(data.option[i].value);
             }
             if (data.option[i].type == 11) {
-             source.showe = true;
+              source.showe = true;
             }
           }
         }
         if (data.base.type == 393216) {
         }
         if (data.base.type == 262144) {
+          for (let i = 0; i < data.option.length; i++) {
+            if (data.option[i].type == 16) {
+              source.valueA = String(data.option[i].value);
+            }
+            if (data.option[i].type == 17) {
+              source.valueB = String(data.option[i].value);
+            }
+            if (data.option[i].type == 18) {
+              source.showa = true;
+            }
+            if (data.option[i].type == 19) {
+              source.showb = true;
+            }
+          }
         }
         if (data.base.type == 327680) {
+          for (let i = 0; i < data.option.length; i++) {
+            if (data.option[i].type == 21) {
+              source.showa = true;
+            }
+            if (data.option[i].type == 29) {
+              source.showb = true;
+            }
+            if (data.option[i].type == 28) {
+              source.valueA = String(data.option[i].value);
+            }
+          }
         }
-
-
-      })
+      });
       // this.hackReset = false;
       // this.$nextTick(( ) => {
-        // this.hackReset = true;
+      // this.hackReset = true;
 
-        
       // });
     }
     // hackOne: function(type) {
@@ -647,6 +674,7 @@ export default {
       this.schedule.endtime = value.endtime;
     },
     addList: function() {
+      console.log(  this.schedule.scheduletype)
       let typelevelNum = parseInt(
         this.schedule.scheduletype ? this.schedule.scheduletype : 0
       );
@@ -664,7 +692,7 @@ export default {
         endday: parseInt(this.schedule.endday),
         endtime: this.schedule.endtime,
         typelevelCh:
-          scheduletype == 0 ? "日期" : typelevelNum == 1 ? "周" : "间隔时间",
+          typelevelNum == 0 ? "日期" : typelevelNum == 1 ? "周" : "间隔时间",
         backupCh: backupNum == 1 ? "全备" : backupNum == 2 ? "增量" : "差量",
         duration: 0
       };
@@ -709,28 +737,19 @@ export default {
       let tests = {
         base: {
           name: this.basic.name,
-          type: this.basictype,
+          type: this.basic.type,
           privilege: parseInt(this.basic.privilege ? this.basic.privilege : 0),
           pool: parseInt(this.basic.pool ? this.basic.pool : 0),
           device: parseInt(this.basic.device ? this.basic.device : 0),
           savedays: parseInt(this.basic.savedays ? this.basic.savedays : 0),
           maxtasks: parseInt(this.basic.maxtasks ? this.basic.maxtasks : 0)
         },
-        resource: [
-          {
-            client: parseInt(
-              this.resources.clientId ? this.resources.clientId : 1
-            ),
-            type: parseInt(this.ztreeTyep),
-            path: this.resources.pathValue,
-            exclude: 0
-          }
-        ],
+        resource:  this.pathConten,
         option: this.$refs.backupOption.showOption(),
         schedule: this.temporary.planList
       };
       console.log(tests);
-      util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
+      // util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
     },
     senddata: function(value) {
       if (value.data.code === 0) {
@@ -833,13 +852,19 @@ export default {
     },
     //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
-      let path = this.build_path_by_tree_node(treeNode);
+        let path = this.build_path_by_tree_node(treeNode);
       var pathList = path.name + "_" + path.path;
-      this.pathConten.push({ name: pathList });
+      if (treeNode.checked) {
+        this.pathConten.push({ path: pathList, client: parseInt(path.client), type:treeNode.ResType,exclude:0});
+      } else {
+        function pathFilter(element){
+          return element.path !==pathList
+        }
+        this.pathConten= this.pathConten.filter(pathFilter)
+      }
       this.resources.clientId = path.client;
       this.ztreeTyep = treeNode.ResType;
       this.resources.pathValue = path.path;
-      console.log(this.ztreeTyep);
     }
   }
 };

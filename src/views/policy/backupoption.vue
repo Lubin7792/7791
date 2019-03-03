@@ -8,7 +8,7 @@
         <div v-show="show2 === '65536'" class="file">
           <Form ref="file" :model="file" :label-width="120">
             <div class="frame">
-              <p class="titles">备份过滤选项</p>
+              <p class="titles">备份过滤选项</p>  
               <RadioGroup v-model="valueA" @on-change="filterType(parseInt(valueA))">
                 <Radio label="6">只备份以下类型文件</Radio>
                 <Input
@@ -19,7 +19,7 @@
                 />
                 <p class="blanks"></p>
                 <Radio label="7">不备份以下类型文件</Radio>
-                <Input v-model="valueC" style="width: 300px" placeholder="txt;exe;dat"/>
+                <Input v-model="valueC" style="width: 300px" placeholder="txt;exe;dat"   @on-blur="filterValue(7,valueB)"/>
               </RadioGroup>
             </div>
             <div class="clearfloat">
@@ -339,7 +339,6 @@ export default {
       }
     },
     filterType(num) {
-      console.log(this.valueA)
       this.deletes(6);
       this.deletes(7);
       var conten;

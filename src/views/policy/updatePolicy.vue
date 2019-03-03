@@ -16,14 +16,14 @@
     class-name="vertical-center-modal"
     @on-ok="ok"
     @on-cancel="cancel"
-    ok-text="关闭"
+    ok-text="确认修改"
     class="policyModal"
   >
     <Tabs type="card" :animated="false" @on-click="click" v-model="tabNames">
       <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index" > 
              </TabPane>
     </Tabs>
-     <Content :show="show" ></Content> 
+     <Content :show="show" ref="conten"></Content> 
   </Modal>
 </template>
 <script>
@@ -74,6 +74,7 @@ export default {
     },
     ok: function() {
       this.$emit("close", false);
+       this.$refs.conten.policypost();
     },
     cancel: function() {
       this.$emit("close", false);
