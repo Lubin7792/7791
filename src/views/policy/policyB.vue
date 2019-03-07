@@ -22,7 +22,6 @@ export default {
       modalss: false,
       modal: false,
       _index: Number,
-      postBackData: [],
       shiliS: [
         {
           enable: 1,
@@ -169,66 +168,92 @@ export default {
                   {
                     props: {
                       trigger: "click"
+                    },
+                    ref:'conten',
+                    style: {},
+                    on: {
+                      "on-click": name => {
+                        console.log("111")
+                        if (data.scheduletypes.name) {
+                          let url =
+                            "/rest-ful/v3.0/policy/schedule/" +
+                            params.row.id +
+                            "?type=" +
+                            data.scheduletypes.type;
+                          util.restfullCall(url, null, "get", this.nowCallBack);
+                        }
+                      }
                     }
                   },
                   [
                     h(
-                      "Icon",
+                      "Button",
                       {
-                        props: {
-                          type: "settings",
-                          size: "25"
+                        style: {
+                          margin: "0 4px 0 1px",
+                          borderColor: "#FFF",
+                          padding: "0"
                         },
                         on: {
                           click: () => {
+                            console.log("11122")
                             this.buttonPost(params);
                           }
-                        },
-                        style: {
-                          marginRight: "15px"
                         }
                       },
-                      "立即调度"
+                      [
+                        h("Icon", {
+                          props: {
+                            type: "arrow-down-b"
+                          },
+                          style: {
+                            lineHeight: "24px",
+                            verticalAlign: "middle",
+                            backgroundColor: "#ed3f14",
+                            padding: "0 7px",
+                            fontSize: "20px",
+                            lineHeight: "26px",
+                            color: "#fff",
+                            height: "24px",
+                            borderRadius: " 0 4px 4px  0"
+                          }
+                        })
+                      ]
                     ),
                     h(
                       "DropdownMenu",
-                      { slot: "list" },
-                      this.postBackData.map(item => {
-                        return [
-                          h(
-                            "DropdownItem",
-                            {
-                              nativeOn: {
-                                click: () => {
-                               let url =
-                            "/rest-ful/v3.0/policy/schedule/" +
-                            params.row.id +
-                            "?type=" +
-                           item.type;
-                          util.restfullCall(url, null, "get", this.nowCallBack);
-
-                                }
-                              }
-                            },
-                            item.name
-                          )
-                        ];
-                      })
+                      {
+                        slot: "list"
+                      },
+                      [
+                        h(
+                          "DropdownItem",
+                          {
+                            props: {
+                              name: data.scheduletypes.type
+                            }
+                          },
+                          data.scheduletypes.name
+                            ? data.scheduletypes.name
+                            : "请立即调度"
+                        )
+                      ]
                     )
                   ]
                 ),
 
                 h(
-                  "Icon",
+                  "Button",
                   {
                     props: {
-                      type: "trash-a",
-                      size: "25"
+                      type: "error",
+                      size: "small"
                     },
-                    on: {
-                      click: () => {
-                        util.restfullCall(
-                          "/rest-ful/v3.0/policy/" + params.row.id,
+                    on:{
+                      click:()=>{
+                          util.restfullCall(
+                          "/rest-ful/v3.0/policy/" +
+                            params.row.id,
                           null,
                           "delete",
                           this.deleteData
@@ -236,29 +261,31 @@ export default {
                       }
                     },
                     style: {
-                      marginRight: "15px"
+                      marginRight: "4px"
                     }
                   },
                   "删除策略"
                 ),
                 h(
-                  "Icon",
+                  "Button",
                   {
                     props: {
-                      type: "edit",
-                      size: "25"
+                      type: "error",
+                      size: "small"
                     },
-                    on: {
-                      click: () => {
-                        this.modal = true;
-                        util.restfullCall(
-                          "/rest-ful/v3.0/policy/detail/" + params.row.id,
+                    on:{
+                      click:()=>{
+                        this.modal= true;
+                          util.restfullCall(
+                          "/rest-ful/v3.0/policy/detail/" +
+                            params.row.id,
                           null,
                           "get",
                           this.detailData
                         );
                       }
                     }
+
                   },
                   "修改策略"
                 )
@@ -281,28 +308,29 @@ export default {
     policiesData() {
       return this.$store.state.policiesData;
     }
+  
   },
-  watch: {},
+  watch: {
+
+  },
   methods: {
-    deleteData: function(value) {
-      if (value.data.code === 0) {
+    deleteData:function (value) {
+       if (value.data.code === 0) {
         this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
-        alert(value.data.message);
-      } else {
-        alert(value.data.message);
+          alert(value.data.message)
+      }else{
+        alert(value.data.message)
       }
     },
-    // 废弃修改列表备份类型数据
+    // 修改列表备份类型数据
     scheduletype(obj, scheduletype) {
       this.policiesData[scheduletype.index].scheduletypes.name =
         obj.data[0].name;
       this.policiesData[scheduletype.index].scheduletypes.type =
         obj.data[0].type;
-      this.$nextTick(() => {
-        this.$refs.exp.$children[1].$children[
-          scheduletype.index
-        ].$children[9].$children[1].currentVisible = true;
-      });
+      this.$nextTick(()=>{
+       this.$refs.exp.$children[1].$children[scheduletype.index].$children[9].$children[1].currentVisible = true;
+      })
     },
     buttonPost(params) {
       util.restfullCalls(
@@ -310,11 +338,9 @@ export default {
           this.policiesData[params.index].id,
         null,
         "get",
-        this.postBack
+        this.scheduletype,
+        params
       );
-    },
-    postBack: function(params) {
-      this.postBackData = params.data;
     },
     nowCallBack: function(params) {
       alert(params.data.message);
@@ -365,7 +391,7 @@ export default {
     closePolicy: function(modalss) {
       this.modalss = modalss;
     },
-    revise: function(show) {
+     revise: function(show) {
       this.modal = show;
     },
     //启动
@@ -389,8 +415,8 @@ export default {
       }
     },
     //修改策略信息
-    detailData: function(obj) {
-      this.$store.commit("existData", obj.data.policy);
+    detailData:function(obj){
+        this.$store.commit("existData",obj.data.policy)
     }
     // //更新反馈信息某一字段
     // updateFeedbackMessage(id, key, value) {

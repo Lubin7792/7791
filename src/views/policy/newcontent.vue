@@ -310,8 +310,8 @@ export default {
       basic: {
         type: "",
         name: "",
-        deviceval: "",
-        poolval: "",
+        deviceval:'',
+        poolval: 2,
         pool: [
           {
             id: 1,
@@ -342,7 +342,7 @@ export default {
             Protected: 90
           }
         ],
-        privilegekey: "",
+        privilegekey:1,
         privilege: [
           {
             Level: 1,
@@ -357,11 +357,11 @@ export default {
             Name: "高优先级"
           }
         ],
-        maxtasks: "",
+        maxtasks: "5",
         compress: [],
         encryption: [],
         algorithm: "",
-        savedays: ""
+        savedays: "30"
       },
       schedule: {
         typelevel: 0,
@@ -514,6 +514,12 @@ export default {
     }
   },
   watch: {
+    policyTyep:function (data) {
+      this.basic.type=data[0].key
+    },
+     devicesList:function (data) {
+      this.basic.deviceval=data[0].id
+    },
     hackOne: function(type) {
       if (type == 131072) {
         this.$refs.backupOption.setOptins(14, 0);
@@ -684,7 +690,8 @@ export default {
           break;
         }
 
-        if (parent.nodetype != 0) {
+     
+       if (parent.nodetype != 0) {
           path = "/" + treeNode.name + path;
         } else {
           path = treeNode.name + path;
@@ -693,6 +700,9 @@ export default {
         }
         treeNode = parent;
       } while (true);
+
+
+
       /*
       var path = "";
       let name = "";
@@ -716,11 +726,14 @@ export default {
 
         }         
       }*/
-
+      if(path.indexOf("//")==0){
+         path=path.substr(1)
+      }
       return { client: cid, path: path, name: name };
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
+
       if (typeof this.basic.type == "number") {
         if (!treeNode.hasOwnProperty("children")) {
           this.treeNodeA = treeNode;

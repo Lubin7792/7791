@@ -146,6 +146,17 @@ const Routers = [
     ]
   },
   {
+    path: "/",
+    component: Navigation,
+    children: [
+      {
+        path: "role",
+        name: "role",
+        component: () => import("../views/role/role.vue")
+      }
+    ]
+  },
+  {
     path: "*",
     redirect: "/login"
   }

@@ -161,6 +161,7 @@ export default {
           maxtasks: diskobj.data[i].maxtasks,
           lowlimit: diskobj.data[i].lowlimit,
         })
+      }
         this.$emit('diskReturn',array)
         // Object.keys(this.diskItem).forEach(key => this.diskItem[key] = null)
         this.diskItem.name = null
@@ -169,7 +170,6 @@ export default {
         this.diskItem.lowlimit = null
         this.diskItem.filesize = null
         this.single = false
-      }
     },
     // 接收选中的path路径
     glanceReturn(pathReturn){

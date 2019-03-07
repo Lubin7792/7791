@@ -1,38 +1,35 @@
 <template>
-    <Tabs :animated="false" class="demo-tabs-style1" style="background: #e3e8ee;padding:16px;" type="card">
+    <Tabs :animated="false" type="card">
         <!-- 介质服务器 -->
         <TabPane label="介质服务器">
-            <Table stripe highlight-row :data="medium" :columns="mediums" @on-current-change="putData" height="620px"></Table>
+            <Table stripe highlight-row :data="medium" :columns="mediums" height="720"></Table>
 
             <div class="btn"> 
                 <Button type="info" @click="newServer">新建介质服务器</Button>
-                <Button type="info" @click="delServer">删除介质服务器</Button>
-                <Button type="info" @click="providerServer">修改介质服务器</Button>
+                <!-- <Button type="info" @click="providerServer">修改介质服务器</Button> -->
                 <serverModal :selServiceList="selServiceList" ref="serverModal" @Return="Return"></serverModal>
-                <updateServer :putDatas="putDatas" ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
+                <updateServer ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
             </div>
         </TabPane>
 
         <!-- 磁盘 -->
-        <TabPane label="磁盘">
-            <Table stripe highlight-row :data="disk" :columns="disks" @on-current-change="diskData" height="620px"></Table>
+        <TabPane label="磁盘设备">
+            <Table stripe highlight-row :data="disk" :columns="disks" height="720"></Table>
             
             <div class="btn">
                 <Button type="info" @click="newDisk">新建磁盘</Button>
-                <Button type="info" @click="delDisk">删除磁盘</Button>
-                <Button type="info" @click="modifyDisk">修改磁盘</Button>
+                <!-- <Button type="info" @click="modifyDisk">修改磁盘</Button> -->
                 <diskModal ref="diskModal" @diskReturn="diskReturn"></diskModal>
-                <updateDisk :modalDisk="modalDisk" ref="updateDisk" @listModify="listModify"></updateDisk>
+                <updateDisk ref="updateDisk" @listModify="listModify"></updateDisk>
             </div>
         </TabPane>
 
         <!-- 磁带库 -->
-        <TabPane label="磁带库">
-            <Table stripe highlight-row :data="tape" :columns="tapes" @on-current-change="librayData" height="620px"></Table>
+        <TabPane label="磁带库设备">
+            <Table stripe highlight-row :data="tape" :columns="tapes" @on-current-change="librayData" height="720"></Table>
             
             <div class="btn">
                 <Button type="info" @click="newLibrary">新建磁带库</Button>
-                <Button type="info" @click="delLibrary">删除磁带库</Button>
                 <!-- <Button type="info" @click="modifyLibrary">修改磁带库</Button> -->
                 <libraryModal ref="libraryModal" @libraryReturn="libraryReturn"></libraryModal>
                 <updateLibrary :modalLibrary="modalLibrary" ref="updateLibrary"></updateLibrary>
@@ -75,15 +72,82 @@ export default {
         { title: '机器名称', key: 'machine' },
         { title: 'IP地址', key: 'addr' },
         { title: '操作系统', key: 'os' },
-        { title: '软件版本', key: 'Version' },
-        { title: '状态', key: 'status' }
+        { title: '软件版本', key: 'version' },
+        { title: '状态', key: 'status' },
+        {title: '操作',key: 'operation',align: 'center',
+          render: (h, params) => {
+            return h('div', [
+                // 修改介质服务器弹框
+                h('Icon', {
+                  props: {
+                      type: 'ios-chatboxes',
+                      size: '20',
+                  },
+                  style: {
+                      marginRight: '10px',
+                  },
+                  on: {
+                      click: () => {
+                        this.$refs.updateServer.showMoad2(params.row)
+                      }
+                  }
+                },),
+                // 删除介质服务器
+                h('Icon', {
+                  props: {
+                      type: 'ios-close',
+                      size: '20',
+                  },
+                  on: {
+                      click: () => {
+                        if (confirm('确认删除数据')) { util.restfullCall( '/rest-ful/v3.0/mediaserver/' + params.row.id, null, 'DELETE', this.delCallback) }                        
+                      }
+                  }
+                },),
+            ]);
+          }
+        }
       ],
       disks: [
         { title: '名称', key: 'name' },
         { title: '设备路径', key: 'path' },
         { title: '介质服务器', key: 'servername' },
         { title: '存储容量', key: 'filesize' },
-        { title: '状态', key: 'status' }
+        { title: '状态', key: 'status' },
+        {title: '操作',key: 'operation',align: 'center',
+          render: (h, params) => {
+            return h('div', [
+                // 修改磁盘弹框
+                h('Icon', {
+                  props: {
+                    type: 'ios-chatboxes',
+                    size: '20',
+                  },
+                  style: {
+                    marginRight: '10px',
+                  },
+                  on: {
+                    click: () => {
+                      console.log("磁盘行",params.row)
+                      this.$refs.updateDisk.showModify(params.row)                      
+                    }
+                  }
+                },),
+                // 删除磁盘弹框
+                h('Icon', {
+                  props: {
+                    type: 'ios-close',
+                    size: '20',
+                  },
+                  on: {
+                    click: () => {
+                      if (confirm('确认删除数据')){ util.restfullCall( '/rest-ful/v3.0/device/' + params.row.id, null, 'DELETE', this.deldisks) }
+                    }
+                  }
+                },),
+            ]);
+          }
+        }
       ],
       tapes: [
         { title: '名称', key: 'name' },
@@ -95,17 +159,32 @@ export default {
         {title: '操作',key: 'operation',align: 'center',
           render: (h, params) => {
             return h('div', [
+              // 磁带库详情弹框
               h('Icon', {
                   props: {
                       type: 'gear-b',
                       size: '20'
                   },
+                  style: {
+                    marginRight: '10px',
+                  },
                   on: {
                       click: () => {
-                        console.log(params)
-                        this.$refs.updateLibrary.livrayModify(params.row.changer, params.row.name)
+                        this.$refs.updateLibrary.livrayModify(params.row)
                       }
                   }
+              },),
+              // 删除磁带库弹框
+              h('Icon', {
+                props: {
+                    type: 'ios-close',
+                    size: '20',
+                },
+                on: {
+                    click: () => {
+                      if (confirm('确认删除数据')) { util.restfullCall( '/rest-ful/v3.0/device/' + params.row.id, null, 'DELETE', this.delLibrarys) }                     
+                    }
+                }
               },),
             ]);
           }
@@ -114,10 +193,8 @@ export default {
       medium: [],
       disk: [],
       tape: [],
-      putDatas: {},
-      modalDisk: {},
       modalLibrary: {},
-      selServiceList:[]
+      selServiceList:[],
     }
   },
 
@@ -134,7 +211,7 @@ export default {
     // 查询成功的介质服务器表
     senddata: function(obj) {
       var array = new Array()
-      for (let i = 0; i < obj.data.length; i++) {
+      for (let i = 0; i < obj.data.length; i++) {  
         array.push({
           name: obj.data[i].name,
           id: obj.data[i].id,
@@ -142,7 +219,7 @@ export default {
           os: obj.data[i].os,
           addr: obj.data[i].addr,
           status: obj.data[i].status,
-          Version: obj.data[i].Version,
+          version: this.filter(obj.data[i].version),
           devices: obj.data[i].devices
         })
       }
@@ -165,10 +242,10 @@ export default {
           maxtasks: diskobj.data[i].maxtasks,
           lowlimit: diskobj.data[i].lowlimit,
         })
-        this.disk = array
       }
+      this.disk = array
     },
-     // 查询添加成功的磁带库表
+    // 查询添加成功的磁带库表
     tapesdata: function(typeobj) {
       var array = new Array()
       for (let i = 0; i < typeobj.data.length; i++) {
@@ -189,13 +266,26 @@ export default {
       }
     },
   // 介质服务器部分代码
-    // 点击新建服务器触发事件
+    // 软件版本号转换
+    filter: function(versions) {
+      let v0 = (versions & 0xff000000) >> 24;
+      v0 = v0.toString();
+      let v1 = (versions & 0xff0000) >> 16;
+      v1 = v1.toString();
+      let v2 = (versions & 0xff00) >> 8;
+      v2 = v2.toString();
+      let v3 = versions & 0xff;
+      v3 = v3.toString();
+      let str = v0 + "." + v1 + "." + v2 + "." + v3;
+      return str;
+    },
+    // 点击新建介质服务器触发事件
     newServer: function() {
       util.restfullCall('/rest-ful/v3.0/vrtsserver?type=2', null, 'get', this.goback)
       // this.$refs.serverModal.showMoadl()
     },
+    // 新建介质服务器回调
     goback: function(obj) {
-      //  console.log("5555",obj)
       var array = new Array()
       for (let i = 0; i < obj.data.length; i++) {
         array.push({
@@ -208,29 +298,17 @@ export default {
       this.$refs.serverModal.showMoadl()
       })
     },
-    // 接收添加成功的数据并附给介质表
+    // 接收添加成功的介质服务器数据并附给介质表
     Return(datas) {
       this.medium = datas
     },
-    // 点击修改介质服务器
-    providerServer: function() {
-      this.$refs.updateServer.showMoad2()
-    },
-    // 选中行数据
-    putData: function(currentRow) {
-      this.putDatas = currentRow
-    },
-    // 修改成功之后数据接收
+    // 修改介质服务器成功之后数据接收
     toogleMedium(data) {
       this.medium.forEach(item => {
         if (item.id === data.id) item.name = data.name
       })
     },
-    // 点击删除介质数据
-    delServer: function() {
-      if (confirm('确认删除数据')) { util.restfullCall( '/rest-ful/v3.0/mediaserver/' + this.putDatas.id, null, 'DELETE', this.delCallback) }
-    },
-    // 删除成功之后的回调判断
+    // 删除介质服务器回调判断
     delCallback(callback) {
       if (callback.data.code === 0)
         util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
@@ -246,30 +324,15 @@ export default {
       this.disk = diskdatas
       util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     },
-    // 选中行数据
-    diskData: function(diskRow) {
-      console.log("磁盘选中数据",diskRow)
-      this.modalDisk = diskRow
-    },
-    // 删除磁盘
-    delDisk:function() {
-      if (confirm('确认删除数据')){ util.restfullCall( '/rest-ful/v3.0/device/' + this.modalDisk.id, null, 'DELETE', this.deldisks) }
-    },
     // 删除磁盘成功之后的回调判断
     deldisks(calback) {
       if (calback.data.code === 0)
       util.restfullCall('/rest-ful/v3.0/devices?type=0', null, 'get', this.diskdata)
       util.restfullCall('/rest-ful/v3.0/mediaservers', null, 'get', this.senddata)
     },
-    // 点击修改磁盘
-    modifyDisk: function() {
-      this.$refs.updateDisk.showModify()
-    },
-    // 修改成功的回调接收
+    // 修改磁盘成功的回调接收
     listModify(listDisk) {
-      this.disk.forEach(item => {
-        if (item.id === listDisk.id) item.name=listDisk.name
-      })
+      this.disk = listDisk
     },
   // 磁带库部分代码
     // 点击创建磁带库
@@ -285,10 +348,6 @@ export default {
     librayData:function(livrayRow) {
       this.modalLibrary = livrayRow
     },
-    // 删除磁盘
-    delLibrary:function() {
-      if (confirm('确认删除数据')) { util.restfullCall( '/rest-ful/v3.0/device/' + this.modalLibrary.id, null, 'DELETE', this.delLibrarys) }
-    },
     // 删除磁带库成功之后的回调判断
     delLibrarys(librarys) {
       if (librarys.data.code === 0)
@@ -298,40 +357,9 @@ export default {
 }
 </script>
 
-<style>
-.demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content {
-  height: 120px;
-  margin-top: -16px;
-}
-
-.demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content > .ivu-tabs-tabpane {
-  background: #fff;
-  padding: 16px;
-}
-
-.demo-tabs-style1 > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
-  border-color: transparent;
-}
-
-.demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active {
-  border-color: #fff;
-}
-</style>
 
 <style scoped>
 .btn {
   margin-top: 15px;
 }
-/* .ivu-tabs {
-  height: 100%;
-}
-.ivu-tabs-no-animation>.ivu-tabs-content {
-  height: 100%;
-}
-.ivu-tabs .ivu-tabs-tabpane {
-  height: 100%;
-}
-.ivu-table-wrapper {
-  height: 80%;
-} */
 </style>

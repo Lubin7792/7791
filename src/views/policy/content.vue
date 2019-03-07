@@ -78,7 +78,7 @@
           </div>
         </div>
         <div class="tree-conten">
-          <Table border ref="selection" :columns="columns4" :data="pathConten"></Table>
+          <Table border ref="selection" :columns="columns4" :data="pathContenList"></Table>
         </div>
       </div>
     </div>
@@ -265,8 +265,10 @@ export default {
       policyTypekey: "",
       ztreeTyep: "",
       ztreeObj: {},
-      pathConten: [],
+      pathContenList: [],
+      pathContens: [],
       checkType: false,
+      findPath: "",
       columns4: [
         {
           title: "已选地址",
@@ -444,6 +446,7 @@ export default {
       basic: {
         type: "",
         name: "",
+        id:"",
         privilege: "",
         pool: "",
         device: "",
@@ -471,50 +474,43 @@ export default {
     backData() {
       return this.$store.state.detailData;
     },
-    // hackOne() {
-    //   return this.policyTypekey;
-    // },
     policyTyep() {
       return this.$store.state.policyType;
     },
     devicesList() {
       return this.$store.state.devicesList;
-    },
-    lconten() {
-      let data1 = [];
-      data1 = this.$store.state.policyData;
-      const array = [];
-      for (let i = 0; i < data1.length; i++) {
-        let item = data1[i];
-        array.push(
-          (item = {
-            id: item.id,
-            iconSkin: "client",
-            name: item.machine,
-            nocheck: true,
-            nodetype: 0
-          })
-        );
-      }
-      $.fn.zTree.init($("#treeDemo"), this.setting, array);
     }
   },
   watch: {
+   
     backData: function(data) {
+      // 重置ztree
+      this.lconten();
+      let pathMachine;
+      let clietList = this.$store.state.policyData;
+      let clientID;
+      let machineList = [];
       //数据清空
       this.$refs.backupOption.callBack();
       // 数据回填
       this.basic = data.base;
-      this.basictype=data.base.type
+      this.basictype = data.base.type;
       this.temporary.planList = data.schedule;
-      this.pathConten=data.resource
-  // 传递进来lientNum
-clietList = this.$store.state.policyData;
+      this.pathContenList =JSON.parse(JSON.stringify(data.resource));
+      this.pathContens =JSON.parse(JSON.stringify(data.resource));
+      for (let i = 0; i < data.resource.length; i++) {
+        let _index = data.resource[i].client;
+        findMachine(_index);
+        function findMachine(_index) {
           function findClient(element) {
-        return element.key == clientNum;
+            return element.id == _index;
+          }
+          // 遍历出来客户端列表
+          machineList.push(clietList.filter(findClient)[0].machine);
+        }
+        this.pathContenList[i].path =
+          machineList[i] + "_" + this.pathContenList[i].path;
       }
-      state.clientList = clientList.filter(findClient);
-
       for (let i = 0; i < data.schedule.length; i++) {
         this.temporary.planList[i].typelevelCh =
           data.schedule[i].scheduletype == 0
@@ -647,16 +643,68 @@ clietList = this.$store.state.policyData;
     // }
   },
   created() {
-    console.log("chuanjian");
     // this.show="基本信息"
   },
   mounted() {
     // this.$emit("updataShow")
   },
-  destroyed() {
-    console.log("xiaoshui ");
-  },
+  destroyed() {},
   methods: {
+    lconten() {
+      let data1 = [];
+      data1 = this.$store.state.policyData;
+      const array = [];
+      for (let i = 0; i < data1.length; i++) {
+        let item = data1[i];
+        array.push(
+          (item = {
+            id: item.id,
+            iconSkin: "client",
+            name: item.machine,
+            nocheck: true,
+            nodetype: 0
+          })
+        );
+      }
+      $.fn.zTree.init($("#treeDemo"), this.setting, array);
+    },
+    // 根据name与路径比对是否包含
+    findCheckout(name) {
+      //已选列表信息
+      let findList = this.pathContenList;
+      // 当前节点
+      let nowNode = this.treeNodeA;
+      // 当前路径
+      let nowPath = this.findPath;
+      // 当前节点的客户端
+      let clientId = nowPath.name;
+      // 当前层级
+      let nowLevel = nowNode.level + 1;
+      let names='';
+      for (let i = 0; i < findList.length; i++) {
+        if(nowLevel !=1){
+          names="/"+name;
+        }else{
+          names=name
+        }
+        if(nowLevel==1&&name=="/"){
+          names='';
+        }
+        if(nowLevel==2&&nowPath.path=="/"){
+        nowPath.path='';
+        }
+           if (
+          clientId + "_" + nowPath.path + names ==
+          findList[i].path
+            .split("/")
+            .splice(0, nowLevel)
+            .join("/")
+        ) {
+          return true;
+          break
+        } 
+      }
+    },
     planListIndex: function(value, index) {
       this.show3 = value.scheduletype.toString();
       (this.schedule.startday = ""),
@@ -674,7 +722,6 @@ clietList = this.$store.state.policyData;
       this.schedule.endtime = value.endtime;
     },
     addList: function() {
-      console.log(  this.schedule.scheduletype)
       let typelevelNum = parseInt(
         this.schedule.scheduletype ? this.schedule.scheduletype : 0
       );
@@ -738,18 +785,19 @@ clietList = this.$store.state.policyData;
         base: {
           name: this.basic.name,
           type: this.basic.type,
+          id:this.basic.id,
           privilege: parseInt(this.basic.privilege ? this.basic.privilege : 0),
           pool: parseInt(this.basic.pool ? this.basic.pool : 0),
           device: parseInt(this.basic.device ? this.basic.device : 0),
           savedays: parseInt(this.basic.savedays ? this.basic.savedays : 0),
           maxtasks: parseInt(this.basic.maxtasks ? this.basic.maxtasks : 0)
         },
-        resource:  this.pathConten,
+        resource: this.pathContens,
         option: this.$refs.backupOption.showOption(),
         schedule: this.temporary.planList
       };
-      console.log(tests);
-      // util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
+      console.log(this.pathContens);
+      util.restfullCall("/rest-ful/v3.0/policy", tests, "put", this.senddata);
     },
     senddata: function(value) {
       if (value.data.code === 0) {
@@ -810,6 +858,9 @@ clietList = this.$store.state.policyData;
         }
         treeNode = parent;
       } while (true);
+      if (path.indexOf("//") == 0) {
+        path = path.substr(1);
+      }
       return { client: cid, path: path, name: name };
     },
     //获取子节点发送请求
@@ -820,6 +871,7 @@ clietList = this.$store.state.policyData;
           this.treeId = treeId;
           let typeId = treeNode.ResType ? treeNode.ResType : this.basictype;
           let path = this.build_path_by_tree_node(treeNode);
+          this.findPath = path;
           let str =
             "/rest-ful/v3.0/client/resource/browse?" +
             "client=" +
@@ -843,7 +895,8 @@ clietList = this.$store.state.policyData;
         arrays.push({
           ResType: objj[i].ResType,
           name: objj[i].Name,
-          nodetype: 1
+          nodetype: 1,
+          checked: this.findCheckout(objj[i].Name)
         });
       }
       let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
@@ -852,15 +905,24 @@ clietList = this.$store.state.policyData;
     },
     //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
-        let path = this.build_path_by_tree_node(treeNode);
+      let path = this.build_path_by_tree_node(treeNode);
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
-        this.pathConten.push({ path: pathList, client: parseInt(path.client), type:treeNode.ResType,exclude:0});
+        this.pathContenList.push({ path:pathList});
+
+        this.pathContens.push({
+          path: path.path,
+          client: parseInt(path.client),
+          type: treeNode.ResType, 
+          exclude: 1
+        });
+      console.log(this.pathContens);
+
       } else {
-        function pathFilter(element){
-          return element.path !==pathList
+        function pathFilter(element) {
+          return element.path !== pathList;
         }
-        this.pathConten= this.pathConten.filter(pathFilter)
+        this.pathContenList = this.pathContenList.filter(pathFilter);
       }
       this.resources.clientId = path.client;
       this.ztreeTyep = treeNode.ResType;

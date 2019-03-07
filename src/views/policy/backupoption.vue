@@ -19,7 +19,7 @@
                 />
                 <p class="blanks"></p>
                 <Radio label="7">不备份以下类型文件</Radio>
-                <Input v-model="valueC" style="width: 300px" placeholder="txt;exe;dat"   @on-blur="filterValue(7,valueB)"/>
+                <Input v-model="valueC" style="width: 300px" placeholder="txt;exe;dat"   @on-blur="filterValue(7,valueC)"/>
               </RadioGroup>
             </div>
             <div class="clearfloat">
@@ -316,7 +316,6 @@ export default {
     };
   },
   created() {
-    console.log("created")
   },
   methods: {
     select(num, conten) {

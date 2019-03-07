@@ -1,6 +1,6 @@
 <style>
 .tree {
-   width: 100%;
+  width: 100%;
   float: left;
   height: 300px;
   overflow: auto;
@@ -101,8 +101,10 @@ export default {
     },
      //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
+      console.log("treeNode1",treeNode)
       if (!treeNode.hasOwnProperty("children")) {
         let path = this.build_path_by_tree_node(treeNode);
+      console.log("treeNode2",treeNode)
         let str =
           "/rest-ful/v3.0/devicepath?server=" +  path.client + "&path=" + path.path;
         util.restfullCall(str, null, "get", function(obj) {

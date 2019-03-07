@@ -35,7 +35,7 @@
                 :open-names="['1']"
                 @on-select="changeUrl"
               >
-                <MenuItem name="home" font-size="16px">
+                <MenuItem name="home" font-size="16px"> 
                   <!--  <Icon type="ios-home"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-home"></use>
@@ -48,6 +48,12 @@
                     <use xlink:href="#icon-user-circle"></use>
                   </svg>
                   用户管理
+                </MenuItem>
+                   <MenuItem name="role" >
+                  <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-jiaose"></use>
+                  </svg>
+                  角色管理
                 </MenuItem>
                 <MenuItem name="taskmonitor">
                   <!--  <Icon type="monitor"></Icon> -->

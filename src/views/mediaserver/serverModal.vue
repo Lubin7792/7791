@@ -51,7 +51,6 @@ export default {
     },
     // 成功接收到回调数据就获取添加成功的表格数据
     upload(callback) {
-      // console.log('data', callback)
       if(callback.data.code === 0) util.restfullCall('/rest-ful/v3.0/mediaservers',null,'get',this.senddata)
     },
     // 添加成功的表格数据传递给父组件
@@ -65,14 +64,27 @@ export default {
             os: obj.data[i].os,
             addr: obj.data[i].addr,
             status: obj.data[i].status,
-            Version: obj.data[i].Version,
+            version: this.filter(obj.data[i].version),
             devices: obj.data[i].devices,                    
             })
         }
         this.$emit('Return',array)
         // 初始化弹框页面
         Object.keys(this.serverItem).forEach(key => this.serverItem[key] = null)
-      },
+    },
+    // 软件版本号转换
+    filter: function(versions) {
+      let v0 = (versions & 0xff000000) >> 24;
+      v0 = v0.toString();
+      let v1 = (versions & 0xff0000) >> 16;
+      v1 = v1.toString();
+      let v2 = (versions & 0xff00) >> 8;
+      v2 = v2.toString();
+      let v3 = versions & 0xff;
+      v3 = v3.toString();
+      let str = v0 + "." + v1 + "." + v2 + "." + v3;
+      return str;
+    },
     cancel() {
       this.modal = false
     }

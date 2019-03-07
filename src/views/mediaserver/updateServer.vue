@@ -23,33 +23,48 @@
 <script>
 import util from '../../libs/util.js'
 export default {
-    props: {
-        putDatas: {
-            type: Object
-        }
-    },
     
-    data () {
-            return {
-                modal1: false
-            }
-    },
-    methods: {
-        showMoad2: function() {
-            this.modal1 = true
-        },
-        // 点击保存修改数据
-        ok () {
-            util.restfullCall('/rest-ful/v3.0/mediaserver/'+this.putDatas.id,{name:this.putDatas.name},'PUT',this.upload);
-            this.modal1 = false
-        },
-        // 回调的数据传递给父组件
-        upload(callback) {
-            if(callback.data.code === 0) this.$emit('toogleMedium', this.putDatas)
-        },
-        cancel () {
-            this.modal1 = false
-        }
+  data () {
+    return {
+      modal1: false,
+      putDatas: {
+        name: '',
+        id: '',
+        machine: '',
+        os: '',
+        addr: '',
+        status: '',
+        Version: '',
+        devices: ''
+      }
     }
+  },
+  methods: {
+    // 传递的行数据接收
+    showMoad2: function(row) {
+      // this.putDatas = row
+      this.putDatas.name = row.name
+      this.putDatas.id = row.id
+      this.putDatas.machine = row.machine
+      this.putDatas.os = row.os
+      this.putDatas.addr = row.addr
+      this.putDatas.status = row.status
+      this.putDatas.Version = row.Version
+      this.putDatas.devices = row.devices
+      this.modal1 = true
+    },
+    // 点击保存修改数据
+    ok () {
+      util.restfullCall('/rest-ful/v3.0/mediaserver/'+this.putDatas.id,{name:this.putDatas.name},'PUT',this.upload);
+      this.modal1 = false
+    },
+    // 回调的数据传递给父组件
+    upload(callback) {
+      if(callback.data.code === 0) this.$emit('toogleMedium', this.putDatas)
+    },
+    cancel () {
+      this.modal1 = false
+    }
+  }
 }
 </script>
