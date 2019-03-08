@@ -217,6 +217,30 @@ export default {
                     )
                   ]
                 ),
+                h(
+                  "Icon",
+                  {
+                    props: {
+                      type: "edit",
+                      size: "25"
+                    },
+                    style:{
+                      marginRight: "15px"
+                    },
+                    on: {
+                      click: () => {
+                        this.modal = true;
+                        util.restfullCall(
+                          "/rest-ful/v3.0/policy/detail/" + params.row.id,
+                          null,
+                          "get",
+                          this.detailData
+                        );
+                      }
+                    }
+                  },
+                  "修改策略"
+                ),
 
                 h(
                   "Icon",
@@ -236,31 +260,9 @@ export default {
                       }
                     },
                     style: {
-                      marginRight: "15px"
                     }
                   },
                   "删除策略"
-                ),
-                h(
-                  "Icon",
-                  {
-                    props: {
-                      type: "edit",
-                      size: "25"
-                    },
-                    on: {
-                      click: () => {
-                        this.modal = true;
-                        util.restfullCall(
-                          "/rest-ful/v3.0/policy/detail/" + params.row.id,
-                          null,
-                          "get",
-                          this.detailData
-                        );
-                      }
-                    }
-                  },
-                  "修改策略"
                 )
               ]
             );
