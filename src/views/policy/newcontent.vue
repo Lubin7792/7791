@@ -264,7 +264,7 @@ export default {
       treeNodeA: {},
       treeId: "",
       hackReset: true,
-      policyTypekey: "",
+      policyTypekey: "65536",
       ztreeTyep: "",
       ztreeObj: {},
       pathConten: [],
@@ -308,7 +308,7 @@ export default {
 
       show3: "0",
       basic: {
-        type: "",
+        type: "65536",
         name: "",
         deviceval:'',
         poolval: 2,

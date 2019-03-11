@@ -16,6 +16,7 @@ const Routers = [
   {
     path: "/",
     component: Navigation,
+    redirect: '/home',
     children: [
       {
         path: "home",
@@ -155,11 +156,13 @@ const Routers = [
         component: () => import("../views/role/role.vue")
       }
     ]
-  },
+  }
+  ,
   {
     path: "*",
     redirect: "/login"
   }
 ];
+
 
 export default Routers;

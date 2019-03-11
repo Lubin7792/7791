@@ -39,6 +39,7 @@
         v-model="modalDelete"
         @on-ok="ok"
         @on-cancel="cancel"
+        :closable="false"
         ok-text="确认删除"
         cancel-text="取消"
         class-name="vertical-center-modal"

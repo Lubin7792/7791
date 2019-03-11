@@ -31,6 +31,7 @@ const RouterConfig = {
 const router = new VueRouter(RouterConfig);
 router.beforeEach((to, from, next) => {
     window.document.title = '天华星航备份软件';
+    console.log("2222")
     next();
 });
 

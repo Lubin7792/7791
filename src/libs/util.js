@@ -1,6 +1,15 @@
 import axios from 'axios';
+// import Router from 'vue-router'
+// const login = () => import('../views/login/login.vue')
+
 // axios.defaults.baseURL = "http://192.168.1.232:8080";
 axios.defaults.baseURL = 'http://192.168.0.109:8080';
+// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+if (window.localStorage.getItem('token')) {
+	Axios.defaults.headers.common['Authorization'] = `Bearer ` + window.localStorage.getItem('token')
+}
+
+axios.defaults.withCredentials = true
 export default {
 	restfullCall: function (url, body, method, dataFormat) {
     axios({
@@ -9,7 +18,12 @@ export default {
       data: body
     })
 		.then(res => {
+			//返回是否是203？跳转到login
+		if(res.status==203){
+			window.location="/#/login"
+		}else{
 			dataFormat(res);
+		}
       })
       .catch(error => {
         // console.log(error);

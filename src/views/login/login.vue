@@ -58,6 +58,9 @@ export default {
       }
     }
   },
+  created() {
+    console.log("login")
+  },
   methods: {
     padDate: function(value) {
       return value < 10 ? '0' + value : value
@@ -84,7 +87,7 @@ export default {
       })
         .then(res => {
           if (res.data.code == 0) {
-            this.$router.push('/navigation')
+            this.$router.push('/home')
           } else {
             alert('用户名或密码错误')
           }

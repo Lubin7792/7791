@@ -10,6 +10,16 @@
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
     <updatePolicy :upmodal="modal" @close="revise"></updatePolicy>
+    <Modal
+      v-model="modalDelete"
+      @on-ok="ok"
+      ok-text="确认删除"
+      cancel-text="取消"
+      :closable="false"
+      class-name="vertical-center-modal"
+    >
+      <p style="color:#f60;text-align:center;font-size:16px;">确认是否删除该策略，如果确认删除请点击删除，否认点击取消。</p>
+    </Modal>
   </div>
 </template>
 <script>
@@ -21,7 +31,9 @@ export default {
     return {
       modalss: false,
       modal: false,
+      modalDelete: false,
       _index: Number,
+      policyId: "",
       postBackData: [],
       shiliS: [
         {
@@ -200,13 +212,17 @@ export default {
                             {
                               nativeOn: {
                                 click: () => {
-                               let url =
-                            "/rest-ful/v3.0/policy/schedule/" +
-                            params.row.id +
-                            "?type=" +
-                           item.type;
-                          util.restfullCall(url, null, "get", this.nowCallBack);
-
+                                  let url =
+                                    "/rest-ful/v3.0/policy/schedule/" +
+                                    params.row.id +
+                                    "?type=" +
+                                    item.type;
+                                  util.restfullCall(
+                                    url,
+                                    null,
+                                    "get",
+                                    this.nowCallBack
+                                  );
                                 }
                               }
                             },
@@ -224,7 +240,7 @@ export default {
                       type: "edit",
                       size: "25"
                     },
-                    style:{
+                    style: {
                       marginRight: "15px"
                     },
                     on: {
@@ -251,16 +267,11 @@ export default {
                     },
                     on: {
                       click: () => {
-                        util.restfullCall(
-                          "/rest-ful/v3.0/policy/" + params.row.id,
-                          null,
-                          "delete",
-                          this.deleteData
-                        );
+                        this.policyId = params.row.id;
+                        this.modalDelete = true;
                       }
                     },
-                    style: {
-                    }
+                    style: {}
                   },
                   "删除策略"
                 )
@@ -286,6 +297,14 @@ export default {
   },
   watch: {},
   methods: {
+    ok: function() {
+      util.restfullCall(
+        "/rest-ful/v3.0/policy/" + this.policyId,
+        null,
+        "delete",
+        this.deleteData
+      );
+    },
     deleteData: function(value) {
       if (value.data.code === 0) {
         this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
