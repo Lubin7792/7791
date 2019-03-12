@@ -1,0 +1,109 @@
+<style lang="less">
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .ivu-modal {
+    top: 0;
+  }
+}
+</style>
+<template>
+  <Modal
+    title="修改配置"
+    v-model="InfoModal"
+    class-name="vertical-center-modal"
+    @on-ok="ok"
+    @on-cancel="cancel"
+    ok-text="确认修改"
+    class="policyModal"
+  >
+    <Tabs type="card" :animated="false" @on-click="click" v-model="tabNames">
+      <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index" > 
+             </TabPane>
+    </Tabs>
+     <Content :show="show" ref="conten"></Content> 
+  </Modal>
+</template>
+<script>
+import Content from "./content.vue";
+export default {
+  data() {
+    return {
+      InfoModal: this.upmodal,
+      tabNames:'',
+      tabList: [
+        {
+          title: "基本信息"
+        },
+        {
+          title: "备份资源列表"
+        },
+        {
+          title: "备份选项"
+        },
+        {
+          title: "调度计划"
+        }
+      ],
+      show: "基本信息"
+    };
+  },
+  components: {
+    Content
+  },
+  props: {
+    upmodal: {
+      type: Boolean
+    }
+  },
+  computed: {
+    back() {
+      return this.$store.state.detailData;
+    }
+  },
+  methods: {
+    delTabList: function() {
+      this.tabList.splice(2, 1);
+    },
+    addTabList: function() {
+      if (this.tabList.length == 3) {
+        this.tabList.splice(2, 0, { title: "备份选项" });
+      }
+    },
+    ok: function() {
+      this.$emit("close", false);
+       this.$refs.conten.policypost();
+    },
+    cancel: function() {
+      this.$emit("close", false);
+    },
+    click: function(name) {
+      this.show = name;
+    },
+    setshow: function(obj) {},
+    updataShow() {
+    }
+  },
+  watch: {
+    upmodal(upmodal) {
+      this.InfoModal = upmodal;
+    },
+
+    back(data) {
+      if (data.base.type == 196608) {
+        this.tabNames="基本信息"
+        this.show="基本信息"
+        if (this.tabList.length == 4) {
+          this.delTabList();
+        }
+      } else {
+        if (!(this.tabList.length == 4)) {
+          this.addTabList();
+        }
+      }
+    }
+  }
+};
+</script>

@@ -1,0 +1,80 @@
+:root {
+	--border: {
+		border-left: none;
+		border-right: none;
+	}
+}
+/* .ivu-table-wrapper {
+	@apply --border;
+} */
+
+/* 头部刷新栏 */
+.sys-top {
+	border: dashed 1px #FB784D;
+	padding: 31px;
+	border-radius: 5px;
+	height: 90px;
+	margin-bottom: 20px;
+	min-width: 1000px;
+	background-color: #F3F3F3;
+}
+/* 改变表格北京色news为消息，wrning为警告，error为错误*/
+/* .ivu-table .news td {
+	background-color: rgb(53, 185, 26);
+	color: #fff;
+} */
+.ivu-table .wrning td {
+	background-color: rgb(224, 222, 63) !important;
+}
+.ivu-table .error td {
+	background-color: rgb(201, 80, 50) !important;
+}
+/* .sys-content .ivu-table td,td {
+  border-bottom:none;
+}
+.sys-content .ivu-table-header th{
+  border-bottom: 2px solid #fd7549;
+  height: 50px;
+  background-color: #fff;
+} */
+/* .sys-content .ivu-table-tbody tr:nth-child(even){
+
+	background-color: #f9efe9;
+
+} */
+/* .sys-content .ivu-table-tbody td{
+  background-color: transparent;
+} */
+/* .sys-content .ivu-table-tbody tr:hover{
+  background-color:#f9efe9;
+} */
+/* .sys-one .ivu-table-cell p{
+    color:#666666;
+}
+.sys-two .ivu-table-cell p{
+    color:#fd7549;
+}
+.sys-three .ivu-table-cell p{
+    color:#b41c21;
+} */
+.sysdesc .ivu-table-cell {
+  width: 300px;
+  height: 20px;
+  white-space: nowrap;	
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.sysmodal .ivu-modal-footer {
+  border-top: none;
+}
+.sysmodal .ivu-modal-header{
+	background-color: #fd7549;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.sysmodal .ivu-modal-close  .ivu-icon-ios-close-empty{
+	color: #fff;
+}
+.sysmodal .ivu-modal-header-inner{
+	color: #fff;
+}
