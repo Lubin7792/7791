@@ -796,7 +796,6 @@ export default {
         option: this.$refs.backupOption.showOption(),
         schedule: this.temporary.planList
       };
-      console.log(this.pathContens);
       util.restfullCall("/rest-ful/v3.0/policy", tests, "put", this.senddata);
     },
     senddata: function(value) {
@@ -916,7 +915,6 @@ export default {
           type: treeNode.ResType, 
           exclude: 1
         });
-      console.log(this.pathContens);
 
       } else {
         function pathFilter(element) {

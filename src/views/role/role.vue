@@ -7,7 +7,7 @@
     <Table border :columns="roleList" :data="roleData"></Table>
     <newRole :show="newShow" @close="closeNew" @post="backPost"></newRole>
     <editRole :show="editShow" @close="closeEdit" :backData="editData" @edit="backPost"></editRole>
-    <rolePrower :show="prowerShow" @close="closePrower"></rolePrower>
+    <rolePrower :show="prowerShow" @close="closePrower" :postData="ztreeData" :ztreeId="backId"></rolePrower>
      <Modal
         v-model="modalDelete"
         @on-ok="ok"
@@ -33,7 +33,9 @@ export default {
       prowerShow: false,
       modalDelete: false,
       rowId:'',
+      backId:null,
       editData: {},
+      ztreeData:[],
       roleList: [
         {
           title: "名称",
@@ -75,6 +77,10 @@ export default {
                   on: {
                     click: () => {
                       this.prowerShow = true;
+                     this.backId=params.row.id;
+
+      util.restfullCall("/rest-ful/v3.0/role/"+params.row.id+"/privilege" , null, "get", this.rolePost);
+                      
                     }
                   }
                 }),
@@ -105,6 +111,10 @@ export default {
     util.restfullCall("/rest-ful/v3.0/roles", null, "get", this.rolesData);
   },
   methods: {
+    rolePost:function (data) {
+      this.ztreeData=data.data
+      console.log(data)
+    },
     ok:function () {
        util.restfullCall(
                         "/rest-ful/v3.0/role/" +this.rowId,

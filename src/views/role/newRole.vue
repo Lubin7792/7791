@@ -37,7 +37,7 @@ export default {
       this.$emit("close", false);
     },
     roleData:function (data) {
-     if(data.status==200){
+     if(data.data.code==0){
       this.$emit("post");
 
      }else{

@@ -58,9 +58,6 @@ export default {
       }
     }
   },
-  created() {
-    console.log("login")
-  },
   methods: {
     padDate: function(value) {
       return value < 10 ? '0' + value : value
@@ -86,8 +83,11 @@ export default {
           now
       })
         .then(res => {
+          console.log(res)
           if (res.data.code == 0) {
             this.$router.push('/home')
+            var obj = {"uid":res.data.uid}
+            localStorage.setItem("userInfo",JSON.stringify(obj))
           } else {
             alert('用户名或密码错误')
           }

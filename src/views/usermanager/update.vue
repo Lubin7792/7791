@@ -5,7 +5,7 @@
     <Modal v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" class-name="vertical-center-modal" title="修改用户" :updateId="updateId">
         <Form ref="formdata" :model="formdata" :rules="ruleValidate" :label-width="80" label-position='left'>
         <FormItem label="用户名" prop="name">
-            <Input v-model="formdata.name" placeholder="请在此输入用户名" disabled="true"></Input>
+            <Input v-model="formdata.name" placeholder="请在此输入用户名" :disabled="true"></Input>
         </FormItem>
         <FormItem label="Ip地址" prop="ip">
             <Input v-model="formdata.ip" placeholder="请在此输入ip地址"></Input>
