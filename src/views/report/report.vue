@@ -23,7 +23,7 @@
   }
   .ivu-table .wrning td {
 	background-color: rgb(224, 222, 63) !important;
-}
+} 
 .ivu-table .error td {
 	background-color: rgb(201, 80, 50) !important;
 }
@@ -32,7 +32,7 @@
 <template>
   <Tabs :animated="false" type="card">
     <!-- 运行记录报表 -->
-    <TabPane label="运行记录报表">
+    <TabPane label="运行记录报表" v-if="nowShow(1)">
         <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -80,7 +80,7 @@
     </TabPane>
 
     <!-- 设备报表 -->
-    <TabPane label="设备报表">
+    <TabPane label="设备报表" v-if="nowShow(2)">
         <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -113,7 +113,7 @@
     </TabPane>
 
     <!-- 介质报表 -->
-    <TabPane label="介质报表">
+    <TabPane label="介质报表" v-if="nowShow(3)">
           <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -155,6 +155,7 @@ export default {
   },
   data() {
     return {
+      numNowList:[],
       runReport: [
         { title: 'ID', key: 'id', width: 80, },
         { title: '任务类型', key: 'type' },
@@ -241,11 +242,30 @@ export default {
   },
   created() {
     // 查询设备报表
+    let uId=JSON.parse(localStorage.userInfo).uid;
+      util.restfullCall( "/rest-ful/v3.0/user/privilege/"+uId+"?module="+10, null, "get", this.numNowBack);
     util.restfullCall('/rest-ful/v3.0/report/device', null, 'get', this.callbackDevice)
     // 查询介质报表
     util.restfullCall('/rest-ful/v3.0/report/volume', null, 'get', this.callbackMedium)
   },
   methods: {
+    nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        // console.log(this.numNowList)
+        return true
+      }else{
+        return false
+      }
+    },
+      numNowBack(data){
+       let list= []
+        data.data.map(item=>{
+            list.push(item.func)
+        })
+        this.numNowList=list;
+        console.log(this.numNowList)
+
+    },
     // 查询设备报表返回数据
     callbackDevice: function(deviceObj) {
       var array = new Array()

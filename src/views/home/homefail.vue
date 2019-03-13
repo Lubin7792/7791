@@ -3,14 +3,14 @@
      <div class="home-title">
           <p > </p>
           <i>备份失败任务量</i>
-          <em>3</em>    
+          <em>{{this.right.failedtasks}}</em>    
         </div>
         <div class="home-content">
-          <p class="home-con-tit">设备状态</p>
+          <p class="home-con-tit">设备统计</p>
           <div class="home-state">
-            <p>设备状态：虚拟磁带库</p>
-            <p>设备数量：3</p>
-            <p>设备状态：正常</p>
+            <p>磁带库设备数量： {{this.right.device.tapelibdevs}}</p>
+            <p></p>
+            <p>磁盘设备数量： {{this.right.device.diskdevs}}</p>
            </div>
           <div class=" home-setup">
             <p>配置设备</p>
@@ -19,4 +19,17 @@
   </div>
 </template>
 <script >
+  export default {
+    props: {
+      right:{}
+    },
+    data() {
+      return{
+        
+      }
+    },
+    methods: {
+
+    }
+  }
 </script>

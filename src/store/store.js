@@ -157,6 +157,8 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    //获取单页面权限
+    
     //获取数据
     getData(state, number) {
       if (number == 0) {

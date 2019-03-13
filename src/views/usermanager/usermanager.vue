@@ -110,10 +110,20 @@ export default {
                 h(
                   "Select",
                   {
+                    props: {
+                      value: this.tableData1[params.index].roleid
+                    },
                     on: {
                       "on-change": value => {
-        util.restfullCall("/rest-ful/v3.0/user/"+params.row.id+"/role?role="+value, null, "put", this.userBack);
-
+                        util.restfullCall(
+                          "/rest-ful/v3.0/user/" +
+                            params.row.id +
+                            "/role?role=" +
+                            value,
+                          null,
+                          "put",
+                          this.userBack
+                        );
                       }
                     }
                   },
@@ -205,8 +215,7 @@ export default {
     util.restfullCall("/rest-ful/v3.0/roles", null, "get", this.rolesData);
   },
   methods: {
-    userBack:function (data) {
-      console.log(data)
+    userBack: function(data) {
     },
     rolesData: function(data) {
       this.rolesList = data.data;

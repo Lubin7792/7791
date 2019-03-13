@@ -65,7 +65,6 @@ export default {
   },
   methods: {
     rolePost: function(params) {
-      console.log(params);
     },
     zTreeOnClick: function(event, treeId, treeNode) {
       var zTree = $.fn.zTree.getZTreeObj("treeDemoB");
@@ -85,7 +84,6 @@ export default {
         }
         this.ztreeData = this.ztreeData.filter(dataFilter);
       }
-      console.log(this.ztreeData)
 
     },
     privilegeData: function(data) {
@@ -119,7 +117,6 @@ export default {
       this.$emit("close", false);
     },
     roleBack: function(params) {
-      console.log(params);
     }
   },
   watch: {

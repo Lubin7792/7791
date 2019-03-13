@@ -6,7 +6,7 @@
         <div class="home-title">
           <p > </p>
           <i>备份任务量</i>
-          <em>55</em>    
+          <em>{{this.leftData.percent}}</em>    
         </div>
         <div class="home-content">
           <p class="home-con-tit">备份数据量</p>
@@ -14,12 +14,12 @@
            
              <div class="home-details">
                <span class="home-capacity">
-                 98.856GB
                  <p> 累计完成备份数据量</p>
+                 <!-- {{this.leftData.totalbytes}} -->
                </span>
                <span class="home-range">
-                50%
-                <p>同上周相比较</p>
+                <p>同比上周字节增长量</p>
+                 <!-- {{this.leftData.increasebytes}} -->
                </span>
           </div>
         </div>
@@ -36,28 +36,45 @@ require("echarts/lib/component/tooltip");
 require("echarts/lib/component/title");
 export default {
   props: {
-  
+    left:{
+    }
   },
   name: "hello",
   data() {
     return {
+      leftData:'',
       msg: "Welcome to Your Vue.js App",
       mss: ""
     };
   },
+  watch: {
+   left:function(data){
+     this.leftData=data.classsum[0]
+     console.log(11,data)
+    this.drawLine(data);
+     
+   }
+  },
   mounted() {
-    this.drawLine();
+  },
+  computed:{
+    // lefts(){
+    //   return this.leftData
+    // }
   },
   methods: {
-    drawLine() {
+    drawLine(data) {
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById("myChart1"));
+      // console.log('this.left', JSON.stringify(this.left))
+      console.log('this.left', data,typeof this.leftData)
+      // console.log('this.left', this.left,this.left.classsum[0].percent)
       // 绘制图表
       myChart.setOption({
         legend: {
           orient: "vertical",
           x: "left",
-          data: ["直接访问", "邮件营销", "联盟广告", "视频广告"]
+          data: ["策略管理", "邮件营销", "联盟广告", "视频广告"]
         },
         series: [
           {
@@ -80,13 +97,13 @@ export default {
             },
             color: [
               "#fd7549",
-              "#fff",
+              // "#fff",
               "#108bd8",
-              "#fff",
+              // "#fff",
               "#ff9103",
-              "#fff",
+              // "#fff",
               "#c5c7c9",
-              "#fff"
+              // "#fff"
             ],
             labelLine: {
               normal: {
@@ -94,14 +111,16 @@ export default {
               }
             },
             data: [
-              { value: 335, name: "直接访问" },
-              { value: 10, name: "" },
-              { value: 90, name: "邮件营销" },
-              { value: 10, name: "" },
-              { value: 100, name: "联盟广告" },
-              { value: 10, name: "" },
-              { value: 90, name: "视频广告" },
-              { value: 10, name: "" }
+              // { value:this.leftData.percent, name:this.leftData.policytype },
+              { value:data.classsum[0].percent, name:data.classsum[0].policytype },
+              // { value: 4, name: "策略管理" },
+              // { value: 5, name: "" },
+              { value: 3, name: "邮件营销" },
+              // { value: 5, name: "" },
+              { value: 43, name: "联盟广告" },
+              // { value: 5, name: "" },
+              { value: 69, name: "视频广告" },
+              // { value: 5, name: "" }
             ]
           }
         ]

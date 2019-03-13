@@ -1,7 +1,7 @@
 <template>
     <div class="home-war">
         <p class="war-tit">警告记录（最近一周）</p>
-        <Table  :columns="columns7" :data="data6" :show-header="false" @on-row-click="getRowData"></Table>
+        <Table  :columns="columns7" :data="data6" :show-header="false" @on-row-click="getRowData" height="250"></Table>
         <Modal  v-model="modal12" title="日志详情"  cancel-text class="popup">
                <popup :num="ceshi" ></popup>   
         </Modal>

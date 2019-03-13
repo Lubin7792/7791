@@ -5,14 +5,21 @@
 <template>
   <div class="policy">
     <div class="buttonC">
-
-
-      <!-- <Button type="error" style="margin-top:15px;" @click="click">新建策略</Button> -->
       <Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
     <updatePolicy :upmodal="modal" @close="revise"></updatePolicy>
+    <Modal
+      v-model="modalDelete"
+      @on-ok="ok"
+      ok-text="确认删除"
+      cancel-text="取消"
+      :closable="false"
+      class-name="vertical-center-modal"
+    >
+      <p style="color:#f60;text-align:center;font-size:16px;">确认是否删除该策略，如果确认删除请点击删除，否认点击取消。</p>
+    </Modal>
   </div>
 </template>
 <script>
@@ -24,7 +31,10 @@ export default {
     return {
       modalss: false,
       modal: false,
+      modalDelete: false,
       _index: Number,
+      policyId: "",
+      postBackData: [],
       shiliS: [
         {
           enable: 1,
@@ -167,159 +177,103 @@ export default {
               },
               [
                 h(
-                  "Button",
-                  {
-                    props: {
-                      type: "error",
-                      size: "small"
-                    },
-                    on: {
-                      click: () => {
-                        util.restfullCalls(
-                          "/rest-ful/v3.0/policy/scheduletype/" +
-                            this.policiesData[params.index].id,
-                          null,
-                          "get",
-                          this.scheduletype,
-                          params
-                        );
-                      }
-                    },
-                    style: {
-                      verticalAlign: "middle",
-                      backgroundColor: "#ed3f14",
-                      padding: "2px",
-                      marginLeft: "-4px",
-                      color: "#fff",
-                      borderRadius: "4px 0 0 4px"
-                    }
-                  },
-                  "立即调度"
-                ),
-                h(
                   "Dropdown",
                   {
                     props: {
                       trigger: "click"
-                    },
-                    ref:'conten',
-                    style: {},
-                    on: {
-                      "on-click": name => {
-                        console.log("111");
-                        if (data.scheduletypes.name) {
-                          let url =
-                            "/rest-ful/v3.0/policy/schedule/" +
-                            params.row.id +
-                            "?type=" +
-                            data.scheduletypes.type;
-                          util.restfullCall(url, null, "get", this.nowCallBack);
-                        }
-                      }
                     }
                   },
                   [
                     h(
-                      "Button",
+                      "Icon",
                       {
-                        style: {
-                          margin: "0 4px 0 1px",
-                          borderColor: "#FFF",
-                          padding: "0"
+                        props: {
+                          type: "settings",
+                          size: "25"
                         },
                         on: {
                           click: () => {
                             this.buttonPost(params);
                           }
+                        },
+                        style: {
+                          marginRight: "15px"
                         }
                       },
-                      [
-                        h("Icon", {
-                          props: {
-                            type: "arrow-down-b"
-                          },
-                          style: {
-                            lineHeight: "24px",
-                            verticalAlign: "middle",
-                            backgroundColor: "#ed3f14",
-                            padding: "0 7px",
-                            fontSize: "20px",
-                            lineHeight: "26px",
-                            color: "#fff",
-                            height: "24px",
-                            borderRadius: " 0 4px 4px  0"
-                          }
-                        })
-                      ]
+                      "立即调度"
                     ),
                     h(
                       "DropdownMenu",
-                      {
-                        slot: "list"
-                      },
-                      [
-                        h(
-                          "DropdownItem",
-                          {
-                            props: {
-                              name: data.scheduletypes.type
-                            }
-                          },
-                          data.scheduletypes.name
-                            ? data.scheduletypes.name
-                            : "请立即调度"
-                        )
-                      ]
+                      { slot: "list" },
+                      this.postBackData.map(item => {
+                        return [
+                          h(
+                            "DropdownItem",
+                            {
+                              nativeOn: {
+                                click: () => {
+                                  let url =
+                                    "/rest-ful/v3.0/policy/schedule/" +
+                                    params.row.id +
+                                    "?type=" +
+                                    item.type;
+                                  util.restfullCall(
+                                    url,
+                                    null,
+                                    "get",
+                                    this.nowCallBack
+                                  );
+                                }
+                              }
+                            },
+                            item.name
+                          )
+                        ];
+                      })
                     )
                   ]
                 ),
-
                 h(
-                  "Button",
+                  "Icon",
                   {
                     props: {
-                      type: "error",
-                      size: "small"
-                    },
-                    on:{
-                      click:()=>{
-                          util.restfullCall(
-                          "/rest-ful/v3.0/policy/" +
-                            params.row.id,
-                          null,
-                          "delete",
-                          this.deleteData
-                        );
-                      }
+                      type: "edit",
+                      size: "25"
                     },
                     style: {
-                      marginRight: "4px"
-                    }
-                  },
-                  "删除策略"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "error",
-                      size: "small"
+                      marginRight: "15px"
                     },
-                    on:{
-                      click:()=>{
-                        this.modal= true;
-                          util.restfullCall(
-                          "/rest-ful/v3.0/policy/detail/" +
-                            params.row.id,
+                    on: {
+                      click: () => {
+                        this.modal = true;
+                        util.restfullCall(
+                          "/rest-ful/v3.0/policy/detail/" + params.row.id,
                           null,
                           "get",
                           this.detailData
                         );
                       }
                     }
-
                   },
                   "修改策略"
+                ),
+
+                h(
+                  "Icon",
+                  {
+                    props: {
+                      type: "trash-a",
+                      size: "25"
+                    },
+                    on: {
+                      click: () => {
+                        this.policyId = params.row.id;
+                        this.modalDelete = true;
+                      }
+                    },
+                    style: {}
+                  },
+                  "删除策略"
                 )
               ]
             );
@@ -340,34 +294,36 @@ export default {
     policiesData() {
       return this.$store.state.policiesData;
     }
-  
   },
-  watch: {
-
-  },
+  watch: {},
   methods: {
-    click(){
-      let str="DESKTOP-VBD4GRU_D:/$RECYCLE.BIN"
-      let newStr = str.substring(str.indexOf("_"))
-      console.log(newStr)
+    ok: function() {
+      util.restfullCall(
+        "/rest-ful/v3.0/policy/" + this.policyId,
+        null,
+        "delete",
+        this.deleteData
+      );
     },
-    deleteData:function (value) {
-       if (value.data.code === 0) {
+    deleteData: function(value) {
+      if (value.data.code === 0) {
         this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
-          alert(value.data.message)
-      }else{
-        alert(value.data.message)
+        alert(value.data.message);
+      } else {
+        alert(value.data.message);
       }
     },
-    // 修改列表备份类型数据
+    // 废弃修改列表备份类型数据
     scheduletype(obj, scheduletype) {
       this.policiesData[scheduletype.index].scheduletypes.name =
         obj.data[0].name;
       this.policiesData[scheduletype.index].scheduletypes.type =
         obj.data[0].type;
-      this.$nextTick(()=>{
-       this.$refs.exp.$children[1].$children[scheduletype.index].$children[9].$children[1].currentVisible = true;
-      })
+      this.$nextTick(() => {
+        this.$refs.exp.$children[1].$children[
+          scheduletype.index
+        ].$children[9].$children[1].currentVisible = true;
+      });
     },
     buttonPost(params) {
       util.restfullCalls(
@@ -375,9 +331,11 @@ export default {
           this.policiesData[params.index].id,
         null,
         "get",
-        this.scheduletype,
-        params
+        this.postBack
       );
+    },
+    postBack: function(params) {
+      this.postBackData = params.data;
     },
     nowCallBack: function(params) {
       alert(params.data.message);
@@ -428,9 +386,10 @@ export default {
     closePolicy: function(modalss) {
       this.modalss = modalss;
     },
-     revise: function(show) {
+    revise: function(show) {
       this.modal = show;
     },
+    //启动
     switch(params, value) {
       if (value) {
         this.policiesData[params.index].enable = 1;
@@ -451,8 +410,8 @@ export default {
       }
     },
     //修改策略信息
-    detailData:function(obj){
-        this.$store.commit("existData",obj.data.policy)
+    detailData: function(obj) {
+      this.$store.commit("existData", obj.data.policy);
     }
     // //更新反馈信息某一字段
     // updateFeedbackMessage(id, key, value) {

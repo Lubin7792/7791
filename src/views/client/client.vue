@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import util from "../../libs/util.js";
 import Table from "../common/table.vue";
 import $ from "jquery";
 export default {
@@ -17,6 +18,7 @@ export default {
   data() {
     return {
       version: [],
+      numNowLis:[],
       state: [],
       // clientId: "",
       updateModal: "false",
@@ -68,8 +70,18 @@ export default {
       datas: []
     };
   },
-
+  created() {
+     let uId=JSON.parse(localStorage.userInfo).uid;
+      util.restfullCall( "/rest-ful/v3.0/user/privilege/"+uId+"?module="+1, null, "get", this.numNowBack);
+  },
   methods: {
+    numNowBack(data){
+       let list= []
+        data.data.map(item=>{
+            list.push(item.module)
+        })
+        this.numNowLis=list;
+    },
     getData: function(obj) {
       for (let i = 0; i < obj.length; i++) {
         this.filter(obj[i].version, obj[i].state);

@@ -3,19 +3,19 @@
      <div class="home-title">
           <p > </p>
           <i>备份成功数量</i>
-          <em>55</em>    
+          <em>{{this.content.successtasks}}</em>    
         </div>
         <div class="home-content">
-          <p class="home-con-tit">设备使用状况</p>
+          <p class="home-con-tit">服务器统计</p>
            <div id="myChart2" :style="{width:'',height:'324px'}"></div> 
              <div class=" home-details">
                <span class="home-capacity">
-                50TB
-                 <p> 设备已使用容量</p>
+                 <p>介质服务器数量</p>
+                 {{this.content.MediaServers}}
                </span>
                <span class="home-range">
-               128TB
-                <p>设备总容量</p>
+                <p>客户端数量</p>
+                 {{this.content.clients}}
                </span>
           </div>
         </div>
@@ -31,6 +31,9 @@ require("echarts/lib/chart/pie");
 require("echarts/lib/component/tooltip");
 require("echarts/lib/component/title");
 export default {
+  props: {
+    content:{}
+  },
   name: "hello",
   data() {
     return {
@@ -49,7 +52,7 @@ export default {
         legend: {
           orient: "vertical",
           left: "left",
-          data: ["直接访问", "邮件营销", "联盟广告", "视频广告", "搜索引擎"]
+          data: []
         },
         color: ["#fd7549", "#e3e3e3"],
         series: [
@@ -57,14 +60,12 @@ export default {
             name: "访问来源",
             type: "pie",
             radius: "55%",
-            center: ["50%", "60%"],
-            
+            center: ["50%", "60%"], 
             data: [
-              { value: 335, name: "已使用" },
-              {
-                value: 310,
-                name: "未使用"
-              }
+              // { value: this.content.device.tapelibdevs, name: "介质服务器" },
+              // { value: this.content.device.diskdevs, name: "客户端" },
+              { value: 390, name: "介质服务器" },
+              { value: 310, name: "客户端" }
             ],
             itemStyle: {
               color:'red',
