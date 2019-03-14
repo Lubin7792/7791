@@ -5,7 +5,7 @@
 <template>
   <div class="policy">
     <div class="buttonC">
-      <Button type="error" style="margin-top:15px;" @click="newPolicy">新建策略</Button>
+      <Button type="error" style="margin-top:15px;" @click="newPolicy" v-if="nowShow(2)">新建策略</Button>
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
@@ -35,6 +35,7 @@ export default {
       _index: Number,
       policyId: "",
       postBackData: [],
+      numNowList:[],
       shiliS: [
         {
           enable: 1,
@@ -115,7 +116,7 @@ export default {
                 }
               },
               [
-                h(
+                 this.nowShow(6)?h(
                   "i-switch",
                   {
                     props: {
@@ -152,7 +153,7 @@ export default {
                       "禁用"
                     )
                   ]
-                )
+                ):''
               ]
             );
           }
@@ -176,7 +177,7 @@ export default {
                 }
               },
               [
-                h(
+                this.nowShow(5)?h(
                   "Dropdown",
                   {
                     props: {
@@ -232,8 +233,8 @@ export default {
                       })
                     )
                   ]
-                ),
-                h(
+                ):'',
+               this.nowShow(3)? h(
                   "Icon",
                   {
                     props: {
@@ -256,9 +257,9 @@ export default {
                     }
                   },
                   "修改策略"
-                ),
+                ):"",
 
-                h(
+               this.nowShow(4)? h(
                   "Icon",
                   {
                     props: {
@@ -274,7 +275,7 @@ export default {
                     style: {}
                   },
                   "删除策略"
-                )
+                ):''
               ]
             );
           }
@@ -287,16 +288,31 @@ export default {
     newPolicy
   },
   created() {
+    this.$store.dispatch("getPrivilege", 8);
     util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
     util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);
   },
   computed: {
     policiesData() {
       return this.$store.state.policiesData;
+    },
+     getPrivilege(){
+      return this.$store.state.privilegeData
     }
   },
-  watch: {},
+  watch: {
+      getPrivilege(data){
+      this.numNowList=data
+    }
+  },
   methods: {
+       nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
+    },
     ok: function() {
       util.restfullCall(
         "/rest-ful/v3.0/policy/" + this.policyId,

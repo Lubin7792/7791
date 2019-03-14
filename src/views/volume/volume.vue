@@ -1,11 +1,11 @@
 <template>
-  <Tabs :animated="false" type="card">
+  <Tabs :animated="false" type="card" class="volum">
   <!-- 介质池 -->
     <TabPane label="介质池">
         <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
 
-          <div class="btn"> 
-              <Button type="info" @click="newPool">新建介质池</Button>
+          <div class="_btn"> 
+              <Button type="info" @click="newPool"  v-if="nowShow(8)">新建介质池</Button>
               <!-- <Button type="info" @click="delPool">删除介质池</Button> -->
               <!-- <Button type="info" @click="alterPool">修改介介质池</Button> -->
               <poolModal ref="poolModal" @Return="Return"></poolModal>
@@ -16,7 +16,7 @@
     <TabPane label="介质">
         <Table :data="volume" :row-class-name="rowClassName" :columns="mediums" stripe highlight-row height="800"></Table>
         
-          <div class="btn">
+          <div class="_btn">
               <bindModal ref="bindModal" @againData="againData"></bindModal>
               <renameModal ref="renameModal" @toogleRename="toogleRename"></renameModal>
               <recoveryModal ref="recoveryModal" @recoveryData="recoveryData"></recoveryModal>
@@ -51,6 +51,7 @@
     },
     data() {
       return {
+      numNowList:[],
         mediumPools: [
           { title: 'ID', key: 'id', sortable: true},
           { title: '介质名称', key: 'name', sortable: true},
@@ -60,7 +61,7 @@
             render: (h, params) => {
               return h('div', [
                 // 修改介质池弹框
-                h('Icon', {
+                this.nowShow(9)?h('Icon', {
                   props: {
                       type: 'ios-chatboxes',
                       size: '20',
@@ -78,7 +79,7 @@
                         }
                       }
                   }
-                },),
+                },):'',
                 // 删除介质
                 h('Icon', {
                   props: {
@@ -113,7 +114,7 @@
             render: (h, params) => {
               return h('div', [
                 // 绑定介质弹框
-                h('Icon', {
+                this.nowShow(9)?h('Icon', {
                   props: {
                       type: 'ios-shuffle',
                       size: '20'
@@ -127,9 +128,9 @@
                         this.$refs.bindModal.newbind(params.row)
                       }
                   }
-                },),
+                },):'',
                 // 删除介质
-                h('Icon', {
+                this.nowShow(12)?h('Icon', {
                   props: {
                       type: 'ios-close',
                       size: '20',
@@ -143,9 +144,9 @@
                         if (confirm('是否确认删除介质'))  util.restfullCall('/rest-ful/v3.0/volume/' + params.row.id, null, 'DELETE', this.deleteMedium)
                       }
                   }
-                },),
+                },):"",
                 // 重命名弹框
-                h('Icon', {
+               this.nowShow(13)? h('Icon', {
                   props: {
                       type: 'ios-chatboxes',
                       size: '20',
@@ -159,7 +160,7 @@
                         this.$refs.renameModal.rename(params.row)
                       }
                   }
-                },),
+                },):'',
                 // 回收介质弹框
                 h('Icon', {
                   props: {
@@ -183,13 +184,31 @@
     },
     
     created() {
+    this.$store.dispatch("getPrivilege", 7);
+
       // 获取介质池信息
       util.restfullCall('/rest-ful/v3.0/volpools', null, 'get', this.callbackPool)
       // 获取介质信息
       util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.callbackMedium)
     },
-
+  computed: {
+    getPrivilege(){
+      return this.$store.state.privilegeData
+    }
+  },
+   watch: {
+    getPrivilege(data){
+      this.numNowList=data
+    }
+  },
     methods:{
+            nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
+    },
       // 查询介质池列表
       callbackPool: function(poolObj) {
         // console.log("介质池数据",poolObj)
@@ -276,7 +295,7 @@
 </script>
 
 <style>
-.btn {
+.volum ._btn {
   margin-top: 15px;
 }
 .ivu-table .wrning td {

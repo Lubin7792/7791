@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       version: [],
-      numNowLis:[],
+      numNowList:[],
       state: [],
       // clientId: "",
       updateModal: "false",
@@ -47,7 +47,7 @@ export default {
           title: "操作",
           key: "operation",
           render: (h, params) => {
-            return h("Icon", {
+            return this.nowShow(2)? h("Icon", {
               props: {
                 type: "gear-b",
                 size: 20
@@ -63,7 +63,7 @@ export default {
                   this.$store.commit("getBasic",params);
                 }
               }
-            });
+            }):'';
           }
         }
       ],
@@ -71,16 +71,25 @@ export default {
     };
   },
   created() {
-     let uId=JSON.parse(localStorage.userInfo).uid;
-      util.restfullCall( "/rest-ful/v3.0/user/privilege/"+uId+"?module="+1, null, "get", this.numNowBack);
+     this.$store.dispatch("getPrivilege", 4);
+  },
+     computed: {
+    getPrivilege(){
+      return this.$store.state.privilegeData
+    }
+  },
+  watch: {
+    getPrivilege(data){
+      this.numNowList=data
+    }
   },
   methods: {
-    numNowBack(data){
-       let list= []
-        data.data.map(item=>{
-            list.push(item.module)
-        })
-        this.numNowLis=list;
+ nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
     },
     getData: function(obj) {
       for (let i = 0; i < obj.length; i++) {

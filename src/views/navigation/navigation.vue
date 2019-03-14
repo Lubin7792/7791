@@ -69,13 +69,6 @@
                   </svg>
                   客户端
                 </MenuItem>
-                <MenuItem name="servicemanager" v-if="nowShow(5)" @click.native="numNow(5)">
-                  <!-- <Icon type="gear-a"></Icon> -->
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-wrench"></use>
-                  </svg>
-                  服务管理
-                </MenuItem>
                 <MenuItem name="syslog" v-if="nowShow(6)" @click.native="numNow(6)">
                   <!-- <Icon type="clipboard"></Icon> -->
                   <svg class="icon" aria-hidden="true">

@@ -7,11 +7,11 @@
             <Icon type="person-add" :size='16'></Icon>
             刷新
         </Button>
-        <Button type="error" @click="deleteData()" class="deleteButton">
+        <Button type="error" @click="deleteData()" class="deleteButton" v-if="nowShow(2)">
             <Icon type="person-add" :size='16'></Icon>
             删除用户
         </Button>
-        <Button type="info" @click="modal1 = true" class="newButton">
+        <Button type="info" @click="modal1 = true" class="newButton" v-if="nowShow(1)">
             <Icon type="person-add" :size='16'></Icon>
             新建用户
         </Button>
@@ -47,6 +47,7 @@ export default {
   },
   data() {
     return {
+      numNowList:[],
       tableData1: [],
       modal1: false,
       selectedClients: [],
@@ -80,7 +81,27 @@ export default {
       dataClient: this.mockClient()
     }
   },
+  created() {
+    this.$store.dispatch("getPrivilege", 1);
+  },
+    computed: {
+    getPrivilege(){
+      return this.$store.state.privilegeData
+    }
+  },
+  watch: {
+    getPrivilege(data){
+      this.numNowList=data
+    }
+  },
   methods: {
+        nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
+    },
     sendData: function(obj) {
       var array = new Array()
       for (let i = 0; i < obj.data.length; i++) {

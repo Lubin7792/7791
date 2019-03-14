@@ -35,6 +35,7 @@ export default {
     Newuser,
     Update
   },
+
   updated: function() {
     $(".allButn").css({ display: "none" });
     $("tr.ivu-table-row").hover(
@@ -71,6 +72,7 @@ export default {
       deleteId: [],
       rolesList: [],
       unlockId: "",
+      numNowList:[],
       updateId: null,
       tableColumns1: [
         {
@@ -188,7 +190,7 @@ export default {
                     }
                   }
                 }),
-                h("Icon", {
+                this.nowShow(3)?h("Icon", {
                   props: {
                     type: "edit",
                     size: 20
@@ -203,7 +205,7 @@ export default {
                       this.modal1 = true;
                     }
                   }
-                })
+                }):''
               ]
             );
           }
@@ -212,9 +214,27 @@ export default {
     };
   },
   created() {
+    this.$store.dispatch("getPrivilege", 1);
     util.restfullCall("/rest-ful/v3.0/roles", null, "get", this.rolesData);
   },
+   computed: {
+    getPrivilege(){
+      return this.$store.state.privilegeData
+    }
+  },
+  watch: {
+    getPrivilege(data){
+      this.numNowList=data
+    }
+  },
   methods: {
+       nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
+    },
     userBack: function(data) {
     },
     rolesData: function(data) {

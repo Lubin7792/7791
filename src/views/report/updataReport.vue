@@ -15,6 +15,12 @@
     margin-left: 4%;
     margin-bottom: 5px;
   }
+  .ivu-table .wrning td {
+	  background-color: rgb(224, 222, 63);
+  }
+  .ivu-table .error td {
+    background-color: rgb(201, 80, 50);
+  }
 </style>
 
 <template>
@@ -28,7 +34,7 @@
                 </div>
               </TabPane>
               <TabPane label="历史日志">
-                <Table stripe :data="log" :columns="historyLog" height="300"></Table>
+                <Table stripe :row-class-name="rowDesc" :data="log" :columns="historyLog" height="300"></Table>
               </TabPane>
           </Tabs>
         </Form>
@@ -103,6 +109,13 @@ export default {
       callbackBase: function (baseObj) {
         this.baseData = baseObj.data.data
         console.log("baseObj",baseObj.data.data)
+      },
+      rowDesc(row) {
+        if(row.desc === '警告'){
+          return 'wrning'
+        }else if(row.desc === "错误"){
+          return 'error'
+        }
       }
     }
 }

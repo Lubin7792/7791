@@ -12,7 +12,6 @@
      <Modal  v-model="modal12" title="日志详情"  cancel-text class="popup">
                <popup :num="ceshi" ></popup>   
         </Modal>
-            <Page :total="100" :current="1" @on-change="changePage"></Page>
   </div>
 </template>
 <script>
@@ -139,9 +138,7 @@ export default {
   },
   methods: {
     getRowData(row, index) {
-      console.log(row, index);
       this.ceshi = row;
-      console.log(this.ceshi.address);
     },
     remove(index) {
       this.data6.splice(index, 1);

@@ -3,21 +3,21 @@
 
 <template>
   <div>
-    <Button type="info" @click="newRole">新建角色</Button>
+    <Button type="info" @click="newRole" v-if="nowShow(2)">新建角色</Button>
     <Table border :columns="roleList" :data="roleData"></Table>
     <newRole :show="newShow" @close="closeNew" @post="backPost"></newRole>
     <editRole :show="editShow" @close="closeEdit" :backData="editData" @edit="backPost"></editRole>
     <rolePrower :show="prowerShow" @close="closePrower" :postData="ztreeData" :ztreeId="backId"></rolePrower>
-     <Modal
-        v-model="modalDelete"
-        @on-ok="ok"
-        ok-text="确认删除"
-        cancel-text="取消"
-        :closable="false"
-        class-name="vertical-center-modal"
-      >
-        <p style="color:#f60;text-align:center;font-size:16px;">确认是否删除该实例，如果确认删除请点击删除，否认点击取消。</p>
-      </Modal>
+    <Modal
+      v-model="modalDelete"
+      @on-ok="ok"
+      ok-text="确认删除"
+      cancel-text="取消"
+      :closable="false"
+      class-name="vertical-center-modal"
+    >
+      <p style="color:#f60;text-align:center;font-size:16px;">确认是否删除该实例，如果确认删除请点击删除，否认点击取消。</p>
+    </Modal>
   </div>
 </template>
 <script>
@@ -32,10 +32,10 @@ export default {
       editShow: false,
       prowerShow: false,
       modalDelete: false,
-      rowId:'',
-      backId:null,
+      rowId: "",
+      backId: null,
       editData: {},
-      ztreeData:[],
+      ztreeData: [],
       roleList: [
         {
           title: "名称",
@@ -57,7 +57,7 @@ export default {
                 }
               },
               [
-                h("Icon", {
+                this.nowShow(3)?h("Icon", {
                   props: { type: "edit", size: 25 },
                   style: {
                     marginRight: "15px"
@@ -68,8 +68,8 @@ export default {
                       (this.editData = params.row), console.log(this.editData);
                     }
                   }
-                }),
-                h("Icon", {
+                }):'',
+               this.nowShow(5)? h("Icon", {
                   props: { type: "gear-b", size: 25 },
                   style: {
                     marginRight: "15px"
@@ -77,29 +77,35 @@ export default {
                   on: {
                     click: () => {
                       this.prowerShow = true;
-                     this.backId=params.row.id;
+                      this.backId = params.row.id;
 
-      util.restfullCall("/rest-ful/v3.0/role/"+params.row.id+"/privilege" , null, "get", this.rolePost);
-                      
+                      util.restfullCall(
+                        "/rest-ful/v3.0/role/" + params.row.id + "/privilege",
+                        null,
+                        "get",
+                        this.rolePost
+                      );
                     }
                   }
-                }),
-                h("Icon", {
+                }):'',
+               this.nowShow(4)? h("Icon", {
                   props: { type: "trash-a", size: 25 },
                   on: {
                     click: () => {
-                     this.rowId=params.row.id;
-                      this.modalDelete = true
+                      this.rowId = params.row.id;
+                      this.modalDelete = true;
                     }
                   },
                   style: {}
-                })
+                }):''
               ]
             );
           }
         }
       ],
-      roleData: []
+      roleData: [],
+      numNowList:[],
+
     };
   },
   components: {
@@ -108,20 +114,38 @@ export default {
     rolePrower
   },
   created() {
+    this.$store.dispatch("getPrivilege", 2);
     util.restfullCall("/rest-ful/v3.0/roles", null, "get", this.rolesData);
   },
+      computed: {
+    getPrivilege(){
+      return this.$store.state.privilegeData
+    }
+  },
+  watch: {
+    getPrivilege(data){
+      this.numNowList=data
+    }
+  },
   methods: {
-    rolePost:function (data) {
-      this.ztreeData=data.data
-      console.log(data)
+            nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
     },
-    ok:function () {
-       util.restfullCall(
-                        "/rest-ful/v3.0/role/" +this.rowId,
-                        null,
-                        "delete",
-                        this.deleteData
-                      );
+    rolePost: function(data) {
+      this.ztreeData = data.data;
+      console.log(data);
+    },
+    ok: function() {
+      util.restfullCall(
+        "/rest-ful/v3.0/role/" + this.rowId,
+        null,
+        "delete",
+        this.deleteData
+      );
     },
     deleteData: function(data) {
       if (data.data.code == 0) {

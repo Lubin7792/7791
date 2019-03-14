@@ -52,6 +52,7 @@ export default {
   data() {
     return {
       levelSelect: [],
+      numNowList:[],
       userSelect: [],
       sourceSelect: [],
       refresh: {
@@ -63,7 +64,27 @@ export default {
       }
     }
   },
+  created() {
+    this.$store.dispatch("getPrivilege", 6);
+  },
+    computed: {
+    getPrivilege(){
+      return this.$store.state.privilegeData
+    }
+  },
+  watch: {
+    getPrivilege(data){
+      this.numNowList=data
+    }
+  },
   methods: {
+         nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
+    },
     // 级别下拉框生成的数据
     openLevel:function(open) {
       if(open == true) util.restfullCall('/rest-ful/v3.0/loglevels', null, 'get', this.levelData)

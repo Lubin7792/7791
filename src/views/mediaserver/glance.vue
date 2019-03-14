@@ -74,29 +74,30 @@ export default {
   
   methods: {
     build_path_by_tree_node: function(treeNode) {
-      //获取路径  
-      var path = "";
-      var cid = 0;
+      //获取路径
+      let path = "";
+      let cid = 0;
       do {
         let parent = treeNode.getParentNode();
-        if(!parent) {
+        if (!parent) {
           cid = treeNode.id;
           name = treeNode.name;
           break;
-        }  
-
-        if(parent.nodetype !=0 ) {
-            path ="/" + treeNode.name +path;
-        }else{
-          path = treeNode.name + path
         }
-        if(parent.nodetype !=1){
 
+        if (parent.nodetype != 0) {
+          path = "/" + treeNode.name + path;
+        } else {
+          path = treeNode.name + path;
         }
-          
+        if (parent.nodetype != 1) {
+        }
         treeNode = parent;
-      }while(true);
-     
+      } while (true);
+      if (path.indexOf("//") == 0) {
+        path = path.substr(1);
+      }
+      return { client: cid, path: path, name: name };
     },
      //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {

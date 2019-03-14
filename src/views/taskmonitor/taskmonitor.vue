@@ -18,6 +18,7 @@ export default {
 
   data() {
     return {
+      numNowList:[],
       columns4: [
         { type: 'selection', width: 60, align: 'center' },
         { title: '任务ID', width: 80, key: 'id' },
@@ -50,7 +51,7 @@ export default {
                   }
               },),
               // 任务监控撤销接口
-              h('Icon', {
+             this.nowShow(2)? h('Icon', {
                   props: {
                       type: 'ios-close',
                       size: '20',
@@ -60,7 +61,7 @@ export default {
                         util.restfullCall( '/rest-ful/v3.0/task/monitor/' + params.row.id + '/cancel', null, 'get', this.getCallback)
                       }
                   }
-              },),
+              },):'',
             ]);
           }
         },
@@ -69,19 +70,36 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("getPrivilege", 1);
     // 任务监控接口信息
     util.restfullCall('/rest-ful/v3.0/task/monitor', null, 'get', this.dealingData)
     // 任务监控定时器
     this.refreshData()
   },
+     computed: {
+    getPrivilege(){
+      return this.$store.state.privilegeData
+    }
+  },
+    watch: {
+    getPrivilege(data){
+      this.numNowList=data
+    }
+  },
   methods: {
+        nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
+    },
     // 选框判断
     handleSelectAll(status) {
       this.$refs.selection.selectAll(status)
     },
     // 任务监控回调信息
     dealingData: function(obj) {
-      console.log('obj', obj)
       var array = new Array()
       for (let i = 0; i < obj.data.length; i++) {
         array.push({
@@ -103,7 +121,6 @@ export default {
     },
     // 任务监控撤销回调
     getCallback: function(obj) {
-      console.log(obj)
       if(obj.data.code == 0) {
         util.restfullCall('/rest-ful/v3.0/task/monitor', null, 'get', this.dealingData)
       }else{

@@ -20,6 +20,7 @@ const store = new Vuex.Store({
     columns: [],
     oracle: [],
     postData: "",
+    privilegeData:[],
     //校验新建是否成功的返回值
     code: "",
     //当前要修改或删除的对象的id
@@ -154,11 +155,29 @@ const store = new Vuex.Store({
     //新建请求成功
     upPolicyOk(state, policyDa) {
       state.policySwitch = policyDa;
+    },
+    //单页面权限数据
+    statePrivilegeData(state, list) {
+      state.privilegeData = list;
     }
   },
   actions: {
     //获取单页面权限
-    
+    getPrivilege(state,number){
+      let uId = JSON.parse(localStorage.userInfo).uid;
+      util.restfullCall("/rest-ful/v3.0/user/privilege/" + uId + "?module=" + number, null, "get", data=>{
+        let list = []
+        data.data.map(item => {
+          list.push(item.func)
+        })
+        this.numNowList = list;
+        state.commit("statePrivilegeData", list);
+
+      });
+   
+
+
+    },
     //获取数据
     getData(state, number) {
       if (number == 0) {
@@ -171,10 +190,8 @@ const store = new Vuex.Store({
         });
       }
       if (number == 1) {
-        console.log(1);
         let url = this.state.url + this.state.clientId + "&type=1";
         util.restfullCall(url, null, "get", obj => {
-          console.log(3);
           let data = [];
           for (let i = 0; i < obj.data.length; i++) {
             let object = JSON.parse(obj.data[i].conf);

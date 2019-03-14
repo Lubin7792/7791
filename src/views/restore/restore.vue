@@ -284,7 +284,7 @@
       // 单击行数据发送请求展示树形数据
       listClick:function(row) {
         this.query.RestoreTime = row.endtime
-        util.restfullCall('/rest-ful/v3.0/restore/resource/query?client='+this.query.client+'&type='+this.query.policytype+'&startime='+this.query.starttime+'&endtime'+row.endtime, null, 'get', this.callbackTree)
+        util.restfullCall('/rest-ful/v3.0/restore/resource/query?client='+this.query.client+'&type='+this.query.policytype+'&startime='+this.query.starttime+'&endtime='+row.endtime, null, 'get', this.callbackTree)
       },
       // 数型数据回调
       callbackTree:function(obj) {
@@ -293,7 +293,7 @@
       //获取子节点发送请求
       zTreeOnClick: function(event, treeId, treeNode) {
         if (treeNode.children.length==0) {
-          let str = "/rest-ful/v3.0/restore/resource/browse?client=" + this.query.client + "&type=" + this.query.policytype +"&path=" + treeNode.path;
+          let str = "/rest-ful/v3.0/restore/resource/browse?client=" + this.query.client + "&type=" + this.query.policytype +"&path=" + treeNode.path+'&startime='+this.query.starttime+'&endtime='+this.query.RestoreTime;
           util.restfullCall(str, null, "get", function(obj) {
             //返回数据处理
             var objj = []
