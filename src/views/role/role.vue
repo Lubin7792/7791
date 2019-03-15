@@ -3,7 +3,7 @@
 
 <template>
   <div>
-    <Button type="info" @click="newRole" v-if="nowShow(2)">新建角色</Button>
+    <Button type="info" @click="newRole" v-if="nowShow(getPower.newRole)">新建角色</Button>
     <Table border :columns="roleList" :data="roleData"></Table>
     <newRole :show="newShow" @close="closeNew" @post="backPost"></newRole>
     <editRole :show="editShow" @close="closeEdit" :backData="editData" @edit="backPost"></editRole>
@@ -57,7 +57,7 @@ export default {
                 }
               },
               [
-                this.nowShow(3)?h("Icon", {
+                this.nowShow(this.getPower.editRole)?h("Icon", {
                   props: { type: "edit", size: 25 },
                   style: {
                     marginRight: "15px"
@@ -69,7 +69,7 @@ export default {
                     }
                   }
                 }):'',
-               this.nowShow(5)? h("Icon", {
+               this.nowShow(this.getPower.setPower)? h("Icon", {
                   props: { type: "gear-b", size: 25 },
                   style: {
                     marginRight: "15px"
@@ -88,7 +88,7 @@ export default {
                     }
                   }
                 }):'',
-               this.nowShow(4)? h("Icon", {
+               this.nowShow(this.getPower.deleteRole)? h("Icon", {
                   props: { type: "trash-a", size: 25 },
                   on: {
                     click: () => {
@@ -114,13 +114,16 @@ export default {
     rolePrower
   },
   created() {
-    this.$store.dispatch("getPrivilege", 2);
+    this.$store.dispatch("getPrivilege", this.$store.state.power.module.role);
     util.restfullCall("/rest-ful/v3.0/roles", null, "get", this.rolesData);
   },
       computed: {
     getPrivilege(){
-      return this.$store.state.privilegeData
-    }
+      return this.$store.state.index.privilegeData
+    },
+          getPower(){
+      return this.$store.state.power.name
+    },
   },
   watch: {
     getPrivilege(data){

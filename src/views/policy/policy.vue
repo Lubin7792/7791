@@ -5,7 +5,7 @@
 <template>
   <div class="policy">
     <div class="buttonC">
-      <Button type="error" style="margin-top:15px;" @click="newPolicy" v-if="nowShow(2)">新建策略</Button>
+      <Button type="error" style="margin-top:15px;" @click="newPolicy" v-if="nowShow(getPower.newPolicy)">新建策略</Button>
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
@@ -116,7 +116,7 @@ export default {
                 }
               },
               [
-                 this.nowShow(6)?h(
+                 this.nowShow(this.getPower.enablePolicy)?h(
                   "i-switch",
                   {
                     props: {
@@ -177,7 +177,7 @@ export default {
                 }
               },
               [
-                this.nowShow(5)?h(
+                this.nowShow(this.getPower.dispatchPolicy)?h(
                   "Dropdown",
                   {
                     props: {
@@ -234,7 +234,7 @@ export default {
                     )
                   ]
                 ):'',
-               this.nowShow(3)? h(
+               this.nowShow(this.getPower.editPolicy)? h(
                   "Icon",
                   {
                     props: {
@@ -259,7 +259,7 @@ export default {
                   "修改策略"
                 ):"",
 
-               this.nowShow(4)? h(
+               this.nowShow(this.getPower.deletePolicy)? h(
                   "Icon",
                   {
                     props: {
@@ -288,17 +288,20 @@ export default {
     newPolicy
   },
   created() {
-    this.$store.dispatch("getPrivilege", 8);
+    this.$store.dispatch("getPrivilege",this.$store.state.power.module.policy);
     util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
     util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);
   },
   computed: {
     policiesData() {
-      return this.$store.state.policiesData;
+      return this.$store.state.index.policiesData;
     },
      getPrivilege(){
-      return this.$store.state.privilegeData
-    }
+      return this.$store.state.index.privilegeData
+    },
+          getPower(){
+      return this.$store.state.power.name
+    },
   },
   watch: {
       getPrivilege(data){
@@ -323,7 +326,7 @@ export default {
     },
     deleteData: function(value) {
       if (value.data.code === 0) {
-        this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
+        this.$store.commit("upPolicyOk", !this.$store.state.index.policySwitch);
         alert(value.data.message);
       } else {
         alert(value.data.message);

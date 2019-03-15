@@ -45,19 +45,19 @@ export default {
   computed: {
     updateModal: {
       get: function() {
-        return this.$store.state.updateModal;
+        return this.$store.state.index.updateModal;
       },
       set: function(obj) {}
     },
     title() {
-      return this.$store.state.title;
+      return this.$store.state.index.title;
     },
     getBasic() {
-      return this.$store.state.returnMessage;
+      return this.$store.state.index.returnMessage;
     },
     tabName: {
       get: function() {
-        return this.$store.state.clientTitle;
+        return this.$store.state.index.clientTitle;
       },
       set: function(obj) {}
     }

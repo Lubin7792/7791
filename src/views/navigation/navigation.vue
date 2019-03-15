@@ -35,27 +35,27 @@
                 :open-names="['1']"
                 @on-select="changeUrl"
               >
-                <MenuItem name="home"  font-size="16px" v-if="nowShow(12)"  @click.native="numNow(12)">
+                <MenuItem name="home"  font-size="16px" v-if="nowShow(getPower.home)"  >
                   <!--  <Icon type="ios-home"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-home"></use>
                   </svg>
                   首页
                 </MenuItem>
-                <MenuItem name="usermanager" font-size="16px" v-if="nowShow(1)" @click.native="numNow(1)">
+                <MenuItem name="usermanager" font-size="16px" v-if="nowShow(getPower.userManager)" >
                   <!-- <Icon type="person-add"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-user-circle"></use>
                   </svg>
                   用户管理
                 </MenuItem>
-                <MenuItem name="role" v-if="nowShow(2)" @click.native="numNow(2)">  
+                <MenuItem name="role" v-if="nowShow(getPower.role)" >  
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-jiaose"></use>
                   </svg>
                   角色管理
                 </MenuItem>
-                <MenuItem name="taskmonitor" v-if="nowShow(3)" @click.native="numNow(3)">
+                <MenuItem name="taskmonitor" v-if="nowShow(getPower.taskMonitor)">
                   <!--  <Icon type="monitor"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-dashboard"></use>
@@ -63,54 +63,54 @@
                   <!-- <i class="iconfont">&#xe602;</i> -->
                   任务监控
                 </MenuItem>
-                <MenuItem name="client" v-if="nowShow(4)" @click.native="numNow(4)">
+                <MenuItem name="client" v-if="nowShow(getPower.client)">
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-laptop"></use>
                   </svg>
                   客户端
                 </MenuItem>
-                <MenuItem name="syslog" v-if="nowShow(6)" @click.native="numNow(6)">
+                <MenuItem name="syslog" v-if="nowShow(getPower.syslog)" >
                   <!-- <Icon type="clipboard"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-file"></use>
                   </svg>
                   日志管理
                 </MenuItem>
-                <MenuItem name="mediaserver" v-if="nowShow(7)" @click.native="numNow(7)">
+                <MenuItem name="mediaserver" v-if="nowShow(getPower.mediaServer)||nowShow(getPower.diskDevice)" >
                   <!-- <Icon type="social-windows"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-server"></use>
                   </svg>
                   介质服务器
                 </MenuItem>
-                <MenuItem name="volume" v-if="nowShow(7)" @click.native="numNow(7)">
+                <MenuItem name="volume" v-if="nowShow(getPower.volume)" >
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-hdd"></use>
                   </svg>
                   介质管理
                 </MenuItem>
-                <MenuItem name="policy" v-if="nowShow(8)" @click.native="numNow(8)">
+                <MenuItem name="policy" v-if="nowShow(getPower.policy)" >
                   <!-- <Icon type="edit"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-xuanzewenjian"></use>
                   </svg>
                   策略管理
                 </MenuItem>
-                <MenuItem name="restore" v-if="nowShow(9)" @click.native="numNow(9)">
+                <MenuItem name="restore" v-if="nowShow(getPower.restore)" >
                   <!--  <Icon type="refresh"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-web-icon-"></use>
                   </svg>
                   恢复管理
                 </MenuItem>
-                <MenuItem name="report" v-if="nowShow(10)" @click.native="numNow(10)">
+                <MenuItem name="report" v-if="nowShow(getPower.report)" >
                   <!-- <Icon type="ios-browsers-outline"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-yiji-baobiaoguanli"></use>
                   </svg>
                   报表管理
                 </MenuItem>
-                <MenuItem name="sysset" v-if="nowShow(11)" @click.native="numNow(11)">
+                <MenuItem name="sysset" v-if="nowShow(getPower.sysset)" >
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-cog"></use>
                   </svg>
@@ -145,18 +145,18 @@ export default {
   },
   name: "navigation",
   computed: {
+    //  权限
+    getPower(){
+      return this.$store.state.power.module
+    },
     //新建成功
     policyState() {
-      return this.$store.state.policySwitch;
+      return this.$store.state.index.policySwitch;
     }
   },
   methods: {
     numNowBack(data){
       console.log(data.data)
-    },
-    numNow(num){
-    // let uId=JSON.parse(localStorage.userInfo).uid;
-    //   util.restfullCall( "/rest-ful/v3.0/user/privilege/"+uId+"?module="+num, null, "get", this.numNowBack);
     },
     nowShow(num){
       if(this.nowLists.indexOf(num)!=-1){

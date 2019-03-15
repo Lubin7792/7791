@@ -193,7 +193,7 @@
     },
   computed: {
     getPrivilege(){
-      return this.$store.state.privilegeData
+      return this.$store.state.index.privilegeData
     }
   },
    watch: {
@@ -249,7 +249,6 @@
       },
       // 接收添加成功的数据
       Return(datas) {
-        console.log("添加成功数据",datas)
         this.volpool = datas
       },
       // 修改介质池的子组件传值接收
@@ -282,7 +281,6 @@
       },
       // 介质行内容
       rowClassName(row, index) {
-        console.log("row",row)
         if(row.state === '已满') {
           return 'wrning';
         }else if(row.state === '出错') {

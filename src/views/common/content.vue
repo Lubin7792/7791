@@ -44,7 +44,7 @@ import Vmware from './vmware.vue';
 		
 		computed:{
 			show(){
-				return this.$store.state.clientTitle;
+				return this.$store.state.index.clientTitle;
 			}
 		},
 		mounted:function(){

@@ -6,7 +6,7 @@
         <Row>
             <Col span="12">
             <FormItem label="实例名:">
-                <input v-model="sqlserver.host"></input>
+                <input v-model="sqlserver.server"></input>
             </FormItem>
             </Col>
               <Col span="12">
@@ -57,13 +57,13 @@ import util from '../../libs/util.js'
 export default {
   computed: {
     clientId() {
-      return this.$store.state.clientId
+      return this.$store.state.index.clientId
     },
     instanceId() {
-      return this.$store.state.instanceId
+      return this.$store.state.index.instanceId
     },
     clientList() {
-      return this.$store.state.clientList
+      return this.$store.state.index.clientList
     },
     thisType(){
       return this.type
@@ -73,6 +73,7 @@ export default {
   data() {
     return {
       sqlserver: {
+        server:'',
         host: '',
         user: '',
         password: '',
@@ -117,7 +118,7 @@ export default {
       'rest-ful/v3.0/client/agent/instances?cid=' +
       this.clientId +
       '&type=' +
-     this.$store.state.clientTitle
+     this.$store.state.index.clientTitle
     util.restfullCall(url, null, 'get', obj => {
       let data = []
       for (let i = 0; i < obj.data.length; i++) {
@@ -204,7 +205,7 @@ export default {
       let postData = {}
       postData.cid = this.clientId
       postData.conf = conf
-      postData.type = parseInt(this.$store.state.clientTitle)
+      postData.type = parseInt(this.$store.state.index.clientTitle)
       postData.id = this.sqlserver.id
       util.restfullCall(url, postData, 'put', obj => {
         if (obj.data.code == 0) {
@@ -230,7 +231,7 @@ export default {
       let conf = JSON.stringify(message)
       let postData = {}
       postData.cid = this.clientId
-      postData.type = parseInt(this.$store.state.clientTitle)
+      postData.type = parseInt(this.$store.state.index.clientTitle)
       postData.conf = conf
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance',
@@ -265,7 +266,7 @@ export default {
       postData.cid = this.clientId
       postData.conf = conf
       postData.id = this.sqlserver.id
-      postData.type = parseInt(this.$store.state.clientTitle)
+      postData.type = parseInt(this.$store.state.index.clientTitle)
       util.restfullCall(
         'rest-ful/v3.0/client/agent/instance/test',
         postData,

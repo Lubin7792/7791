@@ -69,7 +69,7 @@ export default {
   },
     computed: {
     getPrivilege(){
-      return this.$store.state.privilegeData
+      return this.$store.state.index.privilegeData
     }
   },
   watch: {

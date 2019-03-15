@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     back() {
-      return this.$store.state.detailData;
+      return this.$store.state.index.detailData;
     }
   },
   methods: {

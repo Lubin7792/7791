@@ -51,7 +51,7 @@ export default {
                   }
               },),
               // 任务监控撤销接口
-             this.nowShow(2)? h('Icon', {
+             this.nowShow(this.getPower.cancleTask)? h('Icon', {
                   props: {
                       type: 'ios-close',
                       size: '20',
@@ -70,7 +70,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getPrivilege", 1);
+    this.$store.dispatch("getPrivilege", this.$store.state.power.module.taskMonitor);
     // 任务监控接口信息
     util.restfullCall('/rest-ful/v3.0/task/monitor', null, 'get', this.dealingData)
     // 任务监控定时器
@@ -78,7 +78,10 @@ export default {
   },
      computed: {
     getPrivilege(){
-      return this.$store.state.privilegeData
+      return this.$store.state.index.privilegeData
+    },
+      getPower(){
+      return this.$store.state.power.name
     }
   },
     watch: {

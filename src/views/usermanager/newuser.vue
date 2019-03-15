@@ -7,11 +7,11 @@
             <Icon type="person-add" :size='16'></Icon>
             刷新
         </Button>
-        <Button type="error" @click="deleteData()" class="deleteButton" v-if="nowShow(2)">
+        <Button type="error" @click="deleteData()" class="deleteButton" v-if="nowShow(getPower.deleteUser)">
             <Icon type="person-add" :size='16'></Icon>
             删除用户
         </Button>
-        <Button type="info" @click="modal1 = true" class="newButton" v-if="nowShow(1)">
+        <Button type="info" @click="modal1 = true" class="newButton" v-if="nowShow(getPower.newUser)">
             <Icon type="person-add" :size='16'></Icon>
             新建用户
         </Button>
@@ -82,11 +82,14 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getPrivilege", 1);
+    this.$store.dispatch("getPrivilege", this.$store.state.power.module.userManager);
   },
     computed: {
     getPrivilege(){
-      return this.$store.state.privilegeData
+      return this.$store.state.index.privilegeData
+    },
+    getPower(){
+      return this.$store.state.power.name
     }
   },
   watch: {

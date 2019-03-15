@@ -472,13 +472,13 @@ export default {
   },
   computed: {
     backData() {
-      return this.$store.state.detailData;
+      return this.$store.state.index.detailData;
     },
     policyTyep() {
-      return this.$store.state.policyType;
+      return this.$store.state.index.policyType;
     },
     devicesList() {
-      return this.$store.state.devicesList;
+      return this.$store.state.index.devicesList;
     }
   },
   watch: {
@@ -487,7 +487,7 @@ export default {
       // 重置ztree
       this.lconten();
       let pathMachine;
-      let clietList = this.$store.state.policyData;
+      let clietList = this.$store.state.index.policyData;
       let clientID;
       let machineList = [];
       //数据清空
@@ -652,7 +652,7 @@ export default {
   methods: {
     lconten() {
       let data1 = [];
-      data1 = this.$store.state.policyData;
+      data1 = this.$store.state.index.policyData;
       const array = [];
       for (let i = 0; i < data1.length; i++) {
         let item = data1[i];
@@ -800,7 +800,7 @@ export default {
     },
     senddata: function(value) {
       if (value.data.code === 0) {
-        this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
+        this.$store.commit("upPolicyOk", !this.$store.state.index.policySwitch);
       } else {
         alert(value.data.message);
       }

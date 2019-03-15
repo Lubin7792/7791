@@ -190,7 +190,7 @@ export default {
                     }
                   }
                 }),
-                this.nowShow(3)?h("Icon", {
+                this.nowShow(this.getPower.editUser)?h("Icon", {
                   props: {
                     type: "edit",
                     size: 20
@@ -214,12 +214,15 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("getPrivilege", 1);
+    this.$store.dispatch("getPrivilege", this.$store.state.power.module.userManager);
     util.restfullCall("/rest-ful/v3.0/roles", null, "get", this.rolesData);
   },
    computed: {
+      getPower(){
+      return this.$store.state.power.name
+    },
     getPrivilege(){
-      return this.$store.state.privilegeData
+      return this.$store.state.index.privilegeData
     }
   },
   watch: {

@@ -29,8 +29,8 @@
 export default {
   computed: {
     returnMessage() {
-		// console.log(this.$store.state.returnMessage,111);
-    return this.$store.state.returnMessage ;
+		// console.log(this.$store.state.index.returnMessage,111);
+    return this.$store.state.index.returnMessage ;
 		}
 	
 	},

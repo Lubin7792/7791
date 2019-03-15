@@ -11,15 +11,14 @@
         height="720"
       ></Table>
       <div class="btn">
-        <Button type="info" @click="newServer"   v-if="nowShow(2)" >新建介质服务器</Button>
+        <Button type="info" @click="newServer"   v-if="nowShow(1)" >新建介质服务器</Button>
         <!-- <Button type="info" @click="providerServer">修改介质服务器</Button> -->
         <serverModal :selServiceList="selServiceList" ref="serverModal" @Return="Return"></serverModal>
         <updateServer ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
       </div>
     </TabPane>
-
     <!-- 磁盘 -->
-    <TabPane label="磁盘设备"   v-if="nowShow(4)"  name="磁盘设备" :key="Math.random()">
+    <TabPane label="磁盘设备"   v-if="nowShow(1)"  name="磁盘设备" :key="Math.random()">
       <Table
         stripe
         highlight-row
@@ -30,13 +29,12 @@
       ></Table>
 
       <div class="btn">
-        <Button type="info" @click="newDisk"  v-if="nowShow(5)">新建磁盘</Button>
+        <Button type="info" @click="newDisk"  v-if="nowShow(1)">新建磁盘</Button>
         <!-- <Button type="info" @click="modifyDisk">修改磁盘</Button> -->
         <diskModal ref="diskModal" @diskReturn="diskReturn"></diskModal>
         <updateDisk ref="updateDisk" @listModify="listModify" ></updateDisk>
       </div>
     </TabPane>
-
     <!-- 磁带库 -->
     <TabPane label="磁带库设备" name="磁带库设备" :key="Math.random()">
       <Table
@@ -58,7 +56,6 @@
     </TabPane>
   </Tabs>
 </template>
-
 <script>
 import util from "../../libs/util.js";
 import axios from "axios";
@@ -278,7 +275,7 @@ export default {
   },
   computed: {
     getPrivilege() {
-      return this.$store.state.privilegeData;
+      return this.$store.state.index.privilegeData;
     }
   },
   watch: {

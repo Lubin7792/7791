@@ -489,14 +489,14 @@ export default {
       return this.policyTypekey;
     },
     policyTyep() {
-      return this.$store.state.policyType;
+      return this.$store.state.index.policyType;
     },
     devicesList() {
-      return this.$store.state.devicesList;
+      return this.$store.state.index.devicesList;
     },
     lconten() {
       let data1 = [];
-      data1 = this.$store.state.policyData;
+      data1 = this.$store.state.index.policyData;
       const array = [];
       for (let i = 0; i < data1.length; i++) {
         let item = data1[i];
@@ -639,7 +639,7 @@ export default {
     },
     senddata: function(value) {
       if (value.data.code === 0) {
-        this.$store.commit("upPolicyOk", !this.$store.state.policySwitch);
+        this.$store.commit("upPolicyOk", !this.$store.state.index.policySwitch);
         alert(value.data.message);
       } else {
         alert(value.data.message);

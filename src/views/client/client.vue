@@ -12,7 +12,7 @@ export default {
   },
   computed: {
     // clientId() {
-    //   return this.$store.state.clientId;
+    //   return this.$store.state.index.clientId;
     // }
   },
   data() {
@@ -47,7 +47,7 @@ export default {
           title: "操作",
           key: "operation",
           render: (h, params) => {
-            return this.nowShow(2)? h("Icon", {
+            return this.nowShow(this.getPower.setClient)? h("Icon", {
               props: {
                 type: "gear-b",
                 size: 20
@@ -74,8 +74,11 @@ export default {
      this.$store.dispatch("getPrivilege", 4);
   },
      computed: {
+             getPower(){
+      return this.$store.state.power.name
+    },
     getPrivilege(){
-      return this.$store.state.privilegeData
+      return this.$store.state.index.privilegeData
     }
   },
   watch: {

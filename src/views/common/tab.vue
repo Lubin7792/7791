@@ -37,16 +37,16 @@ export default {
   computed: {
     // ...mapGetters(['clientId','clientList'])
     clientList() {
-      return this.$store.state.clientList
+      return this.$store.state.index.clientList
     },
     clientId() {
-      return this.$store.state.clientId
+      return this.$store.state.index.clientId
     },
     oracle() {
-      return this.$store.state.oracle
+      return this.$store.state.index.oracle
     }
     // tabName() {
-    //   return this.$store.state.tabName
+    //   return this.$store.state.index.tabName
     // }
 
   },
