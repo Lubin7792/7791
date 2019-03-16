@@ -1,26 +1,33 @@
 <template>
   <Tabs :animated="false" type="card" class="volum">
-  <!-- 介质池 -->
+    <!-- 介质池 -->
     <TabPane label="介质池">
-        <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
+      <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
 
-          <div class="_btn"> 
-              <Button type="info" @click="newPool"  v-if="nowShow(8)">新建介质池</Button>
-              <!-- <Button type="info" @click="delPool">删除介质池</Button> -->
-              <!-- <Button type="info" @click="alterPool">修改介介质池</Button> -->
-              <poolModal ref="poolModal" @Return="Return"></poolModal>
-              <alterModal ref="alterModal" @alrerReturn="alrerReturn"></alterModal>
-          </div>
+      <div class="_btn">
+        <Button type="info" @click="newPool" v-if="nowShow(getPower.newValume)">新建介质池</Button>
+        <!-- <Button type="info" @click="delPool">删除介质池</Button> -->
+        <!-- <Button type="info" @click="alterPool">修改介介质池</Button> -->
+        <poolModal ref="poolModal" @Return="Return"></poolModal>
+        <alterModal ref="alterModal" @alrerReturn="alrerReturn"></alterModal>
+      </div>
     </TabPane>
     <!-- 介质 -->
     <TabPane label="介质">
-        <Table :data="volume" :row-class-name="rowClassName" :columns="mediums" stripe highlight-row height="800"></Table>
-        
-          <div class="_btn">
-              <bindModal ref="bindModal" @againData="againData"></bindModal>
-              <renameModal ref="renameModal" @toogleRename="toogleRename"></renameModal>
-              <recoveryModal ref="recoveryModal" @recoveryData="recoveryData"></recoveryModal>
-          </div>
+      <Table
+        :data="volume"
+        :row-class-name="rowClassName"
+        :columns="mediums"
+        stripe
+        highlight-row
+        height="800"
+      ></Table>
+
+      <div class="_btn">
+        <bindModal ref="bindModal" @againData="againData"></bindModal>
+        <renameModal ref="renameModal" @toogleRename="toogleRename"></renameModal>
+        <recoveryModal ref="recoveryModal" @recoveryData="recoveryData"></recoveryModal>
+      </div>
     </TabPane>
   </Tabs>
 </template>
@@ -61,7 +68,7 @@
             render: (h, params) => {
               return h('div', [
                 // 修改介质池弹框
-                this.nowShow(9)?h('Icon', {
+                this.nowShow(this.getPower.editValume)?h('Icon', {
                   props: {
                       type: 'ios-chatboxes',
                       size: '20',
@@ -71,7 +78,6 @@
                   },
                   on: {
                       click: () => {
-                        console.log(params.row.type)
                         if(params.row.type == 4) {
                           this.$refs.alterModal.alterPools(params.row)                          
                         } else{
@@ -88,7 +94,6 @@
                   },
                   on: {
                       click: () => {
-                        console.log(params.row.type)
                         if(params.row.type == 4) {
                           if (confirm('是否删除该介质池？')) util.restfullCall('/rest-ful/v3.0/volpool/'+params.row.id, null, 'DELETE', this.deletePool)
                         }else{
@@ -114,7 +119,7 @@
             render: (h, params) => {
               return h('div', [
                 // 绑定介质弹框
-                this.nowShow(9)?h('Icon', {
+                this.nowShow(this.getPower.binValume)?h('Icon', {
                   props: {
                       type: 'ios-shuffle',
                       size: '20'
@@ -130,7 +135,7 @@
                   }
                 },):'',
                 // 删除介质
-                this.nowShow(12)?h('Icon', {
+                this.nowShow(this.getPower.deleteValume)?h('Icon', {
                   props: {
                       type: 'ios-close',
                       size: '20',
@@ -146,7 +151,7 @@
                   }
                 },):"",
                 // 重命名弹框
-               this.nowShow(13)? h('Icon', {
+               this.nowShow(this.getPower.reviseMedium)? h('Icon', {
                   props: {
                       type: 'ios-chatboxes',
                       size: '20',
@@ -162,7 +167,7 @@
                   }
                 },):'',
                 // 回收介质弹框
-                h('Icon', {
+              this.nowShow(this.getPower.recoveryMedium)?   h('Icon', {
                   props: {
                       type: 'ios-undo',
                       size: '20'
@@ -172,7 +177,7 @@
                         this.$refs.recoveryModal.recovery(params.row)
                       }
                   }
-                },),
+                },):'',
               ]);
             }
           },
@@ -184,7 +189,7 @@
     },
     
     created() {
-    this.$store.dispatch("getPrivilege", 7);
+    this.$store.dispatch("getPrivilege", this.$store.state.power.module.volume);
 
       // 获取介质池信息
       util.restfullCall('/rest-ful/v3.0/volpools', null, 'get', this.callbackPool)
@@ -192,11 +197,15 @@
       util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.callbackMedium)
     },
   computed: {
+         getPower(){
+      return this.$store.state.power.name
+    },
     getPrivilege(){
       return this.$store.state.index.privilegeData
     }
   },
    watch: {
+  
     getPrivilege(data){
       this.numNowList=data
     }
@@ -297,10 +306,10 @@
   margin-top: 15px;
 }
 .ivu-table .wrning td {
-	background-color: rgb(224, 222, 63) !important;
+  background-color: rgb(224, 222, 63) !important;
 }
 .ivu-table .error td {
-	background-color: rgb(201, 80, 50) !important;
+  background-color: rgb(201, 80, 50) !important;
 }
 </style>
 

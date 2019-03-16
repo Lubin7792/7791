@@ -2,19 +2,21 @@
   border-color: #FFF;
   position: inherit !important;
 }
-
-.sys-content .row {
+.row {
+  margin-bottom: 20px; 
+}
+/* .sys-content .row {
   border-top: 1px solid #fd7549;
   border-bottom: 2px solid #fd7549;
-}
+} */
 
-.sys-content .ivu-table-header {
+/* .sys-content .ivu-table-header {
   border-bottom: 2xp solid #fd7549;
 }
 
 .sys-content .ivu-table td {
   border-bottom-color: #FFF;
-}
+} */
 
 .sysdetails {
   height: 400px;

@@ -19,6 +19,7 @@ const state ={
     oracle: [],
     postData: "",
     privilegeData: [],
+    privilegeDataTow: [],
     //校验新建是否成功的返回值
     code: "",
     //当前要修改或删除的对象的id
@@ -157,6 +158,9 @@ const mutations ={
     //单页面权限数据
     statePrivilegeData(state, list) {
         state.privilegeData = list;
+    },
+    statePrivilegeDataTow(state, list) {
+        state.privilegeDataTow = list;
     }
 }
 const actions = {
@@ -172,9 +176,18 @@ const actions = {
             state.commit("statePrivilegeData", list);
 
         });
+    },
+    getPrivilegeTow(state, number) {
+        let uId = JSON.parse(localStorage.userInfo).uid;
+        util.restfullCall("/rest-ful/v3.0/user/privilege/" + uId + "?module=" + number, null, "get", data => {
+            let list = []
+            data.data.map(item => {
+                list.push(item.func)
+            })
+            this.numNowList = list;
+            state.commit("statePrivilegeDataTow", list);
 
-
-
+        });
     },
     //获取数据
     getData(state, number) {

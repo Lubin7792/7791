@@ -5,22 +5,19 @@
 <template>
     <div class="sys-content">
         <div class="row">
-            <Table highlight-row :data="pageData" :columns="tableColumns1" :row-class-name="rowClassName" @on-row-click="onClick" height="680"></Table>
+            <Table highlight-row :data="pageData" :columns="tableColumns1" :row-class-name="rowClassName" @on-row-click="onClick" height="616"></Table>
         </div>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="position: fixed; left: 40%;">
+            <div style="position: fixed; left: 45%;">
             <!-- 分页器 -->
                 <Page :total="number" show-total :page-size="pageSize" @on-change="changePage"></Page>
-                <!-- <Page :total="number" show-total /> -->
             </div>
-        </div>
         <!-- 详情弹框 -->
         <Modal v-model="modal1" title="日志详情" class="sysmodal" cancel-text>
             <div class="sysdetails">
                 <ul>
                     <li>
                         <span>级别:</span>
-                        <Input v-model="detailsData.level" readonly placeholder="Enter something..." style="width: 300px"></Input>
+                        <Input v-model="detailsData.levelstr" readonly placeholder="Enter something..." style="width: 300px"></Input>
                     </li>
                     <li>
                         <span>时间:</span>
@@ -55,13 +52,34 @@ export default {
       tableData1: [],
       pageData:[],
       number:0,
-      pageSize: 13,
+      pageSize: 12,
       tableColumns1: [
         { title: '级别', key: 'levelstr' },
         { title: '时间', key: 'time' },
         { title: '用户', key: 'id' },
         { title: '来源', key: 'src' },
-        { title: '描述', key: 'desc', className: 'sysdesc', width:400 }
+        { title: '描述', key: 'desc', className: 'sysdesc', width:400 },
+        { title: '详情', width: 150, align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Icon",
+                {
+                  props: {
+                    type: 'ios-chatboxes',
+                    size: '20',
+                  },
+                  on: {
+                    click: () => {
+                      this.modal1 = true;
+                    }
+                  }
+                },
+                ""
+              )
+            ]);
+          }
+        }
       ],
       details1:{},
     }
@@ -107,9 +125,6 @@ export default {
     },
     // 点击行的内容
     rowClassName (row, index) {
-      // if (row.levelstr === '消息') {
-      //   return 'news';
-      // }else 
       if(row.levelstr === '警告') {
         return 'wrning';
       }else if(row.levelstr === '错误') {
@@ -118,7 +133,6 @@ export default {
     },
     // 点击某行弹出详情对话框
     onClick (row, index) {
-        this.modal1 = true;
         this.detailsData = row
     }
       

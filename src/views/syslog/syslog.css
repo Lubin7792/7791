@@ -10,19 +10,14 @@
 
 /* 头部刷新栏 */
 .sys-top {
-	border: dashed 1px #FB784D;
+	border: solid 1px #F3F3F3;
 	padding: 31px;
 	border-radius: 5px;
 	height: 90px;
 	margin-bottom: 20px;
 	min-width: 1000px;
-	background-color: #F3F3F3;
 }
-/* 改变表格北京色news为消息，wrning为警告，error为错误*/
-/* .ivu-table .news td {
-	background-color: rgb(53, 185, 26);
-	color: #fff;
-} */
+/* 改变表格背景色wrning为警告，error为错误*/
 .ivu-table .wrning td {
 	background-color: rgb(224, 222, 63) !important;
 }
@@ -67,14 +62,14 @@
 .sysmodal .ivu-modal-footer {
   border-top: none;
 }
-.sysmodal .ivu-modal-header{
+/* .sysmodal .ivu-modal-header{
 	background-color: #fd7549;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
-}
-.sysmodal .ivu-modal-close  .ivu-icon-ios-close-empty{
+} */
+/* .sysmodal .ivu-modal-close  .ivu-icon-ios-close-empty{
 	color: #fff;
-}
-.sysmodal .ivu-modal-header-inner{
+} */
+/* .sysmodal .ivu-modal-header-inner{
 	color: #fff;
-}
+} */

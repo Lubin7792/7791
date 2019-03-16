@@ -140,7 +140,6 @@ export default {
     },
     rolePost: function(data) {
       this.ztreeData = data.data;
-      console.log(data);
     },
     ok: function() {
       util.restfullCall(

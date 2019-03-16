@@ -30,9 +30,9 @@
 </style>
 
 <template>
-  <Tabs :animated="false" type="card">
+  <Tabs :animated="false" type="card"  v-model="tabsData">
     <!-- 运行记录报表 -->
-    <TabPane label="运行记录报表">
+    <TabPane label="运行记录报表" name="运行记录报表" v-if="nowShow(getPower.seeRunReprot)"  :key="Math.random()">
         <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -80,7 +80,7 @@
     </TabPane>
 
     <!-- 设备报表 -->
-    <TabPane label="设备报表">
+    <TabPane label="设备报表" name="设备报表" v-if="nowShow(getPower.seeDeviceReprot)" :key="Math.random()">
         <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -113,7 +113,7 @@
     </TabPane>
 
     <!-- 介质报表 -->
-    <TabPane label="介质报表">
+    <TabPane label="介质报表" name="介质报表" v-if="nowShow(getPower.seeMediaReprot)" :key="Math.random()">
           <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -155,6 +155,8 @@ export default {
   },
   data() {
     return {
+      tabsData:'运行记录报表',
+      numNowList:[],
       runReport: [
         { title: 'ID', key: 'id', width: 80, },
         { title: '任务类型', key: 'type' },
@@ -240,12 +242,42 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("getPrivilege", this.$store.state.power.module.report);
     // 查询设备报表
     util.restfullCall('/rest-ful/v3.0/report/device', null, 'get', this.callbackDevice)
     // 查询介质报表
     util.restfullCall('/rest-ful/v3.0/report/volume', null, 'get', this.callbackMedium)
   },
+       computed: {
+    getPrivilege(){
+      return this.$store.state.index.privilegeData
+    },
+          getPower(){
+      return this.$store.state.power.name
+    },
+  },
+  watch: {
+    getPrivilege(data){
+      this.numNowList=data;
+      if (this.numNowList.indexOf(this.getPower.seeMediaReprot) != -1) {
+          this.tabsData="介质报表"  
+      }
+       if (this.numNowList.indexOf(this.getPower.seeDeviceReprot) != -1) {
+          this.tabsData="设备报表"  
+      }
+        if (this.numNowList.indexOf(this.getPower.seeRunReprot) != -1) {
+          this.tabsData="运行记录报表"  
+      }
+    }
+  },
   methods: {
+           nowShow(num){
+      if(this.numNowList.indexOf(num)!=-1){
+        return true
+      }else{
+        return false
+      }
+    },
     // 查询设备报表返回数据
     callbackDevice: function(deviceObj) {
       var array = new Array()

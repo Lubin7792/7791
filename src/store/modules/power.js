@@ -52,7 +52,8 @@ const state={
         // 报表管理
         seeRunReprot: 1,
         seeDeviceReprot: 2,
-        seeMediaReprot:3,
+        seeMediaReprot: 3,
+        exportReprot:4,
         // 系统设置
         setSecurityLevel:1,
         setsysset:2,

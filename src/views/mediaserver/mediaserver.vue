@@ -1,7 +1,7 @@
 <template>
  <Tabs :animated="false" class="media" v-model="tabsData" @on-click="tabName" type="card">
     <!-- 介质服务器 -->
-    <TabPane label="介质服务器" v-if="nowShow(1)" name="介质服务器" :key="Math.random()">
+    <TabPane label="介质服务器" v-if="nowShow(getPower.seeMediaServer)" name="介质服务器" :key="Math.random()">
       <Table
         stripe
         highlight-row
@@ -11,14 +11,14 @@
         height="720"
       ></Table>
       <div class="btn">
-        <Button type="info" @click="newServer"   v-if="nowShow(1)" >新建介质服务器</Button>
+        <Button type="info" @click="newServer"   v-if="nowShow(getPower.addMediaServer)" >新建介质服务器</Button>
         <!-- <Button type="info" @click="providerServer">修改介质服务器</Button> -->
         <serverModal :selServiceList="selServiceList" ref="serverModal" @Return="Return"></serverModal>
         <updateServer ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
       </div>
     </TabPane>
     <!-- 磁盘 -->
-    <TabPane label="磁盘设备"   v-if="nowShow(1)"  name="磁盘设备" :key="Math.random()">
+    <TabPane label="磁盘设备"   v-if="nowShowTow(getPower.seeDiskDevice)"  name="磁盘设备" :key="Math.random()">
       <Table
         stripe
         highlight-row
@@ -29,7 +29,7 @@
       ></Table>
 
       <div class="btn">
-        <Button type="info" @click="newDisk"  v-if="nowShow(1)">新建磁盘</Button>
+        <Button type="info" @click="newDisk"  v-if="nowShowTow(getPower.newDiskDevice)">新建磁盘</Button>
         <!-- <Button type="info" @click="modifyDisk">修改磁盘</Button> -->
         <diskModal ref="diskModal" @diskReturn="diskReturn"></diskModal>
         <updateDisk ref="updateDisk" @listModify="listModify" ></updateDisk>
@@ -85,9 +85,10 @@ export default {
   data() {
     return {
       numNowList: [],
+      numNowListTow:[],
       showA:true,
       showB:true,
-      tabsData:'介质服务器',
+      tabsData:'磁带库设备',
       mediums: [
         { title: "名称", key: "name" },
         { title: "设备数量", key: "devices" },
@@ -118,7 +119,7 @@ export default {
                 }
               }),
               // 删除介质服务器
-              this.nowShow(3)?h("Icon", {
+              this.nowShow(this.getPower.deleteMediaserver)?h("Icon", {
                 props: {
                   type: "ios-close",
                   size: "20"
@@ -153,7 +154,7 @@ export default {
           render: (h, params) => {
             return h("div", [
               // 修改磁盘弹框
-              this.nowShow(6)? h("Icon", {
+              this.nowShowTow(this.getPower.editDiskDevice)? h("Icon", {
                 props: {
                   type: "ios-chatboxes",
                   size: "20"
@@ -168,7 +169,7 @@ export default {
                 }
               }):'',
               // 删除磁盘弹框
-             this.nowShow(7)? h("Icon", {
+             this.nowShowTow(this.getPower.deleteDiskDevice)? h("Icon", {
                 props: {
                   type: "ios-close",
                   size: "20"
@@ -250,7 +251,8 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("getPrivilege", 7);
+    this.$store.dispatch("getPrivilege", this.$store.state.power.module.mediaServer);
+    this.$store.dispatch("getPrivilegeTow", this.$store.state.power.module.diskDevice);
     // 获取介质信息
     util.restfullCall(
       "/rest-ful/v3.0/mediaservers",
@@ -276,19 +278,35 @@ export default {
   computed: {
     getPrivilege() {
       return this.$store.state.index.privilegeData;
-    }
+    },
+      getPrivilegeTow() {
+      return this.$store.state.index.privilegeDataTow;
+    },
+    getPower(){
+      return this.$store.state.power.name
+    },
+    
   },
   watch: {
     getPrivilege(data) {
       this.numNowList = data;
-      if (this.numNowList.indexOf(1) == -1) {
+      if (this.numNowList.indexOf(this.getPower.seeMediaServer) != -1) {
+          this.tabsData="介质服务器"  
+      }
+      if ((this.numNowList.indexOf(this.getPower.seeMediaServer) != -1)&&(this.getPrivilegeTow.indexOf(this.getPower.seeDiskDevice) != -1)) {
+          this.tabsData="介质服务器"
+          console.log("1111")
+      }
+    },
+      getPrivilegeTow(data){
+      this.numNowListTow=data
+          if (this.numNowListTow.indexOf(this.getPower.seeDiskDevice) != -1) {
           this.tabsData="磁盘设备"
       }
-      if (this.numNowList.indexOf(4) == -1) {
+       if ((this.numNowList.indexOf(this.getPower.seeMediaServer) != -1)&&(this.getPrivilegeTow.indexOf(this.getPower.seeDiskDevice) != -1)) {
           this.tabsData="介质服务器"
-      }
-      if ((this.numNowList.indexOf(1) == -1)&&(this.numNowList.indexOf(4) == -1)) {
-          this.tabsData="磁带库设备"
+          console.log("2222")
+
       }
     }
   },
@@ -298,6 +316,13 @@ export default {
     },
     nowShow(num) {
       if (this.numNowList.indexOf(num) != -1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    nowShowTow(num) {
+      if (this.numNowListTow.indexOf(num) != -1) {
         return true;
       } else {
         return false;

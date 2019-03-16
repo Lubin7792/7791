@@ -787,7 +787,6 @@ export default {
         this.pathConten= this.pathConten.filter(pathFilter)
         this.pathContens= this.pathContens.filter(pathFilters)
       }
-      console.log(this.pathConten,this.pathContens)
       this.resources.clientId = path.client;
       this.ztreeTyep = treeNode.ResType;
       this.resources.pathValue = path.path;
