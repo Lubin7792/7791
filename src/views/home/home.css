@@ -30,7 +30,7 @@
   margin-bottom: 20px;
   box-shadow: 3px 3px 3px #e4e4e4;
 }
-.home-title p {
+/* .home-title p {
   float: left;
   display: inline-block;
   width: 105px;
@@ -39,7 +39,7 @@
   background: #ff8863 url(../../images/hometask.png) no-repeat center center;
   border-radius: 5px;
   margin-right: 80px;
-}
+} */
 .home-middle .home-title p{
   background-color: #ff9103;
   background-image: url(../../images/homesuccess.png)
@@ -126,7 +126,7 @@
   height: 200px;
   font-size: 16px;
   line-height: 36px;
-  padding: 15%  0  30px 30%;
+  padding: 15%  0  30px 36%;
 }
 .home-setup{
  text-align: center;

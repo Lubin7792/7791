@@ -2,8 +2,8 @@
 </style>
 <template>
   <Modal title="修改磁盘设备" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="540" :mask-closable="false">
-    <Form :label-width="120">
-      <FormItem label="设备名称">
+    <Form :label-width="120" :model="modalDisk" ref="modalDisk" :rules="ruleDisk">
+      <FormItem label="设备名称" prop="name">
         <Input v-model="modalDisk.name" placeholder="请输入设备名称"></Input>
       </FormItem>
       <FormItem label="介质服务器">
@@ -55,6 +55,9 @@ export default {
   },
   data() {
     return {
+      ruleDisk:{
+        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线的名称', pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/, trigger: 'blur'}]
+      },
       // diskItem: {
       //   name: '',
       //   path: '',
@@ -100,19 +103,15 @@ export default {
     },
     // 点击保存时把修改的数据传给后台
     ok() {
-      util.restfullCall('/rest-ful/v3.0/device/'+this.modalDisk.id,
-      {name:this.modalDisk.name, enable:this.modalDisk.enable, type:this.modalDisk.type, maxtasks:this.modalDisk.maxtasks, lowlimit:this.modalDisk.lowlimit, filesize:this.modalDisk.filesize},
-      'PUT',
-      this.upload);
-        // console.log("444",{
-        // name:this.modalDisk.name,
-        // enable:this.modalDisk.enable,
-        // type:this.modalDisk.type,
-        // maxtasks:this.modalDisk.maxtasks,
-        // lowlimit:this.modalDisk.lowlimit,
-        // filesize:this.modalDisk.filesize
-        // })
-      this.modal = false
+      var diskName = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/;
+      if(diskName.test(this.modalDisk.name)){
+        util.restfullCall('/rest-ful/v3.0/device/'+this.modalDisk.id,
+        {name:this.modalDisk.name, enable:this.modalDisk.enable, type:this.modalDisk.type, maxtasks:this.modalDisk.maxtasks, lowlimit:this.modalDisk.lowlimit, filesize:this.modalDisk.filesize},
+        'PUT',
+        this.upload);
+      }else{
+        this.$Message.error("修改磁盘输入格式错误！")
+      }
     },
     // 修改磁盘的回调数据判断
     upload(callback){
@@ -139,7 +138,7 @@ export default {
       this.$emit('listModify', array)
     },
     cancel() {
-      this.modal = false
+      this.$Message.warning("操作已取消")      
     },
   }
 }

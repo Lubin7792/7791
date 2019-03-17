@@ -7,16 +7,16 @@
         <ul>
             <li>
                 <span>级别:</span>
-                <Input v-model="num.address" readonly placeholder="Enter something..." style="width: 300px"></Input>
+                <Input v-model="num.levelstr" readonly placeholder="Enter something..." style="width: 300px"></Input>
             </li>
             <li>
                 <span>时间:</span>
                 <Input v-model="num.time" readonly placeholder="Enter something..." style="width: 300px"></Input>
             </li>
-            <li>
+            <!-- <li>
                 <span>用户:</span>
                 <Input v-model="num.id" readonly placeholder="Enter something..." style="width: 300px"></Input>
-            </li>
+            </li> -->
             <li>
                 <span>来源:</span>
                 <Input v-model="num.src" readonly placeholder="Enter something..." style="width: 300px"></Input>

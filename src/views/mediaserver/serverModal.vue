@@ -3,7 +3,7 @@
 <template>
     <!-- 介质服务器新建介质弹框 -->
     <Modal v-model="modal" title="添加介质服务器" @on-ok="ok" @on-cancel="cancel" ok-text="保存">
-        <Form :model="serverItem" :label-width="130">
+        <Form :model="serverItem" :label-width="130" ref="serverItem" :rules="ruleServer">
             <FormItem label="介质服务器名称" prop="name">
                 <Input v-model="serverItem.name" placeholder="请输入介质服务器名称"></Input>
             </FormItem>
@@ -27,6 +27,9 @@ export default {
     },
   data() {
     return {
+      ruleServer: {
+        name:[{required: true, message: '请输英文的介质服务器名称', pattern: /^[a-zA-Z]+$/, trigger: 'blur'}]        
+      },
       serverItem: {
         name: '',
         id: ''
@@ -46,8 +49,13 @@ export default {
     },
     // 点击确定把添加的名字传给服务器
     ok() {
+      var severName = /^[a-zA-Z]+$/;
+      if(severName.test(this.serverItem.name)){
       util.restfullCall('/rest-ful/v3.0/mediaserver',this.serverItem,'post',this.upload)
-      this.modal = false
+      // this.modal = false
+      }else{
+        this.$Message.error("添加的介质服务器名称格式错误！")
+      }
     },
     // 成功接收到回调数据就获取添加成功的表格数据
     upload(callback) {
@@ -86,7 +94,7 @@ export default {
       return str;
     },
     cancel() {
-      this.modal = false
+      this.$Message.warning("操作已取消")
     }
   }
 }

@@ -7,10 +7,10 @@
   <div>
       <!-- <button value="2121" type="button" @click="clickHandler">asdsad</button> -->
 
-    <hometask :left="dataList"></hometask> 
-    <!-- <homesuccess :content="dataList"></homesuccess>  -->
-    <!-- <homefail :right="dataList"></homefail>   -->
-    <!-- <homewarning></homewarning> -->
+    <hometask :left="datalist"></hometask> 
+    <homesuccess :content="datalist"></homesuccess>
+    <homefail :right="datalist"></homefail>
+    <homewarning></homewarning>
   </div>
 
 </template>
@@ -33,7 +33,7 @@ export default {
   },
   data() {
     return {
-      dataList:{}
+      datalist: {},
     }
   },
   created() {
@@ -43,13 +43,23 @@ export default {
   methods:{
     // 首页数据回调
     callbackHome:function(obj) {
+      this.datalist = obj.data
       // console.log(obj.data)
-      this.dataList = JSON.parse(JSON.stringify(obj.data))
+      // this.left.tasks = obj.data.tasks
+      // this.left.totalbytes = obj.data.totalbytes
+      // this.left.classsum = obj.data.classsum
+      // this.left.increasebytes = obj.data.increasebytes
+      // this.content.successtasks = obj.data.successtasks
+      // this.content.clients = obj.data.clients
+      // this.content.MediaServers = obj.data.MediaServers
+      // this.right.failedtasks = obj.data.failedtasks
+      // this.right.device = obj.data.device
+      // console.log("11",this.left.classsum[0].percent)
     },
     
-    clickHandler(){
-      // console.log('1111')
-    }
+    // clickHandler(){
+    //   console.log('1111')
+    // }
   }
 };
 

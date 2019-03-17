@@ -4,12 +4,12 @@
 <template>
   <div>
     <Modal title="添加磁盘设备" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="540" :mask-closable="false">
-		  <Form :model="diskItem" :label-width="120">
-			<FormItem label="设备名称">
+		  <Form :model="diskItem" :label-width="120" ref="diskItem" :rules="ruleDiskData" >
+			<FormItem label="设备名称" prop="name">
 				<Input v-model="diskItem.name" placeholder="请输入设备名称"></Input>
 			</FormItem>
       <FormItem label="设备类型">
-        <Select @on-change="dislChanges" v-model="diskItem.type"> 
+        <Select @on-change="dislChanges" v-model="diskItem.type" disabled> 
           <Option v-for="item in selectType" :value="item.type" :key="item.type">{{ item.name }}</Option>
 				</Select>
       </FormItem>
@@ -62,6 +62,10 @@ import util from '../../libs/util.js'
 export default {
   data() {
     return {
+      ruleDiskData:{
+        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线的名称', pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/, trigger: 'blur'}]
+        // name:[{required: true, message: '介质服务器名称不能为空', trigger: 'blur'},{min:1}]
+      },
       modal: false,
       single: false,
       selectType:[],
@@ -136,8 +140,13 @@ export default {
     },
     // 点击确认按钮，把信息传给后台
     ok() {
-      util.restfullCall('/rest-ful/v3.0/device',JSON.stringify(this.diskItem), 'post', this.add)
-      this.modal = false
+      var diskName = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
+      if(diskName.test(this.diskItem.name)){
+        util.restfullCall('/rest-ful/v3.0/device',JSON.stringify(this.diskItem), 'post', this.add)
+      }else{
+        this.$Message.error("新建磁盘输入格式错误！")
+      }
+      
       // Object.keys(this.diskItem).forEach(key => this.diskItem[key] = null)
     },
     // 添加成功的回调
@@ -176,7 +185,7 @@ export default {
       this.diskItem.path = pathReturn
     },
     cancel() {
-      this.modal = false
+      this.$Message.warning("操作已取消")
     },
     glance: function() {
       this.modal = false

@@ -1,8 +1,8 @@
 <template>
     <!-- 新建介质池弹框 -->
   <Modal v-model="modal" title="修改介质池" @on-ok="ok" @on-cancel="cancel" ok-text="保存">
-    <Form :model="alterItem" :label-width="110" resetFields>
-        <FormItem label="介质池名称">
+    <Form :model="alterItem" ref="severName" :rules="ruleAlter" :label-width="110" resetFields>
+        <FormItem label="介质池名称" prop="name">
             <Input v-model="alterItem.name" placeholder="请输入介质池名称"></Input>
         </FormItem>
         <FormItem label="保留周期">
@@ -20,6 +20,9 @@ import util from '../../libs/util.js'
 export default {
   data() {
     return {
+      ruleAlter: {
+        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线的名称', pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/, trigger: 'blur'}]
+      },
       modal: false,
       alterItem: {
         name: '',
@@ -40,13 +43,17 @@ export default {
     },
     // 点击确定把添加的数据传给服务器
     ok() {
-      util.restfullCall(
-        '/rest-ful/v3.0/volpool/' + this.alterItem.id,
-        { name:this.alterItem.name, Protected:this.alterItem.Protected, Cover:this.alterItem.Cover },
-        'PUT',
-        this.callback
-      );
-      this.modal = false
+      var alterName = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
+      if(alterName.test(this.alterItem.name)){
+        util.restfullCall(
+          '/rest-ful/v3.0/volpool/' + this.alterItem.id,
+          { name:this.alterItem.name, Protected:this.alterItem.Protected, Cover:this.alterItem.Cover },
+          'PUT',
+          this.callback
+        );
+      }else{
+        this.$Message.error("新建磁盘输入格式错误！")
+      }
     },
     // 成功接收到回调数据,获取添加成功的表格数据
     callback(obj) {
@@ -67,7 +74,7 @@ export default {
         this.$emit('alrerReturn',array) 
     },
     cancel() {
-      this.modal = false
+      this.$Message.warning("操作已取消")      
     }
   }
 }

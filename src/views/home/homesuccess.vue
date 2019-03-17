@@ -3,7 +3,7 @@
      <div class="home-title">
           <p > </p>
           <i>备份成功数量</i>
-          <em>{{this.content.successtasks}}</em>    
+          <em>{{content.successtasks}}</em>    
         </div>
         <div class="home-content">
           <p class="home-con-tit">服务器统计</p>
@@ -11,11 +11,11 @@
              <div class=" home-details">
                <span class="home-capacity">
                  <p>介质服务器数量</p>
-                 {{this.content.MediaServers}}
+                 {{content.MediaServers}}
                </span>
                <span class="home-range">
                 <p>客户端数量</p>
-                 {{this.content.clients}}
+                 {{content.clients}}
                </span>
           </div>
         </div>
@@ -40,11 +40,18 @@ export default {
       msg: "Welcome to Your Vue.js App"
     };
   },
-  mounted() {
-    this.drawLine();
+   watch: {
+    content:function(data) {
+      this.drawLine(data);
+    }
   },
   methods: {
-    drawLine() {
+    drawLine(data) {
+      var array = new Array
+      array.push(
+        {value: data.clients,name: "客户端"},
+        {value: data.MediaServers,name: "介质服务器"}
+      )
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById("myChart2"));
       // 绘制图表
@@ -54,19 +61,14 @@ export default {
           left: "left",
           data: []
         },
-        color: ["#fd7549", "#e3e3e3"],
+        color: ["#fd7549", "#a59e9e"],
         series: [
           {
             name: "访问来源",
             type: "pie",
             radius: "55%",
             center: ["50%", "60%"], 
-            data: [
-              // { value: this.content.device.tapelibdevs, name: "介质服务器" },
-              // { value: this.content.device.diskdevs, name: "客户端" },
-              { value: 390, name: "介质服务器" },
-              { value: 310, name: "客户端" }
-            ],
+            data: array,
             itemStyle: {
               color:'red',
               emphasis: {
@@ -83,3 +85,8 @@ export default {
   }
 };
 </script>
+<style>
+.p {
+  background-color: #a59e9e;
+}
+</style>

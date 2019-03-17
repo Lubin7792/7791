@@ -2,8 +2,8 @@
   <div>
     <Table border ref="selection" :columns="columns4" :data="taskMonitor"></Table>
     <updataDetail ref="updataDetail"></updataDetail>
-    <Button @click="handleSelectAll(true)">全选</Button>
-    <Button @click="handleSelectAll(false)">全部清除</Button>
+    <!-- <Button @click="handleSelectAll(true)">全选</Button>
+    <Button @click="handleSelectAll(false)">全部清除</Button> -->
   </div>
 </template>
 <script>
@@ -20,7 +20,7 @@ export default {
     return {
       numNowList:[],
       columns4: [
-        { type: 'selection', width: 60, align: 'center' },
+        // { type: 'selection', width: 60, align: 'center' },
         { title: '任务ID', width: 80, key: 'id' },
         { title: '策略', width: 160, key: 'policy' },
         { title: '客户端', width: 160, key: 'client' },
@@ -98,9 +98,9 @@ export default {
       }
     },
     // 选框判断
-    handleSelectAll(status) {
-      this.$refs.selection.selectAll(status)
-    },
+    // handleSelectAll(status) {
+    //   this.$refs.selection.selectAll(status)
+    // },
     // 任务监控回调信息
     dealingData: function(obj) {
       var array = new Array()

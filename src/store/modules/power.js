@@ -36,10 +36,11 @@ const state={
         newValume: 2,
         editValume: 3,
         binValume: 4,
+        deleteValume:9,
         seeMedium: 5,
         deleteMedium: 6,
         reviseMedium:7,
-        recoveryMedium:8,
+        recoveryMedium: 8,
         // 策略管理
         seePolicy:1,
         newPolicy: 2,

@@ -2,8 +2,8 @@
 </style>
 <template>
 	<Modal title="新建磁带库" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="640">
-		<Form :model="libraryItem" :label-width="100">
-			<FormItem label="设备名称">
+		<Form :model="libraryItem" ref="libraryItem" :rules="ruleLibrary" :label-width="100">
+			<FormItem label="设备名称" prop="name">
 				<Input v-model="libraryItem.name" placeholder="请输入设备名称"></Input>
 			</FormItem>
       <Row>
@@ -34,6 +34,9 @@ import util from '../../libs/util.js'
 export default {
   data() {
     return {
+      ruleLibrary:{
+        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线的名称', pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/, trigger: 'blur'}]
+      },
       cityList:[],
       selList:[],
       driver:[],
@@ -118,15 +121,19 @@ export default {
     },
     // 点击确认按钮，把信息传给后台
     ok() {
-      this.modal = false
-      util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', null)
-      this.$emit('libraryReturn',this.libraryItem)
-      this.libraryItem.name = null
-      this.libraryItem.server = null
-      this.Mechanics = null
+      var libraryName = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
+      if(libraryName.test(this.libraryItem.name)){
+        util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', null)
+        this.$emit('libraryReturn',this.libraryItem)
+        this.libraryItem.name = null
+        this.libraryItem.server = null
+        this.Mechanics = null
+      }else{
+        this.$Message.error("新建磁带库输入格式错误！")
+      }
     },
     cancel() {
-      this.modal = false
+      this.$Message.warning("操作已取消")
     }
   }
 }

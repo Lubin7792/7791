@@ -130,7 +130,6 @@ export default {
     },
     ok() {
       this.$emit('glanceReturn',this.glancePath)
-      this.browse = false
     },
     // 接收父组件的传递
     newGlance: function() {
@@ -138,7 +137,7 @@ export default {
     },
     cancel() {
       // this.$store.commit('getModalGlance', false)
-      this.browse = false
+      this.$Message.warning("操作已取消")
     }
   }
 }

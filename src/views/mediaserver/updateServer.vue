@@ -1,8 +1,8 @@
 <template>
     <!-- 介质服务器修改介质弹框 -->
     <Modal v-model="modal1" title="修改介质服务器" @on-ok="ok" @on-cancel="cancel" ok-text="保存" class-name="vertical-center-modal">
-        <Form :label-width="130">
-            <FormItem label="介质服务器名称">
+        <Form :label-width="130" :model="putDatas" ref="putDatas" :rules="rulePut">
+            <FormItem label="介质服务器名称" prop="name">
                 <Input placeholder="请输入介质服务器名称" v-model="putDatas.name"></Input>
             </FormItem>
             <FormItem label="机器名">
@@ -26,6 +26,9 @@ export default {
     
   data () {
     return {
+      rulePut:{
+        name:[{required: true, message: '请输英文的介质服务器名称', pattern: /^[a-zA-Z]+$/, trigger: 'blur'}]        
+      },
       modal1: false,
       putDatas: {
         name: '',
@@ -55,15 +58,19 @@ export default {
     },
     // 点击保存修改数据
     ok () {
-      util.restfullCall('/rest-ful/v3.0/mediaserver/'+this.putDatas.id,{name:this.putDatas.name},'PUT',this.upload);
-      this.modal1 = false
+      var severName = /^[a-zA-Z]+$/;
+      if(severName.test(this.putDatas.name)){
+        util.restfullCall('/rest-ful/v3.0/mediaserver/'+this.putDatas.id,{name:this.putDatas.name},'PUT',this.upload);
+      }else{
+        this.$Message.error("修改的介质服务器名称格式错误！")
+      }
     },
     // 回调的数据传递给父组件
     upload(callback) {
       if(callback.data.code === 0) this.$emit('toogleMedium', this.putDatas)
     },
     cancel () {
-      this.modal1 = false
+      this.$Message.warning("操作已取消")      
     }
   }
 }

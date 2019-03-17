@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="modal" title="确认回收改介质池么？" @on-ok="ok" @on-cancel="cancel">
+  <Modal v-model="modal" title="确认回收该介质池么？" @on-ok="ok" @on-cancel="cancel">
     <p>点击<span style="color:red;font-weight: bold">确定</span>按钮该介质池将被回收，点击<span style="color:red;font-weight: bold">取消</span>按钮返回上一层</p>
   </Modal>
 </template>

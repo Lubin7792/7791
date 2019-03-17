@@ -1,7 +1,7 @@
 <template>
-  <Tabs :animated="false" type="card" class="volum">
+  <Tabs :animated="false" type="card" class="volum" >
     <!-- 介质池 -->
-    <TabPane label="介质池">
+    <TabPane label="介质池" :key="Math.random()"  v-if="nowShow(getPower.seeValume)">
       <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
 
       <div class="_btn">
@@ -13,7 +13,7 @@
       </div>
     </TabPane>
     <!-- 介质 -->
-    <TabPane label="介质">
+    <TabPane label="介质" :key="Math.random()"  v-if="nowShow(getPower.seeMedium)">
       <Table
         :data="volume"
         :row-class-name="rowClassName"
@@ -87,7 +87,7 @@
                   }
                 },):'',
                 // 删除介质
-                h('Icon', {
+               this.nowShow(this.getPower.editValume)? h('Icon', {
                   props: {
                       type: 'ios-close',
                       size: '20',
@@ -101,7 +101,7 @@
                         }
                       }
                   }
-                },),
+                },):'',
               ]);
             }
           }
