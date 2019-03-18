@@ -14,12 +14,12 @@
                 <Input
                   v-model="valueB"
                   style="width: 300px"
-                  placeholder="txt;exe;dat"
+                  placeholder="*txt;*exe;*dat"
                   @on-blur="filterValue(6,valueB)"
                 />
                 <p class="blanks"></p>
                 <Radio label="7">不备份以下类型文件</Radio>
-                <Input v-model="valueC" style="width: 300px" placeholder="txt;exe;dat"   @on-blur="filterValue(7,valueC)"/>
+                <Input v-model="valueC" style="width: 300px" placeholder="*txt;*exe;*dat"   @on-blur="filterValue(7,valueC)"/>
               </RadioGroup>
             </div>
             <div class="clearfloat">

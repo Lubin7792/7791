@@ -5,8 +5,8 @@
 <template>
   <div class="newconten">
     <div v-show="show === '基本信息'" class="basicinfo">
-      <Form ref="basic" :model="basic" :label-width="120">
-        <FormItem label="策略名称">
+      <Form ref="basic" :model="basic" :label-width="120" :rules="ruleMode">
+        <FormItem label="策略名称" prop="basicName" >
           <Input v-model="basic.name"></Input>
         </FormItem>
         <FormItem label="策略类型">
@@ -251,7 +251,22 @@ export default {
   //   this.basic.type = this.basicty;
   // },
   data() {
+  const formName =(rule,value,callback)=>{
+    if(value ===""){
+      console.log("1111")
+    }else{
+      console.log(value)
+    }
+  }
     return {
+      ruleMode:{
+        basicName:[
+           {required:true,
+           validator:formName,
+           trigger:"blur"
+           }
+        ]
+      },
       setting: {
         check: {
           enable: true
