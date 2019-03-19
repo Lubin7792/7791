@@ -8,7 +8,7 @@
       <Button type="error" style="margin-top:15px;" @click="newPolicy" v-if="nowShow(getPower.newPolicy)">新建策略</Button>
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
-    <newPolicy ref="truefalse" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
+    <newPolicy ref="newPolicyData" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
     <updatePolicy :upmodal="modal" @close="revise"></updatePolicy>
     <Modal
       v-model="modalDelete"
@@ -288,6 +288,7 @@ export default {
     newPolicy
   },
   created() {
+    console.log("创建")
     this.$store.dispatch("getPrivilege",this.$store.state.power.module.policy);
     util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
     util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);
@@ -401,6 +402,11 @@ export default {
     },
     newPolicy: function() {
       this.modalss = true;
+        // this.$refs.newPolicy.basic.type="65536";
+this.$refs.newPolicyData.$refs.newConten.callBackFun() ;
+// console.log(this.$refs.newPolicyData.$refs.newConten.callBackFun)
+// this.$refs.newPolicyData.$refs.newConten.basic.type="65536" 
+
     },
     closePolicy: function(modalss) {
       this.modalss = modalss;

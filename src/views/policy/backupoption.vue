@@ -218,7 +218,7 @@ export default {
       valueC: "",
       valueD: "",
       valueE: "",
-      valueF: "",
+      valueF: "0",
       valueG: "",
       valueH: "",
       valueI: "",

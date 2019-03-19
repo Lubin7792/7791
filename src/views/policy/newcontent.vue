@@ -6,7 +6,7 @@
   <div class="newconten">
     <div v-show="show === '基本信息'" class="basicinfo">
       <Form ref="basic" :model="basic" :label-width="120" :rules="ruleMode">
-        <FormItem label="策略名称" prop="basicName" >
+        <FormItem label="策略名称" prop="name">
           <Input v-model="basic.name"></Input>
         </FormItem>
         <FormItem label="策略类型">
@@ -45,7 +45,8 @@
           </Select>
         </FormItem>
         <FormItem label="策略最大调度任务">
-          <Input v-model="basic.maxtasks"></Input>
+          <!-- <Input v-model="basic.maxtasks"></Input> -->
+          <InputNumber :max="5" :min="1" v-model="basic.maxtasks"></InputNumber>
         </FormItem>
         <FormItem label="启用压缩" class="h30">
           <CheckboxGroup v-model="basic.compress">
@@ -57,11 +58,11 @@
             <Checkbox label></Checkbox>
           </CheckboxGroup>
         </FormItem>
-        <FormItem label="加密算法">
+        <!-- <FormItem label="加密算法">
           <Input v-model="basic.algorithm"></Input>
-        </FormItem>
+        </FormItem>-->
         <FormItem label="数据保留周期">
-          <Input v-model="basic.savedays"></Input>
+          <InputNumber :max="90" :min="1" v-model="basic.savedays"></InputNumber>&nbsp;天
         </FormItem>
       </Form>
       <div style="display:none">{{ lconten }}</div>
@@ -251,20 +252,38 @@ export default {
   //   this.basic.type = this.basicty;
   // },
   data() {
-  const formName =(rule,value,callback)=>{
-    if(value ===""){
-      console.log("1111")
-    }else{
-      console.log(value)
-    }
-  }
+    const formName = function(rule, value, callback) {
+      if (!value) {
+        return callback(new Error("请输入策略名称"));
+      } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,128}$/.test(value)) {
+        return callback(
+          new Error("可包含-汉字、字母、数字、下划线")
+        );
+      } else {
+        callback();
+      }
+    };
+     let hh =
+        new Date().getHours() < 10
+          ? "0" + new Date().getHours()
+          : new Date().getHours();
+      let mm =
+        new Date().getMinutes() < 10
+          ? "0" + new Date().getMinutes()
+          : new Date().getMinutes();
+      let ss =
+        new Date().getMinutes() < 10
+          ? "0" + new Date().getSeconds()
+          : new Date().getSeconds();
+
     return {
-      ruleMode:{
-        basicName:[
-           {required:true,
-           validator:formName,
-           trigger:"blur"
-           }
+      ruleMode: {
+        name: [
+          {
+            required: true,
+            validator: formName,
+            trigger: "blur"
+          }
         ]
       },
       setting: {
@@ -323,9 +342,9 @@ export default {
 
       show3: "0",
       basic: {
-        type: "65536",
+        type: 65536,
         name: "",
-        deviceval:'',
+        deviceval: "",
         poolval: 2,
         pool: [
           {
@@ -357,7 +376,7 @@ export default {
             Protected: 90
           }
         ],
-        privilegekey:1,
+        privilegekey: 1,
         privilege: [
           {
             Level: 1,
@@ -372,55 +391,55 @@ export default {
             Name: "高优先级"
           }
         ],
-        maxtasks: "5",
+        maxtasks: 5,
         compress: [],
         encryption: [],
         algorithm: "",
-        savedays: "30"
+        savedays: 30
       },
       schedule: {
         typelevel: 0,
         dayList: [
-          { name: "1号", value: "1" },
-          { name: "2号", value: "2" },
-          { name: "3号", value: "3" },
-          { name: "4号", value: "4" },
-          { name: "5号", value: "5" },
-          { name: "6号", value: "6" },
-          { name: "7号", value: "7" },
-          { name: "8号", value: "8" },
-          { name: "9号", value: "9" },
-          { name: "10号", value: "10" },
-          { name: "11号", value: "11" },
-          { name: "12号", value: "12" },
-          { name: "13号", value: "13" },
-          { name: "14号", value: "14" },
-          { name: "15号", value: "15" },
-          { name: "16号", value: "16" },
-          { name: "17号", value: "17" },
-          { name: "18号", value: "18" },
-          { name: "19号", value: "19" },
-          { name: "20号", value: "20" },
-          { name: "21号", value: "21" },
-          { name: "22号", value: "22" },
-          { name: "23号", value: "23" },
-          { name: "24号", value: "24" },
-          { name: "25号", value: "25" },
-          { name: "26号", value: "26" },
-          { name: "27号", value: "27" },
-          { name: "28号", value: "28" },
-          { name: "29号", value: "29" },
-          { name: "30号", value: "30" },
-          { name: "31号", value: "31" }
+          { name: "1号", value: 1 },
+          { name: "2号", value: 2 },
+          { name: "3号", value: 3 },
+          { name: "4号", value: 4 },
+          { name: "5号", value: 5 },
+          { name: "6号", value: 6 },
+          { name: "7号", value: 7 },
+          { name: "8号", value: 8 },
+          { name: "9号", value: 9 },
+          { name: "10号", value: 10 },
+          { name: "11号", value: 11 },
+          { name: "12号", value: 12 },
+          { name: "13号", value: 13 },
+          { name: "14号", value: 14 },
+          { name: "15号", value: 15 },
+          { name: "16号", value: 16 },
+          { name: "17号", value: 17 },
+          { name: "18号", value: 18 },
+          { name: "19号", value: 19 },
+          { name: "20号", value: 20 },
+          { name: "21号", value: 21 },
+          { name: "22号", value: 22 },
+          { name: "23号", value: 23 },
+          { name: "24号", value: 24 },
+          { name: "25号", value: 25 },
+          { name: "26号", value: 26 },
+          { name: "27号", value: 27 },
+          { name: "28号", value: 28 },
+          { name: "29号", value: 29 },
+          { name: "30号", value: 30 },
+          { name: "31号", value: 31 }
         ],
         weekList: [
-          { value: "1", name: "周一" },
-          { value: "2", name: "周二" },
-          { value: "3", name: "周三" },
-          { value: "4", name: "周四" },
-          { value: "5", name: "周五" },
-          { value: "6", name: "周六" },
-          { value: "7", name: "周日" }
+          { value: 1, name: "周一" },
+          { value: 2, name: "周二" },
+          { value: 3, name: "周三" },
+          { value: 4, name: "周四" },
+          { value: 5, name: "周五" },
+          { value: 6, name: "周六" },
+          { value: 7, name: "周日" }
         ],
         type: [
           {
@@ -448,7 +467,7 @@ export default {
           }
         ],
         freqval: "",
-        backuptlevel: "",
+        backuptlevel:1,
         backuptype: [
           {
             value: "全备",
@@ -466,10 +485,14 @@ export default {
         intervalTime: "",
         timeType: "",
         list: [],
-        startday: "",
-        starttime: "",
-        endday: "",
-        endtime: "",
+        startday:  new Date().getDate() < 10
+          ? "0" + new Date().getDate()
+          : new Date().getDate(),
+        starttime: hh + ":" + mm + ":" + ss,
+        endday:  new Date().getDate() < 10
+          ? "0" + new Date().getDate()
+          : new Date().getDate(),
+        endtime: hh + ":" + mm + ":" + ss,
         planList: [],
         planListIndex: "",
         addLists: {}
@@ -528,12 +551,16 @@ export default {
       $.fn.zTree.init($("#treeDemoA"), this.setting, array);
     }
   },
+  created() {
+    
+  },
   watch: {
-    policyTyep:function (data) {
-      this.basic.type=data[0].key
+    policyTyep: function(data) {
+      // console.log(data)
+      // this.basic.type = data[0].key;
     },
-     devicesList:function (data) {
-      this.basic.deviceval=data[0].id
+    devicesList: function(data) {
+      this.basic.deviceval = data[0].id;
     },
     hackOne: function(type) {
       if (type == 131072) {
@@ -621,19 +648,23 @@ export default {
       this.schedule.starttime = value;
     },
     endDate: function(value) {
+      console.log(value)
       this.schedule.endday = value;
     },
     endTime: function(value) {
       this.schedule.endtime = value;
     },
     planShow: function(value) {
-      let test = value;
+    if(value!=undefined){
+        let test = value;
       this.schedule.freqval = test.label;
+    }
     },
     showNow: function() {},
     showNows: function(value) {},
     policypost: function() {
-      let tests = {
+    if(/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,128}$/.test(this.basic.name) ){
+        let tests = {
         base: {
           name: this.basic.name,
           type: this.basic.type,
@@ -649,22 +680,28 @@ export default {
         option: this.$refs.backupOption.showOption(),
         schedule: this.schedule.planList
       };
-      console.log(tests);
-      util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
+      console.log(tests)
+      // util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
+    }else{
+       this.$Message.error("输入策略名称格式错误！新建失败");
+    }
     },
     senddata: function(value) {
       if (value.data.code === 0) {
         this.$store.commit("upPolicyOk", !this.$store.state.index.policySwitch);
-        alert(value.data.message);
       } else {
         alert(value.data.message);
       }
     },
     alick: function(value) {
-      this.basic.type = value.value;
+
+      if(value!=undefined){
+          this.basic.type = value.value;
       this.policyTypekey = String(value.value);
+      }
     },
     timeFormate: function() {
+       let week =new Date().getDay();
       let date =
         new Date().getDate() < 10
           ? "0" + new Date().getDate()
@@ -681,17 +718,34 @@ export default {
         new Date().getMinutes() < 10
           ? "0" + new Date().getSeconds()
           : new Date().getSeconds();
-      this.schedule.startday = "'" + date + "'";
+     
       this.schedule.starttime = hh + ":" + mm + ":" + ss;
+      this.schedule.endtime = hh + ":" + mm + ":" + ss;
+      week==0?week=7:week=week
+      if(this.show3==0){
+         this.schedule.startday =  date ;
+         this.schedule.endday =  date ;
+      }
+       if(this.show3==1){
+         this.schedule.startday =  week ;
+         this.schedule.endday =  week ;
+      }
+       if(this.show3==2){
+         this.schedule.startday =  "'"+date +"'" ;
+         this.schedule.endday =  "'"+date +"'" ;
+      }
+
+
+      console.log(week,date)
     },
     onplantype: function(value) {
       this.show3 = value;
       // console.log( this.schedule.startday, this.schedule.endtday,"1")
       this.$nextTick(() => {
-        this.schedule.startday = "";
-        this.schedule.endday = "";
+        // this.schedule.startday = "";
+        // this.schedule.endday = "";
       });
-      // this.timeFormate();
+      this.timeFormate();
     },
     build_path_by_tree_node: function(treeNode) {
       //获取路径
@@ -705,8 +759,7 @@ export default {
           break;
         }
 
-     
-       if (parent.nodetype != 0) {
+        if (parent.nodetype != 0) {
           path = "/" + treeNode.name + path;
         } else {
           path = treeNode.name + path;
@@ -715,8 +768,6 @@ export default {
         }
         treeNode = parent;
       } while (true);
-
-
 
       /*
       var path = "";
@@ -741,14 +792,13 @@ export default {
 
         }         
       }*/
-      if(path.indexOf("//")==0){
-         path=path.substr(1)
+      if (path.indexOf("//") == 0) {
+        path = path.substr(1);
       }
       return { client: cid, path: path, name: name };
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-
       if (typeof this.basic.type == "number") {
         if (!treeNode.hasOwnProperty("children")) {
           this.treeNodeA = treeNode;
@@ -790,21 +840,31 @@ export default {
       let path = this.build_path_by_tree_node(treeNode);
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
-        this.pathConten.push({ path:pathList});
-        this.pathContens.push({ path: path.path, client: parseInt(path.client), type:treeNode.ResType,exclude:0});
+        this.pathConten.push({ path: pathList });
+        this.pathContens.push({
+          path: path.path,
+          client: parseInt(path.client),
+          type: treeNode.ResType,
+          exclude: 0
+        });
       } else {
-        function pathFilter(element){
-          return element.path !==pathList;
+        function pathFilter(element) {
+          return element.path !== pathList;
         }
-          function pathFilters(element){
-          return element.path !==path.path;
+        function pathFilters(element) {
+          return element.path !== path.path;
         }
-        this.pathConten= this.pathConten.filter(pathFilter)
-        this.pathContens= this.pathContens.filter(pathFilters)
+        this.pathConten = this.pathConten.filter(pathFilter);
+        this.pathContens = this.pathContens.filter(pathFilters);
       }
       this.resources.clientId = path.client;
       this.ztreeTyep = treeNode.ResType;
       this.resources.pathValue = path.path;
+    },
+    //重置数据
+        callBackFun() {
+          // this.basic.type=65536;
+      Object.assign(this.$data, this.$options.data())
     }
   }
 };

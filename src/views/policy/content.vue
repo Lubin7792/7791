@@ -5,8 +5,8 @@
 <template>
   <div class="newconten">
     <div v-show="show === '基本信息'" class="basicinfo">
-      <Form ref="basic" :model="basic" :label-width="120">
-        <FormItem label="策略名称">
+      <Form ref="basic" :model="basic" :label-width="120" :rules="ruleMode">
+        <FormItem label="策略名称" prop="name">
           <Input v-model="basic.name"></Input>
         </FormItem>
         <FormItem label="策略类型">
@@ -46,7 +46,7 @@
           </Select>
         </FormItem>
         <FormItem label="策略最大调度任务">
-          <Input v-model="basic.maxtasks"></Input>
+          <InputNumber :max="5" :min="1" v-model="basic.maxtasks"></InputNumber>
         </FormItem>
         <FormItem label="启用压缩" class="h30">
           <CheckboxGroup v-model="temporary.compress">
@@ -58,11 +58,11 @@
             <Checkbox label></Checkbox>
           </CheckboxGroup>
         </FormItem>
-        <FormItem label="加密算法">
+        <!-- <FormItem label="加密算法">
           <Input v-model="temporary.algorithm"></Input>
-        </FormItem>
+        </FormItem>-->
         <FormItem label="数据保留周期">
-          <Input v-model="basic.savedays"></Input>
+          <InputNumber :max="90" :min="1" v-model="basic.savedays"></InputNumber>
         </FormItem>
       </Form>
       <div style="display:none">{{ lconten }}</div>
@@ -248,7 +248,25 @@ export default {
     backupoption
   },
   data() {
+    const formName = function(rule, value, callback) {
+      if (!value) {
+        return callback(new Error("请输入策略名称"));
+      } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,128}$/.test(value)) {
+        return callback(new Error("可包含汉字-字母、数字、下划线"));
+      } else {
+        callback();
+      }
+    };
     return {
+      ruleMode: {
+        name: [
+          {
+            required: true,
+            validator: formName,
+            trigger: "blur"
+          }
+        ]
+      },
       setting: {
         check: {
           enable: true
@@ -446,12 +464,12 @@ export default {
       basic: {
         type: "",
         name: "",
-        id:"",
+        id: "",
         privilege: "",
         pool: "",
         device: "",
-        maxtasks: "",
-        savedays: ""
+        maxtasks: 0,
+        savedays: 0
       },
       schedule: {
         scheduletype: 0,
@@ -482,7 +500,6 @@ export default {
     }
   },
   watch: {
-   
     backData: function(data) {
       // 重置ztree
       this.lconten();
@@ -496,8 +513,8 @@ export default {
       this.basic = data.base;
       this.basictype = data.base.type;
       this.temporary.planList = data.schedule;
-      this.pathContenList =JSON.parse(JSON.stringify(data.resource));
-      this.pathContens =JSON.parse(JSON.stringify(data.resource));
+      this.pathContenList = JSON.parse(JSON.stringify(data.resource));
+      this.pathContens = JSON.parse(JSON.stringify(data.resource));
       for (let i = 0; i < data.resource.length; i++) {
         let _index = data.resource[i].client;
         findMachine(_index);
@@ -680,20 +697,20 @@ export default {
       let clientId = nowPath.name;
       // 当前层级
       let nowLevel = nowNode.level + 1;
-      let names='';
+      let names = "";
       for (let i = 0; i < findList.length; i++) {
-        if(nowLevel !=1){
-          names="/"+name;
-        }else{
-          names=name
+        if (nowLevel != 1) {
+          names = "/" + name;
+        } else {
+          names = name;
         }
-        if(nowLevel==1&&name=="/"){
-          names='';
+        if (nowLevel == 1 && name == "/") {
+          names = "";
         }
-        if(nowLevel==2&&nowPath.path=="/"){
-        nowPath.path='';
+        if (nowLevel == 2 && nowPath.path == "/") {
+          nowPath.path = "";
         }
-           if (
+        if (
           clientId + "_" + nowPath.path + names ==
           findList[i].path
             .split("/")
@@ -701,8 +718,8 @@ export default {
             .join("/")
         ) {
           return true;
-          break
-        } 
+          break;
+        }
       }
     },
     planListIndex: function(value, index) {
@@ -781,11 +798,12 @@ export default {
     showNow: function() {},
     showNows: function(value) {},
     policypost: function() {
+    if(/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,128}$/.test(this.basic.name) ){
       let tests = {
         base: {
           name: this.basic.name,
           type: this.basic.type,
-          id:this.basic.id,
+          id: this.basic.id,
           privilege: parseInt(this.basic.privilege ? this.basic.privilege : 0),
           pool: parseInt(this.basic.pool ? this.basic.pool : 0),
           device: parseInt(this.basic.device ? this.basic.device : 0),
@@ -796,7 +814,9 @@ export default {
         option: this.$refs.backupOption.showOption(),
         schedule: this.temporary.planList
       };
-      util.restfullCall("/rest-ful/v3.0/policy", tests, "put", this.senddata);
+      util.restfullCall("/rest-ful/v3.0/policy", tests, "put", this.senddata);}else{
+        this.$Message.error("修改策略名称格式错误！添加失败");
+      }
     },
     senddata: function(value) {
       if (value.data.code === 0) {
@@ -907,15 +927,14 @@ export default {
       let path = this.build_path_by_tree_node(treeNode);
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
-        this.pathContenList.push({ path:pathList});
+        this.pathContenList.push({ path: pathList });
 
         this.pathContens.push({
           path: path.path,
           client: parseInt(path.client),
-          type: treeNode.ResType, 
+          type: treeNode.ResType,
           exclude: 1
         });
-
       } else {
         function pathFilter(element) {
           return element.path !== pathList;

@@ -2,11 +2,11 @@
 @import './sqlserver.css';
 </style>
 <template>
-    <Form class="sqlserver" :model="sqlserver">
+    <Form class="sqlserver" :model="sqlserver" ref="sqlserver" :rules="ruleServer">
         <Row>
             <Col span="12">
-            <FormItem label="实例名:">
-                <input v-model="sqlserver.server"></input>
+            <FormItem label="实例名:"  prop="server">
+                <Input v-model="sqlserver.server"></Input>
             </FormItem>
             </Col>
               <Col span="12">
@@ -19,12 +19,12 @@
         <Row>
            <Col span="12">
             <FormItem label="用户名:">
-                <input v-model="sqlserver.user" class="user-input" :disabled="disableds"></input>
+                <Input v-model="sqlserver.user" class="user-input" :disabled="disableds"></Input>
             </FormItem>
             </Col>
             <Col span="12">
             <FormItem label="密码:">
-                <input v-model="sqlserver.password" class="sqlserver-password" type="password" :disabled="disableds"></input>
+                <Input v-model="sqlserver.password" class="sqlserver-password" type="password" :disabled="disableds"></Input>
             </FormItem>
             </Col>
           
@@ -32,7 +32,7 @@
         <Row>
             <Col span="12">
             <FormItem label="超时时间:">
-                <input v-model="sqlserver.timeout"></input>
+                <InputNumber :max="300" :min="10" v-model="sqlserver.timeout"></InputNumber>
             </FormItem>
             </Col>
            
@@ -71,13 +71,31 @@ export default {
 
   },
   data() {
+       const formServer = function(rule, value, callback) {
+      if (!value) {
+        return callback(new Error("请输入用户名"));
+      } else if (!/^[a-zA-Z0-9_]{1,84}$/.test(value)) {
+        return callback(new Error("可包含-字母、数字、下划线"));
+      } else {
+        callback();
+      }
+    };
     return {
+          ruleServer: {
+        server: [
+          {
+            required: true,
+            validator: formServer,
+            trigger: "blur"
+          }
+        ]
+      },
       sqlserver: {
         server:'',
         host: '',
         user: '',
         password: '',
-        timeout: ''
+        timeout: 10
       },
       modalDelete: false,
       columns: [
@@ -194,6 +212,10 @@ export default {
       this.sqlserver.id = item.id
     },
     updateSqlserver: function() {
+if(!/^[a-zA-Z0-9_]{1,84}$/.test(this.sqlserver.server)){
+        this.$Message.error("输入实例名格式错误！添加失败");
+      }else{
+
       let url = 'rest-ful/v3.0/client/agent/instance/' + this.sqlserver.id
       let message = {}
       message.server = this.sqlserver.server
@@ -219,9 +241,12 @@ export default {
             }
           })
         }
-      })
+      })}
     },
     newSqlserver: function() {
+      if(!/^[a-zA-Z0-9_]{1,84}$/.test(this.sqlserver.server)){
+        this.$Message.error("输入实例名格式错误！添加失败");
+      }else{
       let message = {}
       message.server = this.sqlserver.server
       message.user = this.sqlserver.user
@@ -253,6 +278,7 @@ export default {
         }
       )
       console.log(postData)
+      }
     },
     test: function() {
       let message = {}
