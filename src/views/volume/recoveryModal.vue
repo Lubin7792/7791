@@ -21,16 +21,14 @@ export default {
     // 点击确认按钮调用回收介质接口
     ok() {
       util.restfullCall('/rest-ful/v3.0/volume/recycle/'+this.rowData.id,null,'get',this. callback);
-      this.modal = false
     },
     // 回收介质回调
     callback: function (obj) {
-      console.log(obj,"obj")
       this.$emit('recoveryData', obj)
     },
     // 取消按钮
     cancel() {
-      this.modal =false
+      // this.modal =false
     }
   }
 }

@@ -288,7 +288,6 @@ export default {
     newPolicy
   },
   created() {
-    console.log("创建")
     this.$store.dispatch("getPrivilege",this.$store.state.power.module.policy);
     util.restfullCall("/rest-ful/v3.0/clients", null, "get", this.clientsData);
     util.restfullCall("/rest-ful/v3.0/devices", null, "get", this.devicesData);

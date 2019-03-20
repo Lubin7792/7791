@@ -76,8 +76,6 @@ export default {
     watch: {
       id: {
         handler(newVal, oldVal) {
-          console.log('newVal', newVal)
-          console.log('oldVal', oldVal)
           // 查询基本信息
           util.restfullCall('/rest-ful/v3.0/report/history/' + newVal + '/base', null, 'get', this.callbackBase)
           // 查询历史日志
@@ -88,7 +86,6 @@ export default {
     methods: {
       reportDetail:function(id) {
         this.id = id
-        // console.log("id",this.id)
         this.modal1 = true
       },
       callbackLog: function(logObj) {
@@ -108,7 +105,6 @@ export default {
       },
       callbackBase: function (baseObj) {
         this.baseData = baseObj.data.data
-        console.log("baseObj",baseObj.data.data)
       },
       rowDesc(row) {
         if(row.desc === '警告'){

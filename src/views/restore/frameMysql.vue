@@ -95,7 +95,6 @@
       },
       // 实例下拉框回调
       exampleData: function(obj) {
-        console.log(obj)
         let data = []
         for(let i = 0;i < obj.data.length;i++ ){
           let object = JSON.parse(obj.data[i].conf)

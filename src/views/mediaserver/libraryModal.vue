@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       ruleLibrary:{
-        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线的名称', pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/, trigger: 'blur'}]
+        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线、点的名称', pattern: /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/, trigger: 'blur'}]
       },
       cityList:[],
       selList:[],
@@ -68,9 +68,9 @@ export default {
       single: false
     }
   },
-  created() {
-    // util.restfullCall('/rest-ful/v3.0/mediumchanges?server='+16, null, 'get', this.senddata)
-  },
+  // created() {
+  //   util.restfullCall('/rest-ful/v3.0/mediumchanges?server='+16, null, 'get', this.senddata)
+  // },
   methods: {
     // 点击下拉框获取介质服务器信息
     serverDisk:function(openServer) {
@@ -121,7 +121,7 @@ export default {
     },
     // 点击确认按钮，把信息传给后台
     ok() {
-      var libraryName = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
+      var libraryName = /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/
       if(libraryName.test(this.libraryItem.name)){
         util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', null)
         this.$emit('libraryReturn',this.libraryItem)
@@ -133,7 +133,7 @@ export default {
       }
     },
     cancel() {
-      this.$Message.warning("操作已取消")
+      // this.$Message.warning("操作已取消")
     }
   }
 }

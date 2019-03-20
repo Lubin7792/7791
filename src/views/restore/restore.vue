@@ -189,13 +189,12 @@
         let data1 = [];
         data1 = this.device;
         return data1;
-        // console.log("data1",data1)
       }
     },
     watch: {
       data3: {
         handler(newVal, oldVal) {
-          console.log('newVal', newVal)
+          // console.log('newVal', newVal)
           $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
         },
       }
@@ -283,6 +282,7 @@
       },
       // 单击行数据发送请求展示树形数据
       listClick:function(row) {
+        this.pathConten = [];
         this.query.RestoreTime = row.endtime
         util.restfullCall('/rest-ful/v3.0/restore/resource/query?client='+this.query.client+'&type='+this.query.policytype+'&startime='+this.query.starttime+'&endtime='+row.endtime, null, 'get', this.callbackTree)
       },
@@ -301,17 +301,113 @@
             objj = obj.data.data;
             let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
             ztreeobj.addNodes(treeNode, objj);
-        console.log(str)
           });
         }
       },
+
+      ComparePath(element) {
+
+      },
+
+      AppendPathIntoConten(path) {
+       
+      },
+
+      DeletePathFromConten(path) {
+      
+      },
+
+      
+      DeleteItemFromArray(path, start) {
+           for (var index = 0; index < this.pathConten.length; ) {
+          if (this.pathConten[index].name.substring(start, path.length + 2) == (path + "/")) {
+              this.pathConten.splice(index, 1)                
+          }
+          else if (this.pathConten[index].name.substring(start) == path) {
+              this.pathConten.splice(index, 1)   
+          } else {
+            ++index
+          }
+        }
+      },
+
+      // 节点取消选中中状态下父节点操作
+      DisSelectNode:function(treeNode) {
+        let parent = null;
+        do {
+          parent = treeNode.getParentNode()
+          if ((parent == null) || (parent.checked)) {
+            break;
+          }else {
+            treeNode = parent;
+          }
+        }while(true);
+        
+        this.DeleteItemFromArray(treeNode.path, 1)
+
+        if ((parent != null) && (parent.checked)) {
+           this.pathConten.unshift({ name : "-" + treeNode.path })
+        }
+      },
+
+
+       // 节点全选中选中状态下父节点操作
+      SelectNode:function(treeNode) {
+        let parent = null;
+        do {
+          parent = treeNode.getParentNode()
+          if (parent) {
+            console.log("parent = " + parent.path)
+              this.DeleteItemFromArray("-" + parent.path, 0);
+          }
+
+          if ((parent == null) || (parent.checked && parent.check_Child_State != 2)) {
+            break;
+          }  else {
+            treeNode = parent;
+          }
+        }while(true);
+        console.log("current node = " + treeNode.path)
+        this.DeleteItemFromArray(treeNode.path, 1);
+      
+        let bNeedInsert = true;
+        let tempNode = treeNode;
+
+        if (parent) {
+          do  {
+            console.log("-------------------------------------------------");
+              for (var index = 0; index < this.pathConten.length; index++) {
+                  console.log("************" + this.pathConten[index].name.substring(1))
+                  console.log("************" + tempNode.path)
+                if (this.pathConten[index].name.substring(1) == tempNode.path) {
+                    console.log("Parent equal " + this.pathConten[index].name)
+                    bNeedInsert = false;
+                    break
+                }
+              }
+
+              console.log("-------------------------------------------------");
+
+              tempNode = tempNode.getParentNode();
+          }while(tempNode)
+        }
+
+        console.log("bNeedInster  = " + bNeedInsert)
+        if (bNeedInsert == true) {
+            console.log("insert item......")
+            this.pathConten.unshift({ name : "+" + treeNode.path })
+        }
+      },
+
       // 选中节点
       zTreeOnCheck: function(event, treeId, treeNode) {
-        console.log(treeNode)
-        if(treeNode.checked) {
-          this.pathConten.unshift({ name : "+" + treeNode.path })
-        }else if(!treeNode.checked) {
-          this.pathConten.unshift({ name : "-" + treeNode.path })
+        // console.log(treeNode)
+        if (!treeNode.checked) {
+          this.DisSelectNode(treeNode)
+          // this.pathConten.unshift({ name : "+" + treeNode.path })
+        } else {
+          this.SelectNode(treeNode)
+          //this.pathConten.unshift({ name : "-" + treeNode.path })
         }
         var hash = {};
         this.temporary = this.pathConten.reduce(function(item, next) {
@@ -322,10 +418,10 @@
         this.pathConten = this.temporary
         this.temporary = []
 
-        if(treeNode.checked) {
-          this.treeNodeTemp.unshift({Type:treeNode.type,path:treeNode.path,Exclude:treeNode.Exclude= 0 })
-        }else if(!treeNode.checked)
-        this.treeNodeTemp.unshift({Type:treeNode.type,path:treeNode.path,Exclude:treeNode.Exclude= 1})
+        // if(treeNode.checked) {
+        //   this.treeNodeTemp.unshift({Type:treeNode.type,path:treeNode.path,Exclude:treeNode.Exclude= 0 })
+        // }else if(!treeNode.checked)
+        // this.treeNodeTemp.unshift({Type:treeNode.type,path:treeNode.path,Exclude:treeNode.Exclude= 1})
       },
       // 恢复弹框判定
       onRecovery: function() {

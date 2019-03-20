@@ -49,7 +49,6 @@ export default {
   watch: {
     level: {
       handler(newVal, oldVal) {
-        // console.log(newVal !== '')
         if(newVal !== '') {
         util.restfullCall('/rest-ful/v3.0/sysevents?level='+this.level+'&starttime='+this.pastTimes+'&endtime='+this.nowTime, null, 'get', this.wrningData)
         }
@@ -78,7 +77,6 @@ export default {
   methods: {
     // 级别下拉框回调数据
     levelData:function(obj) {
-      console.log(obj)
       var array = new Array
       for(let i = 0;i < obj.data.length;i++ ){
         if(obj.data[i].name == "警告"){
@@ -88,7 +86,6 @@ export default {
     },
     // 警告表格数据回调
     wrningData:function(obj) {
-      console.log(obj)
       var array = new Array()
       for (let i = 0; i < obj.data.length; i++) {
         array.push({

@@ -90,7 +90,7 @@ export default {
     },
     // 接收父组件
     queryEvent:function(obj) {
-      console.log("e",obj)
+      // console.log("e",obj)
       this.tableData1 = obj
       this.number = obj.length
       this.pageData = this.tableData1.slice(0,this.pageSize)

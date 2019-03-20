@@ -26,7 +26,6 @@ export default {
     // 接收父组件
     rename: function(row) {
       this.rowData = row
-      console.log(this.rowData)
       this.modal = true
     },
     // 点击确定把添加的名字传给服务器
@@ -43,7 +42,7 @@ export default {
         if(callback.data.code === 0) this.$emit('toogleRename', this.rowData)
     },
     cancel() {
-      this.$Message.warning("操作已取消")
+      // this.$Message.warning("操作已取消")
     }
   }
 }

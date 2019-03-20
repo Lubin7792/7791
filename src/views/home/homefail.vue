@@ -16,8 +16,8 @@
       <div class="home-setup">
         <Button type="primary" @click="allocation=true">配置设备&nbsp;&nbsp;&nbsp;<Icon type="aperture" /></Button>
         <Modal v-model="allocation" title="配置设备" @on-ok="ok" @on-cancel="cancel">
-          <Form :label-width="150">
-            <FormItem label="选择介质服务器:">
+          <Form :label-width="100">
+            <FormItem label="选择类型:">
               <Select @on-change="onServer" v-model="type" @on-open-change="openServer"> 
                 <Option v-for="item in selectData" :value="item.type" :key="item.type">{{ item.name }}</Option>
               </Select>
@@ -89,7 +89,7 @@ import libraryModal from '../mediaserver/libraryModal.vue'
         }
       },
       cancel () {
-        this.$Message.warning("操作已取消")
+        // this.$Message.warning("操作已取消")
       }
     }
   }

@@ -6,10 +6,14 @@
   <div class="layout">
     <Layout>
       <Header class="navigation-header" style="height:50px; background:none;">
-        <Menu mode="horizontal" active-name="1" class="header" stylt="height:50px !important">
+        <Menu mode="horizontal" active-name="1" class="header" stylt="height:50px !important" @on-select="onMenu">
           <div class="layout-logo"></div>
           <span class="title">THE VRTS备份软件</span>
           <div class="layout-nav">
+            <MenuItem name="3">
+              <Icon type="ios-download-outline"></Icon>
+              下载客户端
+            </MenuItem>
             <MenuItem name="1">
               <Icon type="help-circled"></Icon>帮助
             </MenuItem>
@@ -132,12 +136,18 @@
         </Content>
       </Layout>
     </Layout>
+    <downloud ref="downloud"></downloud>
   </div>
 </template>
 <script>
 import util from "../../libs/util.js";
 import icon from "./iconfont.js";
+// 下载客户端弹框
+import downloud from "./downloud.vue";
 export default {
+  components:{
+    downloud
+  },
   data(){
     return {
       nowLists:[]
@@ -156,7 +166,6 @@ export default {
   },
   methods: {
     numNowBack(data){
-      console.log(data.data)
     },
     nowShow(num){
       if(this.nowLists.indexOf(num)!=-1){
@@ -217,7 +226,14 @@ export default {
             list.push(item.module)
         })
         this.nowLists=list;
-    }
+    },
+    // 点击头部导航menu导航栏
+    onMenu:function(data){
+      // 点击下载客户端弹框
+      if(data == 3){
+        this.$refs.downloud.downModel();
+      }
+    },
   },
   created() {
     let uId=JSON.parse(localStorage.userInfo).uid;

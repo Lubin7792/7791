@@ -284,7 +284,6 @@ export default {
     },
     // 刷新数据之后的回调传递给子组件表格
     callbackEvent: function(obj) {
-      console.log("事件",obj)
       var array = new Array()
       for (let i = 0; i < obj.data.length; i++) {
         array.push({

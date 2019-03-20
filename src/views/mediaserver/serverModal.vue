@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       ruleServer: {
-        name:[{required: true, message: '请输英文的介质服务器名称', pattern: /^[a-zA-Z]+$/, trigger: 'blur'}]        
+        name:[{required: true, message: '介质服务器名称只能是汉子字母数字下划线(_)点(.)', pattern: /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/, trigger: 'blur'}]        
       },
       serverItem: {
         name: '',
@@ -49,7 +49,7 @@ export default {
     },
     // 点击确定把添加的名字传给服务器
     ok() {
-      var severName = /^[a-zA-Z]+$/;
+      var severName = /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/;
       if(severName.test(this.serverItem.name)){
       util.restfullCall('/rest-ful/v3.0/mediaserver',this.serverItem,'post',this.upload)
       // this.modal = false
@@ -94,7 +94,7 @@ export default {
       return str;
     },
     cancel() {
-      this.$Message.warning("操作已取消")
+      // this.$Message.warning("操作已取消")
     }
   }
 }

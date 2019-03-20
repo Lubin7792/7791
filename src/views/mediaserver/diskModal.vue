@@ -5,51 +5,51 @@
   <div>
     <Modal title="添加磁盘设备" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" cancel-text="取消" width="540" :mask-closable="false">
 		  <Form :model="diskItem" :label-width="120" ref="diskItem" :rules="ruleDiskData" >
-			<FormItem label="设备名称" prop="name">
-				<Input v-model="diskItem.name" placeholder="请输入设备名称"></Input>
-			</FormItem>
-      <FormItem label="设备类型">
-        <Select @on-change="dislChanges" v-model="diskItem.type" disabled> 
-          <Option v-for="item in selectType" :value="item.type" :key="item.type">{{ item.name }}</Option>
-				</Select>
-      </FormItem>
-			<FormItem label="介质服务器">
-					<Select v-model="diskItem.server" @on-change="changes" @on-open-change="serverDisk" :label-in-value="true">
-            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
-					</Select>
-			</FormItem>
-			<FormItem label="设备路径">
-				<Row>
-					<Col span="19">
-            <Input type="text" v-model="diskItem.path" disabled></Input>
+        <FormItem label="设备名称" prop="name">
+          <Input v-model="diskItem.name" placeholder="请输入设备名称"></Input>
+        </FormItem>
+        <FormItem label="设备类型">
+          <Select @on-change="dislChanges" v-model="diskItem.type" disabled> 
+            <Option v-for="item in selectType" :value="item.type" :key="item.type">{{ item.name }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="介质服务器">
+            <Select v-model="diskItem.server" @on-change="changes" @on-open-change="serverDisk" :label-in-value="true">
+              <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.machine }}</Option>
+            </Select>
+        </FormItem>
+        <FormItem label="设备路径">
+          <Row>
+            <Col span="19">
+              <Input type="text" v-model="diskItem.path" disabled></Input>
+            </Col>
+            <Col span="4" offset="1">
+              <Button type="primary" @click="browse">浏览</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <Row type="flex" justify="space-around">
+          <Col span="12">
+            <FormItem label="最大并发数">
+              <InputNumber :max="10" :min="5" v-model="diskItem.maxtasks"></InputNumber>
+            </FormItem>
           </Col>
-          <Col span="4" offset="1">
-            <Button type="primary" @click="browse">浏览</Button>
+          <Col span="12">
+            <FormItem label="容量告警下限">
+              <InputNumber :max="60" :min="5" v-model="diskItem.lowlimit"></InputNumber>
+            </FormItem>
           </Col>
-				</Row>
-			</FormItem>
-			<Row type="flex" justify="space-around">
-				<Col span="12">
-					<FormItem label="最大并发数">
-            <InputNumber :max="10" :min="5" v-model="diskItem.maxtasks"></InputNumber>
-					</FormItem>
-				</Col>
-				<Col span="12">
-					<FormItem label="容量告警下限">
-            <InputNumber :max="60" :min="5" v-model="diskItem.lowlimit"></InputNumber>
-					</FormItem>
-				</Col>
-			</Row>
-			<Row type="flex" justify="space-around">
-				<Col span="6">
-					<Checkbox v-model="single">定制介质文件</Checkbox>
-				</Col>
-				<Col span="12">
-					<FormItem label="介质文件容量" >
-            <InputNumber :max="100" :min="1" v-model="diskItem.filesize" :disabled="!single"></InputNumber> (M)
-					</FormItem>
-				</Col>
-			</Row>	
+        </Row>
+        <Row type="flex" justify="space-around">
+          <Col span="6">
+            <Checkbox v-model="single">定制介质文件</Checkbox>
+          </Col>
+          <Col span="12">
+            <FormItem label="介质文件容量" >
+              <InputNumber :max="100" :min="1" v-model="diskItem.filesize" :disabled="!single"></InputNumber> (M)
+            </FormItem>
+          </Col>
+        </Row>	
 		  </Form>
 	  </Modal>
     <!-- glance浏览目录弹框 -->
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       ruleDiskData:{
-        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线的名称', pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/, trigger: 'blur'}]
+        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线、点的名称', pattern: /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/, trigger: 'blur'}]
         // name:[{required: true, message: '介质服务器名称不能为空', trigger: 'blur'},{min:1}]
       },
       modal: false,
@@ -140,7 +140,7 @@ export default {
     },
     // 点击确认按钮，把信息传给后台
     ok() {
-      var diskName = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/
+      var diskName = /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/
       if(diskName.test(this.diskItem.name)){
         util.restfullCall('/rest-ful/v3.0/device',JSON.stringify(this.diskItem), 'post', this.add)
       }else{
@@ -185,7 +185,7 @@ export default {
       this.diskItem.path = pathReturn
     },
     cancel() {
-      this.$Message.warning("操作已取消")
+      // this.$Message.warning("操作已取消")
     },
     glance: function() {
       this.modal = false

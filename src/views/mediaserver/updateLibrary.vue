@@ -92,7 +92,6 @@ export default {
   methods: {
     // 接收父组件的传值
     livrayModify:function(row){
-      console.log(row)
       this.libraryList = row
       // 获取磁盘详情列表数据
       util.restfullCall('/rest-ful/v3.0/mediumchanger/' + row.changer, null, 'get', this.address)
@@ -108,7 +107,6 @@ export default {
     },
     // 槽位信息选择驱动器回调
     slotCallback:function(obj) {
-      console.log(obj)
       if(obj.data.code == 0) {
         this.$Message.success("磁带加载成功")
       }else{
@@ -117,7 +115,6 @@ export default {
     },
     // 磁带移出驱动器回调
     delCallback:function(obj) {
-      console.log(obj)
       if(obj.data.code == 0) {
         this.$Message.success("磁带移出驱动器成功")
       }else{

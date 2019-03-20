@@ -49,17 +49,19 @@ export default {
     },
     // 接收父组件
     newbind: function(obj) {
-      console.log(obj)
       this.volumeData = obj
       this.modal = true
     },
     // 点击确认绑定介质池和介质id
     ok() {
       util.restfullCall('/rest-ful/v3.0/volume/bind/'+this.volumeData.id +'?pool='+this.volumeId, null, 'get', this.bindData)
-      this.modal = false
     },
     bindData: function(goBack) {
-      if(goBack.data.code === 0) util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.againMedium)
+      if(goBack.data.code === 0) {
+        util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.againMedium)
+      }else{
+        this.$Message.error(goBack.data.Message);
+      }
     },
     againMedium: function(againObj) {
       var array = new Array()
@@ -81,8 +83,8 @@ export default {
       this.storage = null
     },
     cancel() {   
-      console.log("下拉框选中数据",this.volumeId,"选中数据id",this.volumeData.id)
-      this.modal = false
+      // console.log("下拉框选中数据",this.volumeId,"选中数据id",this.volumeData.id)
+      // this.$Message.warning('操作已取消');
     }
   }
 }

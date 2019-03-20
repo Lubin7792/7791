@@ -1,5 +1,5 @@
 <template>
-  <Collapse v-model="model" accordion @on-change="col1">
+  <Collapse v-model="model" @on-change="col1">
     <!-- 系统安全设置 -->
     <Panel name="1">
       <!-- 标题栏 -->
@@ -46,7 +46,7 @@
         </Form>
         <Form :label-width="550">
           <FormItem>
-            <Button style="margin-right: 8px">重 置</Button>
+            <Button style="margin-right: 8px" @click="Reset">重 置</Button>
             <Button type="primary" @click="confirm">确认修改</Button>
           </FormItem>
         </Form>
@@ -381,6 +381,12 @@ export default {
         this.$Message.error("输入密码格式错误！修改失败");
       }
     },
+    // 重置密码按钮重置表单
+    Reset:function() {
+      this.formItem.old = "";
+      this.formItem.password = "";
+      this.formItem.rpassword = "";
+    },
     // 设置密码确认修改回调
     passwordData: function(obj) {
       if (obj.data.code == 0) {
@@ -452,7 +458,7 @@ export default {
     // 添加Email到表格
     addEmail: function() {
       var pathEma = /^[0-9A-Za-z][\.-_0-9A-Za-z]*@[0-9A-Za-z]+(?:\.[0-9A-Za-z]+)+$/;
-      console.log(pathEma.test(this.Emailpath.mailPath));
+      // console.log(pathEma.test(this.Emailpath.mailPath));
       if (pathEma.test(this.Emailpath.mailPath)) {
         util.restfullCall(
           "/rest-ful/v3.0/system/email",
@@ -485,7 +491,7 @@ export default {
     // 点击保存按钮保存修改后的数据
     preservation: function() {
       var pathEma = /^[0-9A-Za-z][\.-_0-9A-Za-z]*@[0-9A-Za-z]+(?:\.[0-9A-Za-z]+)+$/;
-      console.log(pathEma.test(this.Emailpath.mailPath));
+      // console.log(pathEma.test(this.Emailpath.mailPath));
       if (pathEma.test(this.Emailpath.mailPath)) {
         util.restfullCall(
           "/rest-ful/v3.0/system/email",

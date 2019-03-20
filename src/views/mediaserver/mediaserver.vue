@@ -295,7 +295,6 @@ export default {
       }
       if ((this.numNowList.indexOf(this.getPower.seeMediaServer) != -1)&&(this.getPrivilegeTow.indexOf(this.getPower.seeDiskDevice) != -1)) {
           this.tabsData="介质服务器"
-          console.log("1111")
       }
     },
       getPrivilegeTow(data){
@@ -305,7 +304,6 @@ export default {
       }
        if ((this.numNowList.indexOf(this.getPower.seeMediaServer) != -1)&&(this.getPrivilegeTow.indexOf(this.getPower.seeDiskDevice) != -1)) {
           this.tabsData="介质服务器"
-          console.log("2222")
 
       }
     }

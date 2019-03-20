@@ -48,7 +48,6 @@ export default {
   },
   watch: {
     left:function(data) {
-      // console.log("data",data)
       this.drawLine(data);
     }
   },
@@ -64,9 +63,6 @@ export default {
       // datalist = array;
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById("myChart1"));
-      // console.log('this.left', JSON.stringify(this.left))
-      // console.log('this.left', this.left,typeof this.left.classsum)
-      // console.log('this.left', this.left,this.left.classsum[0].percent)
       // 绘制图表
       myChart.setOption({
         legend: {

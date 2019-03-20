@@ -78,7 +78,7 @@
           </div>
         </div>
         <div class="tree-conten">
-          <Table border ref="selection" :columns="columns4" :data="pathConten"></Table>
+          <Table border ref="selection" :columns="columns4" :data="resources.pathConten"></Table>
         </div>
       </div>
     </div>
@@ -277,6 +277,7 @@ export default {
           : new Date().getSeconds();
 
     return {
+      ztreeArray:[],
       ruleMode: {
         name: [
           {
@@ -301,8 +302,6 @@ export default {
       policyTypekey: "65536",
       ztreeTyep: "",
       ztreeObj: {},
-      pathConten: [],
-      pathContens: [],
       checkType: false,
       columns4: [
         {
@@ -500,7 +499,9 @@ export default {
       resources: {
         equipment: "",
         clientId: "",
-        pathValue: ""
+        pathValue: "",
+        pathConten: [],
+     pathContens: [],
       },
       columns12: [
         {
@@ -533,22 +534,23 @@ export default {
       return this.$store.state.index.devicesList;
     },
     lconten() {
-      let data1 = [];
-      data1 = this.$store.state.index.policyData;
-      const array = [];
-      for (let i = 0; i < data1.length; i++) {
-        let item = data1[i];
-        array.push(
-          (item = {
-            id: item.id,
-            iconSkin: "client",
-            name: item.machine,
-            nocheck: true,
-            nodetype: 0
-          })
-        );
-      }
-      $.fn.zTree.init($("#treeDemoA"), this.setting, array);
+      // let data1 = [];
+      // data1 = this.$store.state.index.policyData;
+      // const array = [];
+      // for (let i = 0; i < data1.length; i++) {
+      //   let item = data1[i];
+      //   array.push(
+      //     (item = {
+      //       id: item.id,
+      //       iconSkin: "client",
+      //       name: item.machine,
+      //       nocheck: true,
+      //       nodetype: 0
+      //     })
+      //   );
+      // }
+      // this.ztreeArray=array
+      // $.fn.zTree.init($("#treeDemoA"), this.setting, array);
     }
   },
   created() {
@@ -560,7 +562,7 @@ export default {
       // this.basic.type = data[0].key;
     },
     devicesList: function(data) {
-      this.basic.deviceval = data[0].id;
+      // this.basic.deviceval = data[0].id;
     },
     hackOne: function(type) {
       if (type == 131072) {
@@ -676,7 +678,7 @@ export default {
           savedays: parseInt(this.basic.savedays ? this.basic.savedays : 0),
           maxtasks: parseInt(this.basic.maxtasks ? this.basic.maxtasks : 0)
         },
-        resource: this.pathContens,
+        resource: this.resources.pathContens,
         option: this.$refs.backupOption.showOption(),
         schedule: this.schedule.planList
       };
@@ -694,11 +696,25 @@ export default {
       }
     },
     alick: function(value) {
-
-      if(value!=undefined){
-          this.basic.type = value.value;
+      this.basic.type = value.value;
       this.policyTypekey = String(value.value);
+ let data1 = [];
+      data1 = this.$store.state.index.policyData;
+      const array = [];
+      for (let i = 0; i < data1.length; i++) {
+        let item = data1[i];
+        array.push(
+          (item = {
+            id: item.id,
+            iconSkin: "client",
+            name: item.machine,
+            nocheck: true,
+            nodetype: 0
+          })
+        );
       }
+      this.ztreeArray=array
+      $.fn.zTree.init($("#treeDemoA"), this.setting, array);
     },
     timeFormate: function() {
        let week =new Date().getDay();
@@ -734,9 +750,6 @@ export default {
          this.schedule.startday =  "'"+date +"'" ;
          this.schedule.endday =  "'"+date +"'" ;
       }
-
-
-      console.log(week,date)
     },
     onplantype: function(value) {
       this.show3 = value;
@@ -840,31 +853,94 @@ export default {
       let path = this.build_path_by_tree_node(treeNode);
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
-        this.pathConten.push({ path: pathList });
-        this.pathContens.push({
+        this.SelectNode(treeNode)
+        this.resources.pathConten.push({ path: pathList });
+        this.resources.pathContens.push({
           path: path.path,
           client: parseInt(path.client),
           type: treeNode.ResType,
           exclude: 0
         });
       } else {
+        this.DisSelectNode(treeNode)
         function pathFilter(element) {
           return element.path !== pathList;
         }
         function pathFilters(element) {
           return element.path !== path.path;
         }
-        this.pathConten = this.pathConten.filter(pathFilter);
-        this.pathContens = this.pathContens.filter(pathFilters);
+        this.resources.pathConten = this.resources.pathConten.filter(pathFilter);
+        this.resources.pathContens = this.resources.pathContens.filter(pathFilters);
       }
       this.resources.clientId = path.client;
       this.ztreeTyep = treeNode.ResType;
       this.resources.pathValue = path.path;
     },
+          // 取消选中状态下
+      DisSelectNode:function(treeNode) {
+
+        let parent = null;
+        do {
+          parent = treeNode.getParentNode()
+          if ((parent == null) || (parent.checked)) {
+            break;
+          }  else {
+            treeNode = parent;
+        // console.log(" Dis need delete path:" + treeNode.path);
+          }
+        }while(true);
+        
+      },
+
+       // 选中状态下
+      SelectNode:function(treeNode) {
+        let parent = null;
+        do {
+          parent = treeNode.getParentNode()
+          // 没有父节点或者 父节点选中并且不是全选
+          if ((parent == null) || (parent.checked && parent.check_Child_State != 2)) {
+            console.log("Select path:" + treeNode.name,"paretNme:"+parent);
+            
+            break;
+
+          }  else {
+            console.log("Select need delete path:" + treeNode.name);
+            treeNode = parent;
+          }
+        }while(true);
+
+      },
+
     //重置数据
         callBackFun() {
           // this.basic.type=65536;
-      Object.assign(this.$data, this.$options.data())
+      this.hackReset = false;
+      Object.assign(this.$data.basic, this.$options.data().basic)
+      Object.assign(this.$data.schedule, this.$options.data().schedule)
+      Object.assign(this.$data.resources, this.$options.data().resources)
+
+      // console.log(this.$options.data().basic)
+     this.$nextTick(()=>{
+      this.basic.deviceval = this.devicesList[0].id;
+        this.hackReset = true;
+       let data1 = [];
+      data1 = this.$store.state.index.policyData;
+      const array = [];
+      for (let i = 0; i < data1.length; i++) {
+        let item = data1[i];
+        array.push(
+          (item = {
+            id: item.id,
+            iconSkin: "client",
+            name: item.machine,
+            nocheck: true,
+            nodetype: 0
+          })
+        );
+      }
+      this.ztreeArray=array
+      $.fn.zTree.init($("#treeDemoA"), this.setting, array);
+     })
     }
   }
 };

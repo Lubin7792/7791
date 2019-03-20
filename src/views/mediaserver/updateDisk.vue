@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       ruleDisk:{
-        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线的名称', pattern: /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/, trigger: 'blur'}]
+        name:[{required: true, message: '请输入只含有汉字、数字、字母、下划线、点的名称', pattern: /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/, trigger: 'blur'}]
       },
       // diskItem: {
       //   name: '',
@@ -87,7 +87,6 @@ export default {
   methods: {
     // 接收行数据
     showModify:function(row) {
-      console.log("磁盘行数据",row)
       this.modalDisk.id = row.id
       this.modalDisk.name = row.name
       this.modalDisk.type = row.type
@@ -103,7 +102,7 @@ export default {
     },
     // 点击保存时把修改的数据传给后台
     ok() {
-      var diskName = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/;
+      var diskName = /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/;
       if(diskName.test(this.modalDisk.name)){
         util.restfullCall('/rest-ful/v3.0/device/'+this.modalDisk.id,
         {name:this.modalDisk.name, enable:this.modalDisk.enable, type:this.modalDisk.type, maxtasks:this.modalDisk.maxtasks, lowlimit:this.modalDisk.lowlimit, filesize:this.modalDisk.filesize},
@@ -138,7 +137,7 @@ export default {
       this.$emit('listModify', array)
     },
     cancel() {
-      this.$Message.warning("操作已取消")      
+      // this.$Message.warning("操作已取消")
     },
   }
 }

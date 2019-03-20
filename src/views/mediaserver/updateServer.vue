@@ -27,7 +27,7 @@ export default {
   data () {
     return {
       rulePut:{
-        name:[{required: true, message: '请输英文的介质服务器名称', pattern: /^[a-zA-Z]+$/, trigger: 'blur'}]        
+        name:[{required: true, message: '介质服务器名称只能是汉子字母数字下划线(_)点(.)', pattern: /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/, trigger: 'blur'}]        
       },
       modal1: false,
       putDatas: {
@@ -58,7 +58,7 @@ export default {
     },
     // 点击保存修改数据
     ok () {
-      var severName = /^[a-zA-Z]+$/;
+      var severName = /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/;
       if(severName.test(this.putDatas.name)){
         util.restfullCall('/rest-ful/v3.0/mediaserver/'+this.putDatas.id,{name:this.putDatas.name},'PUT',this.upload);
       }else{
@@ -70,7 +70,7 @@ export default {
       if(callback.data.code === 0) this.$emit('toogleMedium', this.putDatas)
     },
     cancel () {
-      this.$Message.warning("操作已取消")      
+      // this.$Message.warning("操作已取消")
     }
   }
 }

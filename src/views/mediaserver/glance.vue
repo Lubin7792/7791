@@ -66,7 +66,7 @@ export default {
   watch: {
     data3: {
       handler(newVal, oldVal) {
-        console.log('newVal', newVal)
+        // console.log('newVal', newVal)
         $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
       },
     }
@@ -101,10 +101,8 @@ export default {
     },
      //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
-      console.log("treeNode1",treeNode)
       if (!treeNode.hasOwnProperty("children")) {
         let path = this.build_path_by_tree_node(treeNode);
-      console.log("treeNode2",treeNode)
         let str =
           "/rest-ful/v3.0/devicepath?server=" +  path.client + "&path=" + path.path;
         util.restfullCall(str, null, "get", function(obj) {
@@ -137,7 +135,7 @@ export default {
     },
     cancel() {
       // this.$store.commit('getModalGlance', false)
-      this.$Message.warning("操作已取消")
+      // this.$Message.warning("操作已取消")
     }
   }
 }

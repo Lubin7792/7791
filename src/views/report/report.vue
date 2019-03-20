@@ -179,7 +179,6 @@ export default {
                   },
                   on: {
                       click: () => {
-                        // console.log("222",params)
                         this.$refs.updataReport.reportDetail(params.row.id,)
                       }
                   }
@@ -499,7 +498,6 @@ export default {
     },
     // 设备类型下拉框回调
     deviceData:function (obj) {
-      // console.log("obj",obj)
       var array = new Array
       for(let i = 0;i < obj.data.length;i++ ){
         array.push({
