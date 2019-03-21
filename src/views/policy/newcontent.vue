@@ -591,8 +591,8 @@ export default {
       this.schedule.freqtypelevel = value.freqtype;
       this.schedule.intervalTime = value.freqval;
       this.$nextTick(() => {
-        this.schedule.startday = value.startday.toString();
-        this.schedule.endday = value.endday.toString();
+        this.schedule.startday = value.startday;
+        this.schedule.endday = value.endday;
       });
       this.schedule.starttime = value.starttime;
       this.schedule.endtime = value.endtime;
@@ -738,15 +738,15 @@ export default {
       this.schedule.starttime = hh + ":" + mm + ":" + ss;
       this.schedule.endtime = hh + ":" + mm + ":" + ss;
       week==0?week=7:week=week
-      if(this.show3==0){
+      if(this.show3=="0"){
          this.schedule.startday =  date ;
          this.schedule.endday =  date ;
       }
-       if(this.show3==1){
+       if(this.show3=="1"){
          this.schedule.startday =  week ;
          this.schedule.endday =  week ;
       }
-       if(this.show3==2){
+       if(this.show3=="2"){
          this.schedule.startday =  "'"+date +"'" ;
          this.schedule.endday =  "'"+date +"'" ;
       }
@@ -853,7 +853,7 @@ export default {
       let path = this.build_path_by_tree_node(treeNode);
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
-        this.SelectNode(treeNode)
+        // this.SelectNode(treeNode)
         this.resources.pathConten.push({ path: pathList });
         this.resources.pathContens.push({
           path: path.path,
@@ -862,7 +862,7 @@ export default {
           exclude: 0
         });
       } else {
-        this.DisSelectNode(treeNode)
+        // this.DisSelectNode(treeNode)
         function pathFilter(element) {
           return element.path !== pathList;
         }
@@ -899,6 +899,7 @@ export default {
           parent = treeNode.getParentNode()
           // 没有父节点或者 父节点选中并且不是全选
           if ((parent == null) || (parent.checked && parent.check_Child_State != 2)) {
+            // 添加当前路径
             console.log("Select path:" + treeNode.name,"paretNme:"+parent);
             
             break;
@@ -914,6 +915,7 @@ export default {
     //重置数据
         callBackFun() {
           // this.basic.type=65536;
+       this.show3="0";
       this.hackReset = false;
       Object.assign(this.$data.basic, this.$options.data().basic)
       Object.assign(this.$data.schedule, this.$options.data().schedule)

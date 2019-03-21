@@ -933,6 +933,7 @@ export default {
           path: path.path,
           client: parseInt(path.client),
           type: treeNode.ResType,
+          
           exclude: 1
         });
       } else {

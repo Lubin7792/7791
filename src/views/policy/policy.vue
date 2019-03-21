@@ -394,7 +394,9 @@ export default {
       this.$store.commit("saveDevicesData", devicesList);
     },
     enableCall(obj) {
-      alert(obj.data.message);
+      if(obj.data.code==0){
+        console.log(obj.data.message);
+      }
     },
     close: function(modal) {
       this.modal = modal;
@@ -421,7 +423,12 @@ this.$refs.newPolicyData.$refs.newConten.callBackFun() ;
           "/rest-ful/v3.0/policy/enable/" + params.row.id + "?method=enable",
           null,
           "get",
-          this.enableCall
+        obj=>{
+          if(obj.data.code!=0){
+        this.policiesData[params.index].enable = 0;
+
+      }
+        }
         );
       } else {
         this.policiesData[params.index].enable = 0;
@@ -429,7 +436,11 @@ this.$refs.newPolicyData.$refs.newConten.callBackFun() ;
           "/rest-ful/v3.0/policy/enable/" + params.row.id + "?method=disable",
           null,
           "get",
-          this.enableCall
+          obj=>{
+          if(obj.data.code!=0){
+        this.policiesData[params.index].enable = 1;
+      }
+        }
         );
       }
     },
