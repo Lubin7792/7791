@@ -1,10 +1,22 @@
+<style>
+  .home-setup .ivu-btn-primary{
+    background: #ed7149;
+    border-color: #ed7149;
+  }
+</style>
+
 <template>
   <div class="home-right">
-    <div class="home-title">
-      <p > </p>
-      <i>备份失败任务量</i>
-      <em>{{this.right.failedtasks}}</em>    
+    <div class="task">
+      <div class="home-fail">
+        <div class="home-title">
+          <p > </p>
+          <i>备份失败任务量</i>
+          <em>{{this.right.failedtasks}}</em>    
+        </div>
+      </div>
     </div>
+    
     <div class="home-content">
       <p class="home-con-tit">设备统计</p>
       <div class="home-state">
@@ -14,7 +26,7 @@
       </div>
       <!-- 配置设备触发 -->
       <div class="home-setup">
-        <Button type="primary" @click="allocation=true">配置设备&nbsp;&nbsp;&nbsp;<Icon type="aperture" /></Button>
+        <Button type="primary" @click="allocation=true">配置设备&nbsp;&nbsp;&nbsp;<Icon type="gear-a" size="25" /></Button>
         <Modal v-model="allocation" title="配置设备" @on-ok="ok" @on-cancel="cancel">
           <Form :label-width="100">
             <FormItem label="选择类型:">

@@ -122,7 +122,7 @@
         Client: '',
         RestoreTime: '',
         PolicyType: '',
-        treeTemp: []
+        list:[]
       }
     },
 
@@ -136,8 +136,24 @@
         this.number++;
       },
       // 接收父组件的传递
-      recovery: function(row,tree) {
-        this.treeTemp = tree
+      recovery: function(row,data) {
+        var array = new Array
+        for(var i=0;i<data.length;i++) {
+          console.log(data[i].name.substring(0,1))
+          if(data[i].name.substring(0,1) == '+'){  
+            this.list.push({
+              Exclude:0,
+              Type:data[i].type,
+              path: data[i].name.substring(1,data[i].name.length)
+            })
+          }else  if(data[i].name.substring(0,1) == '-'){  
+            this.list.push({
+              Exclude:1,
+              Type:data[i].type,
+              path: data[i].name.substring(1,data[i].name.length)
+            })
+          }
+        }
         this.Client = row.client;
         this.RestoreTime = row.RestoreTime;
         this.PolicyType = row.policytype;
@@ -174,7 +190,7 @@
         util.restfullCall(
           '/rest-ful/v3.0/restore',
           { Client:this.Client, RestoreTime:this.RestoreTime, PolicyType:this.PolicyType,
-            Resources:this.treeTemp,
+            Resources:this.list,
             Options:[
               { type:22, value:this.redirect.path },
               { type:23, value:file },
@@ -186,9 +202,22 @@
           'POST',
           this.clientslData
         )
+        // 初始化弹框
+        this.redirection=false;
+        this.redirect.machine='';
+        this.redirect.path='';
+        this.fileHandle="news";
+        this.runMode="normal";
+        this.recoveryBefore=false;
+        this.scenarioPre='';
+        this.recoveryAfter=false;
+        this.scenarioAfter='';
+        this.aimSelect=[];
+        this.list=[];
+
       },
       cancel() {
-
+        this.list=[];
       }
     }
   }

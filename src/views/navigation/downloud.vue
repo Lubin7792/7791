@@ -56,7 +56,7 @@ import util from "../../libs/util.js";
                   },
                   on: {
                     click: () => {
-                      console.log(params.row.url)
+                      // console.log(params.row.url)
                     }
                   }
                 },'下载')
@@ -160,7 +160,6 @@ import util from "../../libs/util.js";
           })
         }
         this.downData = array
-        console.log("4",obj)
       },
       ok () {
         this.$Message.info('点击了确定');

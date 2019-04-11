@@ -30,12 +30,28 @@
   margin-bottom: 20px;
   box-shadow: 3px 3px 3px #e4e4e4;
 }
+.home-fail:hover {
+  margin-left: -10px; 
+}
+.home-success:hover {
+  margin-left: -10px; 
+}
+.task {
+  position: relative;
+  width: 470px;
+  height: 130px;
+  margin-bottom: 20px;
+}
+.home-task:hover,.home-fail:hover,.home-success:hover, {
+  position: absolute;
+  margin: -5px 0 0 -5px
+}
 .home-title p {
   float: left;
   display: inline-block;
-  width: 105px;
-  height: 105px;
-  padding: 20px;
+  width: 90px;
+  height: 90px;
+  margin-top: 10px;
   background: #ff8863 url(../../images/hometask.png) no-repeat center center;
   border-radius: 5px;
   margin-right: 80px;

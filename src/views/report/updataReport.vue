@@ -34,7 +34,7 @@
                 </div>
               </TabPane>
               <TabPane label="历史日志">
-                <Table stripe :row-class-name="rowDesc" :data="log" :columns="historyLog" height="300"></Table>
+                <Table :row-class-name="rowDesc" :data="log" :columns="historyLog" height="300"></Table>
               </TabPane>
           </Tabs>
         </Form>
@@ -107,9 +107,9 @@ export default {
         this.baseData = baseObj.data.data
       },
       rowDesc(row) {
-        if(row.desc === '警告'){
+        if(row.level === '警告'){
           return 'wrning'
-        }else if(row.desc === "错误"){
+        }else if(row.level === "错误"){
           return 'error'
         }
       }

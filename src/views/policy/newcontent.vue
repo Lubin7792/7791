@@ -101,9 +101,9 @@
           <Select style="width:120px" v-model="schedule.backuptlevel">
             <Option
               v-for="item in schedule.backuptype"
-              :label="item.value"
-              :value="item.level"
-              :key="item.value"
+              :label="item.Name"
+              :value="item.Type"
+              :key="item.Type"
             ></Option>
           </Select>
         </FormItem>
@@ -306,7 +306,7 @@ export default {
       columns4: [
         {
           title: "已选地址",
-          key: "path"
+          key: "name"
         }
       ],
       treedata: [
@@ -467,30 +467,13 @@ export default {
         ],
         freqval: "",
         backuptlevel:1,
-        backuptype: [
-          {
-            value: "全备",
-            level: 1
-          },
-          {
-            value: "增量",
-            level: 2
-          },
-          {
-            value: "差量",
-            level: 3
-          }
-        ],
+        backuptype: [],
         intervalTime: "",
         timeType: "",
         list: [],
-        startday:  new Date().getDate() < 10
-          ? "0" + new Date().getDate()
-          : new Date().getDate(),
+        startday:  new Date().getDate() ,
         starttime: hh + ":" + mm + ":" + ss,
-        endday:  new Date().getDate() < 10
-          ? "0" + new Date().getDate()
-          : new Date().getDate(),
+        endday:  new Date().getDate() ,
         endtime: hh + ":" + mm + ":" + ss,
         planList: [],
         planListIndex: "",
@@ -498,9 +481,13 @@ export default {
       },
       resources: {
         equipment: "",
+        checkNode:null,
         clientId: "",
         pathValue: "",
+        // 展示列表
         pathConten: [],
+        // 发送列表
+        checkPath:'',
      pathContens: [],
       },
       columns12: [
@@ -554,7 +541,6 @@ export default {
     }
   },
   created() {
-    
   },
   watch: {
     policyTyep: function(data) {
@@ -582,7 +568,6 @@ export default {
   methods: {
     planListIndex: function(value, index) {
       this.show3 = value.scheduletype.toString();
-      console.log(value, this.show3);
       (this.schedule.startday = ""),
         (this.schedule.endday = ""),
         (this.schedule.planListIndex = index);
@@ -599,10 +584,10 @@ export default {
     },
     addList: function() {
       let typelevelNum = parseInt(
-        this.schedule.typelevel ? this.schedule.typelevel : 0
+        this.schedule.typelevel 
       );
       let backupNum = parseInt(
-        this.schedule.backuptlevel ? this.schedule.backuptlevel : 0
+        this.schedule.backuptlevel
       );
       let addList = {
         backuptype: backupNum,
@@ -620,7 +605,7 @@ export default {
         endtime: this.schedule.endtime,
         typelevelCh:
           typelevelNum == 0 ? "日期" : typelevelNum == 1 ? "周" : "间隔时间",
-        backupCh: backupNum == 1 ? "全备" : backupNum == 2 ? "增量" : "差量",
+        backupCh:this.backupChn(backupNum),
         duration: 0
       };
       this.schedule.addLists = addList;
@@ -628,6 +613,14 @@ export default {
     addPlan: function() {
       this.addList();
       this.schedule.planList.push(this.schedule.addLists);
+    },
+    backupChn:function(num){
+      let text='';
+       this.schedule.backuptype.map(item=>{
+         if(item.Type==num)
+         text= item.Name
+       })
+       return text;
     },
     revisePlan: function() {
       this.addList();
@@ -678,12 +671,11 @@ export default {
           savedays: parseInt(this.basic.savedays ? this.basic.savedays : 0),
           maxtasks: parseInt(this.basic.maxtasks ? this.basic.maxtasks : 0)
         },
-        resource: this.resources.pathContens,
+        resource: this.resources.pathConten,
         option: this.$refs.backupOption.showOption(),
         schedule: this.schedule.planList
       };
-      console.log(tests)
-      // util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
+      util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
     }else{
        this.$Message.error("输入策略名称格式错误！新建失败");
     }
@@ -715,13 +707,20 @@ export default {
       }
       this.ztreeArray=array
       $.fn.zTree.init($("#treeDemoA"), this.setting, array);
+        util.restfullCall(
+        "/rest-ful/v3.0/policy/backuptype/" + this.basic.type,
+        null,
+        "get",
+        obj=>{
+         this.schedule.backuptype=obj.data
+        }
+      );
+      // this.schedule.backuptlevel=1;
     },
     timeFormate: function() {
        let week =new Date().getDay();
       let date =
-        new Date().getDate() < 10
-          ? "0" + new Date().getDate()
-          : new Date().getDate();
+        new Date().getDate() ;
       let hh =
         new Date().getHours() < 10
           ? "0" + new Date().getHours()
@@ -760,7 +759,7 @@ export default {
       });
       this.timeFormate();
     },
-    build_path_by_tree_node: function(treeNode) {
+    tree_path: function(treeNode) {
       //获取路径
       let path = "";
       let cid = 0;
@@ -782,33 +781,10 @@ export default {
         treeNode = parent;
       } while (true);
 
-      /*
-      var path = "";
-      let name = "";
-      let current_node = treeNode;
-      let parent = treeNode.getParentNode();
-
-      while (true) {
-        parent = current_node.getParentNode();
-        if (!parent) {
-          name = current_node.name;
-          break;
-        }
-        if (this.checkType) {
-          path = "/" + path;
-           path =current_node.name+path ;
-          current_node = parent;
-          console.log(path,current_node.name)
-        }else{
-          path = current_node.name + path;
-          current_node = parent;
-
-        }         
-      }*/
       if (path.indexOf("//") == 0) {
         path = path.substr(1);
       }
-      return { client: cid, path: path, name: name };
+      return { client: cid, path: path, name: name ,namePath:name+"_"+path};
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
@@ -817,7 +793,7 @@ export default {
           this.treeNodeA = treeNode;
           this.treeId = treeId;
           let typeId = treeNode.ResType ? treeNode.ResType : this.basic.type;
-          let path = this.build_path_by_tree_node(treeNode);
+          let path = this.tree_path(treeNode);
           let str =
             "/rest-ful/v3.0/client/resource/browse?" +
             "client=" +
@@ -841,79 +817,143 @@ export default {
         arrays.push({
           ResType: objj[i].ResType,
           name: objj[i].Name,
-          nodetype: 1
+          nodetype: 1,
+            checked: this.findCheckout(treeNode)
         });
       }
       let ztreeobj = $.fn.zTree.getZTreeObj(treeId);
       ztreeobj.addNodes(treeNode, arrays);
       this.checkType = treeNode.ResType;
     },
+    findCheckout:function(state){
+      if(state.checked){
+        return true
+      }else{
+        return false
+      }
+    },
     //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
-      let path = this.build_path_by_tree_node(treeNode);
+      let path = this.tree_path(treeNode);
+      console.log("this.path",path.path)
+      this.resources.treeNode=path.path
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
-        // this.SelectNode(treeNode)
-        this.resources.pathConten.push({ path: pathList });
-        this.resources.pathContens.push({
-          path: path.path,
-          client: parseInt(path.client),
-          type: treeNode.ResType,
-          exclude: 0
-        });
+        this.SelectNode(treeNode)
+    //  this.resources.pathConten.push({ path: pathList });
+    //     this.resources.pathContens.push({
+    //       path: path.path,
+    //       client: parseInt(path.client),
+    //       type: treeNode.ResType,
+    //       exclude: 0
+    //     });
       } else {
-        // this.DisSelectNode(treeNode)
-        function pathFilter(element) {
-          return element.path !== pathList;
-        }
-        function pathFilters(element) {
-          return element.path !== path.path;
-        }
-        this.resources.pathConten = this.resources.pathConten.filter(pathFilter);
-        this.resources.pathContens = this.resources.pathContens.filter(pathFilters);
+        this.DisSelectNode(treeNode)
+    //  function pathFilter(element) {
+    //       return element.path !== pathList;
+    //     }
+    //     function pathFilters(element) {
+    //       return element.path !== path.path;
+    //     }
+    //     this.resources.pathConten = this.resources.pathConten.filter(pathFilter);
+    //     this.resources.pathContens = this.resources.pathContens.filter(pathFilters);
       }
       this.resources.clientId = path.client;
       this.ztreeTyep = treeNode.ResType;
       this.resources.pathValue = path.path;
     },
+          //操作展示列表
+    DeleteItemFromArray(path, start) {
+           for (var index = 0; index < this.resources.pathConten.length; ) {
+             //删除相关的
+           if (this.resources.pathConten[index].name.substring(start, path.length + 1) == path) {
+              this.resources.pathConten.splice(index, 1);               
+          }
+          else if (this.resources.pathConten[index].name.substring(start) == path) {
+              this.resources.pathConten.splice(index, 1)   
+          } else {
+            ++index
+          }
+        }
+      },
           // 取消选中状态下
       DisSelectNode:function(treeNode) {
-
-        let parent = null;
-        do {
-          parent = treeNode.getParentNode()
-          if ((parent == null) || (parent.checked)) {
-            break;
-          }  else {
-            treeNode = parent;
-        // console.log(" Dis need delete path:" + treeNode.path);
+        let parent = null ;
+        do{
+          parent =treeNode.getParentNode();
+          if(parent.level==0){
+            break
           }
-        }while(true);
-        
+          if((parent==null )||(parent.checked)){
+            break;
+          }else{
+            treeNode = parent;
+          }
+        }while(true)
+        this.DeleteItemFromArray(this.tree_path(treeNode).namePath,1)
+        //  let aNeedInsert = true;
+        // let tempNode = treeNode;
+        // if (parent) {
+        //   do  {
+        //       for (var index = 0; index < this.resources.pathConten.length; index++) {
+        //         if (this.resources.pathConten[index].name.substring(0,this.tree_path(tempNode).namePath.length + 2) == ("+"+this.tree_path(tempNode).namePath)) {
+        //             aNeedInsert = false;
+        //             break
+        //         }
+        //       }
+        //       tempNode = tempNode.getParentNode();
+        //   }while(tempNode)
+        // }
+ if ((parent != null) && (parent.checked)) {
+           this.resources.pathConten.unshift({ name : "-" +this.tree_path(treeNode).namePath,path:this.tree_path(treeNode).path, type: treeNode.ResType,client:this.tree_path(treeNode).client ,Exclude:1})
+        }
       },
-
        // 选中状态下
       SelectNode:function(treeNode) {
-        let parent = null;
-        do {
-          parent = treeNode.getParentNode()
-          // 没有父节点或者 父节点选中并且不是全选
-          if ((parent == null) || (parent.checked && parent.check_Child_State != 2)) {
-            // 添加当前路径
-            console.log("Select path:" + treeNode.name,"paretNme:"+parent);
-            
+      let parent = null;
+      do{
+        parent =treeNode.getParentNode()
+        if(parent) {
+          // 删除-父节点
+              this.DeleteItemFromArray("-" +this.tree_path(parent).namePath, 0);
+        }
+        if ((parent == null) || (parent.checked && parent.check_Child_State != 2)||parent.level==0) {
             break;
-
           }  else {
-            console.log("Select need delete path:" + treeNode.name);
             treeNode = parent;
           }
-        }while(true);
+      }while(true)
+        this.DeleteItemFromArray(this.tree_path(treeNode).namePath, 1);
+    //排查兄弟节点
+       let bNeedInsert = true;
+        let tempNode = treeNode;
+        if (parent) {
+          do  {
+            // console.log(this.tree_path(parent).path,"-------------------------------------------------",this.tree_path(tempNode).path);
+              for (var index = 0; index < this.resources.pathConten.length; index++) {
+                  // console.log("************A" + this.resources.pathConten[index].name.substring(1))
+                  // console.log("************B" + this.tree_path(tempNode).namePath)
+                if (this.resources.pathConten[index].name.substring(1) == this.tree_path(tempNode).namePath) {
+                    // console.log("Parent equal " + this.pathConten[index].name)
+                    bNeedInsert = false;
+                    break
+                }
+              }
 
+              // console.log("-------------------------------------------------");
+
+              tempNode = tempNode.getParentNode();
+          }while(tempNode)
+        }
+       
+        if (bNeedInsert == true) {
+            this.resources.pathConten.unshift({ name : "+" +this.tree_path(treeNode).namePath, path:this.tree_path(treeNode).path,type: treeNode.ResType,client:this.tree_path(treeNode).client,Exclude:0 })
+        }
       },
 
     //重置数据
         callBackFun() {
+
           // this.basic.type=65536;
        this.show3="0";
       this.hackReset = false;
@@ -942,6 +982,16 @@ export default {
       }
       this.ztreeArray=array
       $.fn.zTree.init($("#treeDemoA"), this.setting, array);
+
+       util.restfullCall(
+        "/rest-ful/v3.0/policy/backuptype/" + this.basic.type,
+        null,
+        "get",
+        obj=>{
+         this.schedule.backuptype=obj.data
+        }
+      );
+      this.schedule.backuptlevel=1;
      })
     }
   }

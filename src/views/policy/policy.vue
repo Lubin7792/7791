@@ -327,7 +327,6 @@ export default {
     deleteData: function(value) {
       if (value.data.code === 0) {
         this.$store.commit("upPolicyOk", !this.$store.state.index.policySwitch);
-        alert(value.data.message);
       } else {
         alert(value.data.message);
       }

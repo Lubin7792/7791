@@ -26,7 +26,7 @@
                 <Radio label="new">恢复到原路径</Radio>
             </FormItem>
             <FormItem>
-                <Radio label="old" v-model="disab">重定向恢复</Radio>
+                <Radio label="old">重定向恢复</Radio>
             </FormItem>
           </RadioGroup>
         </Form>
@@ -37,7 +37,7 @@
                 </Select>
             </FormItem>
             <FormItem label="实例名：">
-                <Select placeholder="请选择实例" :disabled="!disab" @on-open-change="exampleSlect" v-model="exa">
+                <Select placeholder="请选择实例" :disabled="!disab" @on-change="changes" @on-open-change="exampleSlect" v-model="exa" :label-in-value="true">
                   <Option v-for="item in example" :value="item.host" :key="item.host">{{ item.host }}</Option>
                 </Select>
             </FormItem>
@@ -61,13 +61,22 @@
         example: [],
         aim: '',
         exa: '',
-        Client: '',
         RestoreTime: '',
         PolicyType: '',
-        treeTemp: []
+        list:[]
       }
     },
-
+    watch: {
+      path: {
+        handler(newVal, oldVal) {
+          if(newVal=="new") {
+            this.disab = false
+          }else if(newVal=="old") {
+            this.disab = true
+          }
+        }
+      }
+    },
     methods: {
       // 目的机器获取数据
       aimMachine:function(open) {
@@ -109,35 +118,76 @@
         this.example = array
 
       },
+       // 选中实例名字
+      changes: function(datas) {
+      this.exa = datas.label
+      },
       // 接收父组件的传递
-      mysql: function(row, tree) {
-        this.treeTemp = tree
-        this.Client = row.client
+      mysql: function(row, data) {
+        var array = new Array
+        for(var i=0;i<data.length;i++) {
+          // console.log(data[i].name.substring(0,1))
+          if(data[i].name.substring(0,1) == '+'){  
+            this.list.push({
+              Exclude:0,
+              Type:data[i].type,
+              path: data[i].name.substring(1,data[i].name.length)
+            })
+          }else  if(data[i].name.substring(0,1) == '-'){  
+            this.list.push({
+              Exclude:1,
+              Type:data[i].type,
+              path: data[i].name.substring(1,data[i].name.length)
+            })
+          }
+        }
+        this.aim = row.client
         this.RestoreTime = row.RestoreTime;
         this.PolicyType = row.policytype
         this.modal = true
       },
-      ok() {
-        var file = "1";
-        if(this.path == "new") {
-          file = "1"
-        }else {
-          file = "2"
-        }
+      // 恢复原路径
+      originalPath:function(arr) {
         util.restfullCall(
           '/rest-ful/v3.0/restore',
-          { Client:this.Client, RestoreTime:this.RestoreTime, PolicyType:this.PolicyType,
-            Resources:this.treeTemp,
+          { Client:this.aim, RestoreTime:this.RestoreTime, PolicyType:this.PolicyType,
+            Resources:this.list,
+            Options:[]
+          },
+          'POST',
+          this.clientslData
+        )
+      },
+      // 重定向恢复
+      singleRedirect:function(arr) {
+        util.restfullCall(
+          '/rest-ful/v3.0/restore',
+          { Client:this.aim, RestoreTime:this.RestoreTime, PolicyType:this.PolicyType,
+            Resources:this.list,
             Options:[
-              { type:23, value:file },
+              { type:22, value:this.exa },
             ]
           },
           'POST',
           this.clientslData
         )
       },
+      ok() {
+        if(this.path == "new") {
+          this.originalPath()
+        }else if(this.path == "old") {
+          this.singleRedirect()
+        }
+        // 初始化弹框
+        this.path="new";
+        this.aim='';
+        this.exa='';
+        this.aimSelect=[];
+        this.example=[];
+        this.list=[]
+      },
       cancel() {
-
+        this.list=[];
       }
     }
   }

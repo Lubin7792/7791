@@ -91,6 +91,7 @@ span.tmpzTreeMove_arrow {width:16px; height:16px; display: inline-block; padding
 ul.ztree.zTreeDragUL {margin:0; padding:0; position:absolute; width:auto; height:auto;overflow:hidden; background-color:#cfcfcf; border:1px #00B83F dotted; opacity:0.8; filter:alpha(opacity=80)}
 .zTreeMask {z-index:10000; background-color:#cfcfcf; opacity:0.0; filter:alpha(opacity=0); position:absolute}
 
+/* .ztree li span.button.client_ico_open{margin-right: 2px; background-image: url("./img/MySQL.png")} */
 .ztree li span.button.client_ico_open{margin-right: 2px; background-image: url("./img/client-o.svg")}
 .ztree li span.button.client_ico_close{margin-right: 2px; background-image: url("./img/client.svg")}
 .ztree li span.button.client_ico_docu{margin-right: 2px; background-image: url("./img/client.svg")}

@@ -121,22 +121,27 @@
       <fileRecovery ref="fileRecovery"></fileRecovery>
       <!-- MYSQ恢复弹框 -->
       <frameMysql ref="frameMysql"></frameMysql>
-    <!-- <dendrogram></dendrogram> -->
+      <!-- VMWARE恢复框 -->
+      <vmwareModal ref="vmwareModal"></vmwareModal>
+      <!-- SQLSERVER回复框 -->
+      <sqlserver ref="sqlserver"></sqlserver>
 
   </div>
 </template>
 <script>
   import util from '../../libs/util.js'
-  // import dendrogram from './dendrogram.vue'
   import fileRecovery from './fileRecovery.vue'
   import frameMysql from './frameMysql.vue'
+  import vmwareModal from './vmwareModal.vue'
+  import sqlserver from './sqlserver.vue'
   
 
   export default {
     components: {
-      // dendrogram
       fileRecovery,
-      frameMysql
+      frameMysql,
+      vmwareModal,
+      sqlserver
     },
     data() {
       return {
@@ -144,8 +149,8 @@
           { title:'ID', key: 'id' },
           { title:'策略名称', key: 'policy' },
           { title:'策略类型', key: 'policytype' },
-          { title:'开始时间', key: 'starttime' },
-          { title:'结束时间', key: 'endtime' },
+          { title:'备份类型', key: 'scheduletype' },
+          { title:'备份时间', key: 'starttime' }
         ],
         regainData: [],
         clientSelect:[],
@@ -175,7 +180,7 @@
         device: [],
         pathConten: [],
         temporary: [],
-        treeNodeTemp: []
+        // treeNodeTemp: []
       }
     },
     created() {
@@ -194,7 +199,6 @@
     watch: {
       data3: {
         handler(newVal, oldVal) {
-          // console.log('newVal', newVal)
           $.fn.zTree.init($("#treeDemo"), this.setting, this.data3);
         },
       }
@@ -251,7 +255,7 @@
       },
       // 点击查询
       onQuery() {
-        let url = '/rest-ful/v3.0/report/history?'
+        let url = '/rest-ful/v3.0/report/history?status=1&'
         Object.keys(this.query).forEach(item => {
           if(this.query[item]) url += `${item}=${this.query[item]}&`
         })
@@ -305,18 +309,6 @@
         }
       },
 
-      ComparePath(element) {
-
-      },
-
-      AppendPathIntoConten(path) {
-       
-      },
-
-      DeletePathFromConten(path) {
-      
-      },
-
       
       DeleteItemFromArray(path, start) {
            for (var index = 0; index < this.pathConten.length; ) {
@@ -346,7 +338,7 @@
         this.DeleteItemFromArray(treeNode.path, 1)
 
         if ((parent != null) && (parent.checked)) {
-           this.pathConten.unshift({ name : "-" + treeNode.path })
+           this.pathConten.unshift({ name : "-" + treeNode.path, type: treeNode.type })
         }
       },
 
@@ -357,7 +349,7 @@
         do {
           parent = treeNode.getParentNode()
           if (parent) {
-            console.log("parent = " + parent.path)
+            // console.log("parent = " + parent.path)
               this.DeleteItemFromArray("-" + parent.path, 0);
           }
 
@@ -367,7 +359,7 @@
             treeNode = parent;
           }
         }while(true);
-        console.log("current node = " + treeNode.path)
+        // console.log("current node = " + treeNode.path)
         this.DeleteItemFromArray(treeNode.path, 1);
       
         let bNeedInsert = true;
@@ -375,27 +367,27 @@
 
         if (parent) {
           do  {
-            console.log("-------------------------------------------------");
+            // console.log("-------------------------------------------------");
               for (var index = 0; index < this.pathConten.length; index++) {
-                  console.log("************" + this.pathConten[index].name.substring(1))
-                  console.log("************" + tempNode.path)
+                  // console.log("************" + this.pathConten[index].name.substring(1))
+                  // console.log("************" + tempNode.path)
                 if (this.pathConten[index].name.substring(1) == tempNode.path) {
-                    console.log("Parent equal " + this.pathConten[index].name)
+                    // console.log("Parent equal " + this.pathConten[index].name)
                     bNeedInsert = false;
                     break
                 }
               }
 
-              console.log("-------------------------------------------------");
+              // console.log("-------------------------------------------------");
 
               tempNode = tempNode.getParentNode();
           }while(tempNode)
         }
 
-        console.log("bNeedInster  = " + bNeedInsert)
+        // console.log("bNeedInster  = " + bNeedInsert)
         if (bNeedInsert == true) {
-            console.log("insert item......")
-            this.pathConten.unshift({ name : "+" + treeNode.path })
+            // console.log("insert item......")
+            this.pathConten.unshift({ name : "+" + treeNode.path, type: treeNode.type })
         }
       },
 
@@ -409,16 +401,17 @@
           this.SelectNode(treeNode)
           //this.pathConten.unshift({ name : "-" + treeNode.path })
         }
-        var hash = {};
-        this.temporary = this.pathConten.reduce(function(item, next) {
-            hash[next.name] ? '' : hash[next.name] = true && item.push(next);
-            return item
-        }, [])
-        this.pathConten = []
-        this.pathConten = this.temporary
-        this.temporary = []
+        // var hash = {};
+        // this.temporary = this.pathConten.reduce(function(item, next) {
+        //     hash[next.name] ? '' : hash[next.name] = true && item.push(next);
+        //     return item
+        // }, [])
+        // this.pathConten = []
+        // this.pathConten = this.temporary
+        // this.temporary = []
 
         // if(treeNode.checked) {
+        //   console.log("treeNode",treeNode)
         //   this.treeNodeTemp.unshift({Type:treeNode.type,path:treeNode.path,Exclude:treeNode.Exclude= 0 })
         // }else if(!treeNode.checked)
         // this.treeNodeTemp.unshift({Type:treeNode.type,path:treeNode.path,Exclude:treeNode.Exclude= 1})
@@ -429,9 +422,13 @@
           this.$Message.warning("请先选择需要恢复的资源")
         }else {
           if(this.query.policytype == 65536) {
-            this.$refs.fileRecovery.recovery(this.query,this.treeNodeTemp)
+            this.$refs.fileRecovery.recovery(this.query,this.pathConten)
           }else if(this.query.policytype == 196608) {
-            this.$refs.frameMysql.mysql(this.query,this.treeNodeTemp)
+            this.$refs.frameMysql.mysql(this.query,this.pathConten)
+          }else if(this.query.policytype == 327680) {
+            this.$refs.vmwareModal.vmware(this.query,this.pathConten)
+          }else if(this.query.policytype == 262144) {
+            this.$refs.sqlserver.server(this.query,this.pathConten)
           }
         }
       }

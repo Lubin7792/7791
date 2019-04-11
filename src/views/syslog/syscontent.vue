@@ -56,7 +56,7 @@ export default {
       tableColumns1: [
         { title: '级别', key: 'levelstr' },
         { title: '时间', key: 'time' },
-        { title: '用户', key: 'id' },
+        { title: '用户', key: 'user' },
         { title: '来源', key: 'src' },
         { title: '描述', key: 'desc', className: 'sysdesc', width:400 },
         { title: '详情', width: 150, align: "center",

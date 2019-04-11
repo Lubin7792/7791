@@ -32,7 +32,7 @@
 <template>
   <Tabs :animated="false" type="card"  v-model="tabsData">
     <!-- 运行记录报表 -->
-    <TabPane label="运行记录报表" name="运行记录报表" v-if="nowShow(getPower.seeRunReprot)"  :key="Math.random()">
+    <TabPane label="运行记录报表" name="运行记录报表" v-if="nowShow(getPower.seeRunReprot)" >
         <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -75,12 +75,12 @@
         </Row>
       </div>
 
-        <Table stripe :row-class-name="rowRun" :data="run" :columns="runReport" height="650"></Table>
+        <Table :row-class-name="rowRun" :data="run" :columns="runReport" height="650"></Table>
         <updataReport ref="updataReport"></updataReport>
     </TabPane>
 
     <!-- 设备报表 -->
-    <TabPane label="设备报表" name="设备报表" v-if="nowShow(getPower.seeDeviceReprot)" :key="Math.random()">
+    <TabPane label="设备报表" name="设备报表" v-if="nowShow(getPower.seeDeviceReprot)">
         <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -109,11 +109,11 @@
         </Row>
       </div>
 
-        <Table stripe :row-class-name="rowDevice" :data="device" :columns="deviceReport" height="650"></Table>
+        <Table :row-class-name="rowDevice" :data="device" :columns="deviceReport" height="650"></Table>
     </TabPane>
 
     <!-- 介质报表 -->
-    <TabPane label="介质报表" name="介质报表" v-if="nowShow(getPower.seeMediaReprot)" :key="Math.random()">
+    <TabPane label="介质报表" name="介质报表" v-if="nowShow(getPower.seeMediaReprot)">
           <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -137,7 +137,7 @@
       </div>
 
         <!-- <Table stripe :data="medium" :columns="mediumReport" style="overflow-y:scroll; height:520px"></Table> -->
-        <Table stripe :row-class-name="rowMedium" :data="medium" :columns="mediumReport" height="650"></Table>
+        <Table :row-class-name="rowMedium" :data="medium" :columns="mediumReport" height="650"></Table>
     </TabPane>
   </Tabs>
 </template>
@@ -542,7 +542,7 @@ export default {
     },
     // 状态下拉框获取数据
     openPoolStatus:function(open) {
-      if(open == true) this.poolStatusSelect = [{code: 0, name: "正常"},{code: 1, name: "错误"},{code: 2,name: "已满"}]
+      if(open == true) this.poolStatusSelect = [{code: "0", name: "正常"},{code: 1, name: "错误"},{code: 2,name: "已满"}]
     },
     // 状态下拉框的id
     changesPoolStatus: function(datas) {

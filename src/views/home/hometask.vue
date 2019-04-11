@@ -2,28 +2,32 @@
 </style>
 
 <template>
-    <div class="home-left">
+  <div class="home-left">
+    <div class="task">
+      <div class="home-task">
         <div class="home-title">
           <p > </p>
           <i>备份任务量</i>
           <em>{{left.tasks}}</em>    
         </div>
-        <div class="home-content">
-          <p class="home-con-tit">备份数据量</p>
-            <div id="myChart1"  :style="{width:'470px',height:'244px'}" ></div> 
-           
-             <div class="home-details">
-               <span class="home-capacity">
-                 <p> 累计完成备份数据量</p>
-                 {{left.totalbytes}}
-               </span>
-               <span class="home-range">
-                <p>同比上周字节增长量</p>
-                 {{left.increasebytes}}
-               </span>
-          </div>
+      </div>
+    </div>
+        
+    <div class="home-content">
+        <p class="home-con-tit">备份数据量</p>
+        <div id="myChart1"  :style="{width:'470px',height:'244px'}" ></div>
+        <div class="home-details">
+           <span class="home-capacity">
+             <p> 累计完成备份数据量</p>
+             {{left.totalbytes}}
+           </span>
+           <span class="home-range">
+            <p>同比上周字节增长量</p>
+             {{left.increasebytes}}
+           </span>
         </div>
     </div>
+  </div>
 </template>
 <script >
 // 引入基本模板
@@ -54,13 +58,19 @@ export default {
   methods: {
     drawLine(data) {
       var array = new Array;
-      for (var i=0;i<data.classsum.length;i++){
-        array.push({
-          value:data.classsum[i].percent,
-          name:data.classsum[i].policytype
-        })
+      if(data.classsum.length == 0) {
+          array.push({
+            value:1,
+            name:"暂无数据"
+          })
+      }else if(data.classsum.length !== 0) {
+          for (var i=0;i<data.classsum.length;i++){
+            array.push({
+              value:data.classsum[i].percent,
+              name:data.classsum[i].policytype
+            })
+          }
       };
-      // datalist = array;
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById("myChart1"));
       // 绘制图表
@@ -74,7 +84,7 @@ export default {
           {
             name: "访问来源",
             type: "pie",
-            radius: ["65%", "75%"],
+            radius: ["55%", "75%"],
             avoidLabelOverlap: false,
             label: {
               normal: {

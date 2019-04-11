@@ -2,8 +2,8 @@ import axios from 'axios';
 // import Router from 'vue-router'
 // const login = () => import('../views/login/login.vue')
 
-// axios.defaults.baseURL = "http://192.168.1.232:8080";
-axios.defaults.baseURL = 'http://192.168.0.109:8080';
+axios.defaults.baseURL = "http://192.168.1.233:8080";
+// axios.defaults.baseURL = 'http://192.168.0.109:8080';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 if (window.localStorage.getItem('token')) {
 	Axios.defaults.headers.common['Authorization'] = `Bearer ` + window.localStorage.getItem('token')

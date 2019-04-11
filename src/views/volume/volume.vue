@@ -1,7 +1,7 @@
 <template>
   <Tabs :animated="false" type="card" class="volum" >
     <!-- 介质池 -->
-    <TabPane label="介质池" :key="Math.random()"  v-if="nowShow(getPower.seeValume)">
+    <TabPane label="介质池" :key="Math.random().toFixed(4)"  v-if="nowShow(getPower.seeValume)">
       <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
 
       <div class="_btn">
@@ -13,7 +13,7 @@
       </div>
     </TabPane>
     <!-- 介质 -->
-    <TabPane label="介质" :key="Math.random()"  v-if="nowShow(getPower.seeMedium)">
+    <TabPane label="介质" :key="Math.random().toFixed(4)"  v-if="nowShow(getPower.seeMedium)">
       <Table
         :data="volume"
         :row-class-name="rowClassName"

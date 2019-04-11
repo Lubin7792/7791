@@ -158,9 +158,9 @@
           </Form>
         </div>
         <div v-if="show2 === '327680'">
-         <Checkbox v-model="showa" @on-change="checkType(showa,21)">跳过失败的虚拟机</Checkbox>
+         <Checkbox v-model="showa" @on-change="checkType(showa,29)">跳过失败的虚拟机</Checkbox>
           <p class="blanks"></p>
-          <Checkbox v-model="showb" @on-change="checkType(showb,29)">跳过关机的虚拟机</Checkbox>
+          <Checkbox v-model="showb" @on-change="checkType(showb,21)">跳过关机的虚拟机</Checkbox>
           <p class="blanks"></p>
           <span>数据传输模式</span>
           <Select
@@ -307,10 +307,10 @@ export default {
         off: "",
         mode: "",
         modeList: [
-          { name: "NMBD", key: "0" },
-          { name: "HOTADD", key: "1" },
-          { name: "SAN", key: "2" },
-          { name: "DEFAULT", key: "3" }
+          { name: "NMBD", key: "1" },
+          { name: "HOTADD", key: "2" },
+          { name: "SAN", key: "3" },
+          { name: "DEFAULT", key: "0" }
         ]
       }
     };

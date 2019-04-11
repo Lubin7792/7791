@@ -1,7 +1,7 @@
 <template>
  <Tabs :animated="false" class="media" v-model="tabsData" @on-click="tabName" type="card">
     <!-- 介质服务器 -->
-    <TabPane label="介质服务器" v-if="nowShow(getPower.seeMediaServer)" name="介质服务器" :key="Math.random()">
+    <TabPane label="介质服务器" v-if="nowShow(getPower.seeMediaServer)" name="介质服务器" :key="Math.random().toFixed(4)">
       <Table
         stripe
         highlight-row
@@ -18,7 +18,7 @@
       </div>
     </TabPane>
     <!-- 磁盘 -->
-    <TabPane label="磁盘设备"   v-if="nowShowTow(getPower.seeDiskDevice)"  name="磁盘设备" :key="Math.random()">
+    <TabPane label="磁盘设备"   v-if="nowShowTow(getPower.seeDiskDevice)"  name="磁盘设备" :key="Math.random().toFixed(4)">
       <Table
         stripe
         highlight-row
@@ -36,7 +36,7 @@
       </div>
     </TabPane>
     <!-- 磁带库 -->
-    <TabPane label="磁带库设备" name="磁带库设备" :key="Math.random()">
+    <TabPane label="磁带库设备" name="磁带库设备" :key="Math.random().toFixed(4)">
       <Table
         stripe
         highlight-row
@@ -51,7 +51,7 @@
         <Button type="info" @click="newLibrary">新建磁带库</Button>
         <!-- <Button type="info" @click="modifyLibrary">修改磁带库</Button> -->
         <libraryModal ref="libraryModal" @libraryReturn="libraryReturn"></libraryModal>
-        <updateLibrary :modalLibrary="modalLibrary" ref="updateLibrary"></updateLibrary>
+       <updateLibrary ref="updateLibrary"></updateLibrary>
       </div>
     </TabPane>
   </Tabs>
