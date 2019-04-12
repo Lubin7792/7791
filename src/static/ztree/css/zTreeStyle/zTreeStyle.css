@@ -96,6 +96,20 @@ ul.ztree.zTreeDragUL {margin:0; padding:0; position:absolute; width:auto; height
 .ztree li span.button.client_ico_close{margin-right: 2px; background-image: url("./img/client.svg")}
 .ztree li span.button.client_ico_docu{margin-right: 2px; background-image: url("./img/client.svg")}
 
+.ztree li span.button.file_ico_open{margin-right: 2px; background-image: url("./img/file-o.png")}
+.ztree li span.button.file_ico_close{margin-right: 2px; background-image: url("./img/file-o.png")}
+.ztree li span.button.file_ico_docu{margin-right: 2px; background-image: url("./img/file-o.png")}
+
+.ztree li span.button.catalog_ico_open{margin-right: 2px; background-image: url("./img/catalog-o.png")}
+.ztree li span.button.catalog_ico_close{margin-right: 2px; background-image: url("./img/catalog.png")}
+.ztree li span.button.catalog_ico_docu{margin-right: 2px; background-image: url("./img/catalog.png")}
+
+.ztree li span.button.disk_ico_open{margin-right: 2px; background-image: url("./img/disk-o.png")}
+.ztree li span.button.disk_ico_close{margin-right: 2px; background-image: url("./img/disk.png")}
+.ztree li span.button.disk_ico_docu{margin-right: 2px; background-image: url("./img/disk.png")}
+
+
+
 /* level style*/
 /*.ztree li span.button.level0 {
 	display:none;

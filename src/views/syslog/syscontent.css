@@ -2,9 +2,7 @@
   border-color: #FFF;
   position: inherit !important;
 }
-.row {
-  margin-bottom: 20px; 
-}
+
 /* .sys-content .row {
   border-top: 1px solid #fd7549;
   border-bottom: 2px solid #fd7549;
@@ -21,7 +19,11 @@
 .sysdetails {
   height: 400px;
 }
-
+.sys-page {
+  /* position: absolute; */
+  bottom: 2px;
+  margin-left: 35%;
+}
 ul,
 li {
   padding: 0;

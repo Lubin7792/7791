@@ -16,7 +16,7 @@
 
 <template>
   <div>
-    <Modal title="SQLSERVER备份" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="开始恢复" cancel-text="取消恢复" width="500" :mask-closable="false">
+    <Modal title="恢复选项" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="开始恢复" cancel-text="取消恢复" width="500" :mask-closable="false">
       <div>
         <!-- 恢复路径 -->
         <Form label-position="left" :label-width="0">
@@ -199,13 +199,12 @@
       defaultPath:function(path) {
         var file = "1";
         if(this.dataBase == "dataBaseY"){file = "1"}else{file = "0"}
-        // (this.dataBase == "dataBaseY")?(file = "1"):(file = "0")
         util.restfullCall(
           '/rest-ful/v3.0/restore',
           { Client:this.redirect.client, RestoreTime:this.RestoreTime, PolicyType:this.PolicyType,
             Resources:this.list,
             Options:[
-              { type: 37, value: this.file},  
+              { type: 37, value: file},  
             ]
           },
           'POST',
@@ -222,7 +221,7 @@
           { Client:this.redirect.client, RestoreTime:this.RestoreTime, PolicyType:this.PolicyType,
             Resources:this.list,
             Options:[
-              { type: 37, value: this.file},
+              { type: 37, value: file},
               { type: 36, value: this.redirect.time},
             ]
           },
@@ -240,7 +239,7 @@
           { Client:this.redirect.client, RestoreTime:this.RestoreTime, PolicyType:this.PolicyType,
             Resources:this.list,
             Options:[
-              { type: 37, value: this.file},
+              { type: 37, value: file},
               { type: 35, value: this.redirect.case},
             ]
           },
@@ -258,7 +257,7 @@
           { Client:this.redirect.client, RestoreTime:this.RestoreTime, PolicyType:this.PolicyType,
             Resources:this.list,
             Options:[
-              { type: 37, value: this.file},
+              { type: 37, value: file},
               { type: 36, value:this.redirect.time },
               { type: 35, value: this.redirect.case},
             ]

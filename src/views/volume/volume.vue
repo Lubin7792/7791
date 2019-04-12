@@ -1,7 +1,7 @@
 <template>
   <Tabs :animated="false" type="card" class="volum" >
     <!-- 介质池 -->
-    <TabPane label="介质池" :key="Math.random().toFixed(4)"  v-if="nowShow(getPower.seeValume)">
+    <TabPane label="介质池" :key="Math.random()"  v-if="nowShow(getPower.seeValume)">
       <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
 
       <div class="_btn">
@@ -13,7 +13,7 @@
       </div>
     </TabPane>
     <!-- 介质 -->
-    <TabPane label="介质" :key="Math.random().toFixed(4)"  v-if="nowShow(getPower.seeMedium)">
+    <TabPane label="介质" :key="Math.random()"  v-if="nowShow(getPower.seeMedium)">
       <Table
         :data="volume"
         :row-class-name="rowClassName"
@@ -29,7 +29,9 @@
         <recoveryModal ref="recoveryModal" @recoveryData="recoveryData"></recoveryModal>
       </div>
     </TabPane>
+
   </Tabs>
+
 </template>
 
 <script>
@@ -60,11 +62,11 @@
       return {
       numNowList:[],
         mediumPools: [
-          { title: 'ID', key: 'id', sortable: true},
+          { title: 'ID', key: 'id', sortable: true, width: 80},
           { title: '介质名称', key: 'name', sortable: true},
           { title: '保留周期', key: 'Protected', sortable: true},
           { title: '覆盖周期', key: 'Cover', sortable: true},
-          {title: '操作',key: 'operation',align: 'center',
+          {title: '操作',key: 'operation',align: 'center', width: 100,
             render: (h, params) => {
               return h('div', [
                 // 修改介质池弹框
@@ -115,7 +117,7 @@
           { title: '最后写入时间', key: 'LastWrtime' },
           { title: '介质状态', key: 'state', width: 100 },
           { title: '在线状态', key: 'online', width: 100 },
-          {title: '操作',key: 'operation',align: 'center',
+          {title: '操作',key: 'operation',align: 'center', width: 120,
             render: (h, params) => {
               return h('div', [
                 // 绑定介质弹框
@@ -303,8 +305,12 @@
 
 <style>
 .volum ._btn {
-  margin-top: 15px;
+margin-top: 10px;
 }
+/* .
+.volum ._btn.ivu-btn-info {
+  float: right;
+}  */
 .ivu-table .wrning td {
   background-color: rgb(224, 222, 63) !important;
 }

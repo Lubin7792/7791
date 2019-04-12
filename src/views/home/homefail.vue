@@ -17,29 +17,31 @@
       </div>
     </div>
     
-    <div class="home-content">
-      <p class="home-con-tit">设备统计</p>
-      <div class="home-state">
-        <p>磁带库设备数量： {{tapelibdevs}}</p>
-        <p></p>
-        <p>磁盘设备数量： {{diskdevs}}</p>
-      </div>
-      <!-- 配置设备触发 -->
-      <div class="home-setup">
-        <Button type="primary" @click="allocation=true">配置设备&nbsp;&nbsp;&nbsp;<Icon type="gear-a" size="25" /></Button>
-        <Modal v-model="allocation" title="配置设备" @on-ok="ok" @on-cancel="cancel">
-          <Form :label-width="100">
-            <FormItem label="选择类型:">
-              <Select @on-change="onServer" v-model="type" @on-open-change="openServer"> 
-                <Option v-for="item in selectData" :value="item.type" :key="item.type">{{ item.name }}</Option>
-              </Select>
-            </FormItem>
-          </Form>
-        </Modal>
-        <!-- 磁盘内容 -->
-        <diskModal ref="diskModal"></diskModal>
-        <!-- 磁带库内容 -->
-        <libraryModal ref="libraryModal"></libraryModal>
+    <div class="content">
+      <div class="home-content">
+        <p class="home-con-tit">设备统计</p>
+        <div class="home-state">
+          <p>磁带库设备数量： {{tapelibdevs}}</p>
+          <p></p>
+          <p>磁盘设备数量： {{diskdevs}}</p>
+        </div>
+        <!-- 配置设备触发 -->
+        <div class="home-setup">
+          <Button type="primary" @click="allocation=true">配置设备&nbsp;&nbsp;&nbsp;<Icon type="gear-a" size="16" /></Button>
+          <Modal v-model="allocation" title="配置设备" @on-ok="ok" @on-cancel="cancel">
+            <Form :label-width="100">
+              <FormItem label="选择类型:">
+                <Select @on-change="onServer" v-model="type" @on-open-change="openServer"> 
+                  <Option v-for="item in selectData" :value="item.type" :key="item.type">{{ item.name }}</Option>
+                </Select>
+              </FormItem>
+            </Form>
+          </Modal>
+          <!-- 磁盘内容 -->
+          <diskModal ref="diskModal"></diskModal>
+          <!-- 磁带库内容 -->
+          <libraryModal ref="libraryModal"></libraryModal>
+        </div>
       </div>
     </div>
   </div>

@@ -12,20 +12,22 @@
         </div>
       </div>
     </div>
-        
-    <div class="home-content">
-        <p class="home-con-tit">备份数据量</p>
-        <div id="myChart1"  :style="{width:'470px',height:'244px'}" ></div>
-        <div class="home-details">
-           <span class="home-capacity">
-             <p> 累计完成备份数据量</p>
-             {{left.totalbytes}}
-           </span>
-           <span class="home-range">
-            <p>同比上周字节增长量</p>
-             {{left.increasebytes}}
-           </span>
-        </div>
+    
+    <div class="content">
+      <div class="home-content">
+          <p class="home-con-tit">备份数据量</p>
+          <div id="myChart1"  :style="{width:'470px',height:'244px'}" ></div>
+          <div class="home-details">
+            <span class="home-capacity">
+              <p> 累计完成备份数据量</p>
+              {{left.totalbytes}}
+            </span>
+            <span class="home-range">
+              <p>同比上周字节增长量</p>
+              {{left.increasebytes}}
+            </span>
+          </div>
+      </div>
     </div>
   </div>
 </template>
@@ -107,7 +109,10 @@ export default {
               "#ff9103",
               // "#fff",
               "#c5c7c9",
-              // "#fff"
+              // "#fff",
+              "##4ee6cb",
+              "##57d868",
+              "#c95dea"
             ],
             labelLine: {
               normal: {

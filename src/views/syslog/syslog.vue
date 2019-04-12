@@ -71,7 +71,7 @@
             </col>
         </Row>
       </div>
-      <sysdetails ref="sysdetails"></sysdetails>
+      <sysdetails  ref="sysdetails" ></sysdetails>
     </TabPane>
   </Tabs>
   

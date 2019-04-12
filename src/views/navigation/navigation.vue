@@ -5,8 +5,9 @@
 <template>
   <div class="layout">
     <Layout>
+      <!-- 头部导航区 -->
       <Header class="navigation-header" style="height:50px; background:none;">
-        <Menu mode="horizontal" active-name="1" class="header" stylt="height:50px !important" @on-select="onMenu">
+        <Menu mode="horizontal" active-name="1" @on-select="onMenu">
           <div class="layout-logo"></div>
           <span class="title">THE VRTS备份软件</span>
           <div class="layout-nav">
@@ -18,46 +19,48 @@
               <Icon type="help-circled"></Icon>帮助
             </MenuItem>
             <MenuItem name="2">
-            <Dropdown trigger="click" style="margin-left: 20px" @on-click="adminClick" >
-             <Icon type="android-person"></Icon>admin
-              <DropdownMenu slot="list">
-                <DropdownItem name="logout">退出登录</DropdownItem>
-              </DropdownMenu>
+              <Dropdown trigger="click" style="margin-left: 20px" @on-click="adminClick" >
+                <Icon type="android-person"></Icon>admin
+                <DropdownMenu slot="list">
+                  <DropdownItem name="logout">退出登录</DropdownItem>
+                </DropdownMenu>
             </Dropdown>
              </MenuItem>
           </div>
         </Menu>
       </Header>
-      <Layout :style="{ height: '100%' }">
-        <Content :style="{ background: '#fff', height: '100%' }">
-          <Layout>
-            <Sider hide-trigger :style="{ background: '#fff' }">
-              <Menu
-                active-name="1-2"
-                :style="{ background: '#4a4949', height: '100%' }"
-                width="282px"
-                :open-names="['1']"
-                @on-select="changeUrl"
-              >
+      <!-- <Layout :style="{ height: '100%' }"> -->
+      <Layout>
+        <!-- <Content :style="{ background: '#fff', height: '100%' }"> -->
+        <!-- <Content> -->
+          <!-- <Layout> -->
+            <!-- 左侧导航区 -->
+            <Sider class="nev-lef" ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+              <Menu active-name="1-2" :style="{ background: '#4a4949', height: '100%' }" theme="dark" width="auto" :class="menuitemClasses" :open-names="['1']" @on-select="changeUrl">
+                
+                <Header :style="{padding: 0}" class="lef-head">
+                  <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="drag" size="24"></Icon>
+                </Header>
+
                 <MenuItem name="home"  font-size="16px" v-if="nowShow(getPower.home)"  >
-                  <!--  <Icon type="ios-home"></Icon> -->
+                  <!-- <Icon type="ios-home"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-home"></use>
                   </svg>
-                  首页
+                  <span>首页</span>  
                 </MenuItem>
                 <MenuItem name="usermanager" font-size="16px" v-if="nowShow(getPower.userManager)" >
                   <!-- <Icon type="person-add"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-user-circle"></use>
                   </svg>
-                  用户管理
+                  <span>用户管理</span>
                 </MenuItem>
                 <MenuItem name="role" v-if="nowShow(getPower.role)" >  
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-jiaose"></use>
                   </svg>
-                  角色管理
+                  <span>角色管理</span>
                 </MenuItem>
                 <MenuItem name="taskmonitor" v-if="nowShow(getPower.taskMonitor)">
                   <!--  <Icon type="monitor"></Icon> -->
@@ -65,75 +68,69 @@
                     <use xlink:href="#icon-dashboard"></use>
                   </svg>
                   <!-- <i class="iconfont">&#xe602;</i> -->
-                  任务监控
+                  <span>任务监控</span>
                 </MenuItem>
                 <MenuItem name="client" v-if="nowShow(getPower.client)">
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-laptop"></use>
                   </svg>
-                  客户端
+                  <span>客户端</span>
                 </MenuItem>
                 <MenuItem name="syslog" v-if="nowShow(getPower.syslog)" >
                   <!-- <Icon type="clipboard"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-file"></use>
                   </svg>
-                  日志管理
+                  <span>日志管理</span>
                 </MenuItem>
                 <MenuItem name="mediaserver" v-if="nowShow(getPower.mediaServer)||nowShow(getPower.diskDevice)" >
                   <!-- <Icon type="social-windows"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-server"></use>
                   </svg>
-                  介质服务器
+                  <span>介质服务</span>
                 </MenuItem>
                 <MenuItem name="volume" v-if="nowShow(getPower.volume)" >
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-hdd"></use>
                   </svg>
-                  介质管理
+                  <span>介质管理</span>
                 </MenuItem>
                 <MenuItem name="policy" v-if="nowShow(getPower.policy)" >
                   <!-- <Icon type="edit"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-xuanzewenjian"></use>
                   </svg>
-                  策略管理
+                  <span>策略管理</span>
                 </MenuItem>
                 <MenuItem name="restore" v-if="nowShow(getPower.restore)" >
                   <!--  <Icon type="refresh"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-web-icon-"></use>
                   </svg>
-                  恢复管理
+                  <span>恢复管理</span>
                 </MenuItem>
                 <MenuItem name="report" v-if="nowShow(getPower.report)" >
                   <!-- <Icon type="ios-browsers-outline"></Icon> -->
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-yiji-baobiaoguanli"></use>
                   </svg>
-                  报表管理
+                  <span>报表管理</span>
                 </MenuItem>
                 <MenuItem name="sysset" v-if="nowShow(getPower.sysset)" >
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-cog"></use>
                   </svg>
-                  系统设置
+                  <span>系统设置</span>
                 </MenuItem>
               </Menu>
             </Sider>
-            <Content
-              :style="{
-                padding: '24px',
-                minHeight: '280px',
-                background: '#fff',
-                width: '1000px'
-              }"
-            >
+            <!-- 右侧内容区 -->
+            <Content :style="{ padding: '24px', minHeight: '280px', background: '#fff'}">
               <router-view></router-view>
             </Content>
-          </Layout>
-        </Content>
+          <!-- </Layout> -->
+        <!-- </Content> -->
       </Layout>
     </Layout>
     <downloud ref="downloud"></downloud>
@@ -150,7 +147,8 @@ export default {
   },
   data(){
     return {
-      nowLists:[]
+      nowLists:[],
+      isCollapsed: false
     }
   },
   name: "navigation",
@@ -162,9 +160,18 @@ export default {
     //新建成功
     policyState() {
       return this.$store.state.index.policySwitch;
+    },
+    menuitemClasses() {
+      return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
+    },
+    rotateIcon() {
+      return ['menu-item', this.isCollapsed ? 'rotate-icon' : '']
     }
   },
   methods: {
+    collapsedSider() {
+      this.$refs.side1.toggleCollapse();
+    },
     numNowBack(data){
     },
     nowShow(num){

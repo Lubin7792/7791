@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal title="VMWARE备份" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="开始恢复" cancel-text="取消恢复" width="500" :mask-closable="false">
+    <Modal title="恢复选项" v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="开始恢复" cancel-text="取消恢复" width="500" :mask-closable="false">
       <!-- 恢复路径 -->
       <div>
         <Form label-position="left" :label-width="0">

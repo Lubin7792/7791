@@ -5,9 +5,9 @@
 <template>
   <div class="sys-content">
     <div class="row">
-      <Table highlight-row :data="pageData" :columns="tableColumns1" :row-class-name="rowClassName" @on-row-click="onClick" height="616"></Table>
+      <Table highlight-row :data="pageData" :columns="tableColumns1" :row-class-name="rowClassName" @on-row-click="onClick" height="619"></Table>
     </div>
-      <div style="position: fixed; left: 45%;">
+      <div class="sys-page" >
       <!-- 分页器 -->
         <Page :total="number" show-total :page-size="pageSize" @on-change="onPage"></Page>
       </div>
@@ -53,7 +53,7 @@ export default {
         { title: '时间', key: 'time' },
         { title: '来源', key: 'src' },
         { title: '描述', key: 'desc', className: 'sysdesc', width:400 },
-        { title: '详情', width: 150, align: "center",
+        { title: '详情', width: 80, align: "center",
           render: (h, params) => {
             return h("div", [
               h(

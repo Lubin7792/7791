@@ -1,7 +1,8 @@
 <template>
  <Tabs :animated="false" class="media" v-model="tabsData" @on-click="tabName" type="card">
     <!-- 介质服务器 -->
-    <TabPane label="介质服务器" v-if="nowShow(getPower.seeMediaServer)" name="介质服务器" :key="Math.random().toFixed(4)">
+    <TabPane label="介质服务器" v-if="nowShow(getPower.seeMediaServer)" name="介质服务器" :key="Math.random()">
+      
       <Table
         stripe
         highlight-row
@@ -18,7 +19,8 @@
       </div>
     </TabPane>
     <!-- 磁盘 -->
-    <TabPane label="磁盘设备"   v-if="nowShowTow(getPower.seeDiskDevice)"  name="磁盘设备" :key="Math.random().toFixed(4)">
+    <TabPane label="磁盘设备"   v-if="nowShowTow(getPower.seeDiskDevice)"  name="磁盘设备" :key="Math.random()">
+      
       <Table
         stripe
         highlight-row
@@ -27,7 +29,6 @@
         :columns="disks"
         height="720"
       ></Table>
-
       <div class="btn">
         <Button type="info" @click="newDisk"  v-if="nowShowTow(getPower.newDiskDevice)">新建磁盘</Button>
         <!-- <Button type="info" @click="modifyDisk">修改磁盘</Button> -->
@@ -36,7 +37,7 @@
       </div>
     </TabPane>
     <!-- 磁带库 -->
-    <TabPane label="磁带库设备" name="磁带库设备" :key="Math.random().toFixed(4)">
+    <TabPane label="磁带库设备" name="磁带库设备" :key="Math.random()">
       <Table
         stripe
         highlight-row
@@ -46,13 +47,14 @@
         @on-current-change="librayData" 
         height="720"
       ></Table>
-
       <div class="btn">
         <Button type="info" @click="newLibrary">新建磁带库</Button>
         <!-- <Button type="info" @click="modifyLibrary">修改磁带库</Button> -->
         <libraryModal ref="libraryModal" @libraryReturn="libraryReturn"></libraryModal>
-       <updateLibrary ref="updateLibrary"></updateLibrary>
+        <!-- <updateLibrary :modalLibrary="modalLibrary" ref="updateLibrary"></updateLibrary> -->
+        <updateLibrary ref="updateLibrary"></updateLibrary>
       </div>
+
     </TabPane>
   </Tabs>
 </template>
@@ -245,7 +247,7 @@ export default {
       medium: [],
       disk: [],
       tape: [],
-      modalLibrary: {},
+      // modalLibrary: {},
       selServiceList: []
     };
   },
@@ -310,7 +312,7 @@ export default {
   },
   methods: {
     tabName(name){
- this.tabsData=name
+      this.tabsData=name
     },
     nowShow(num) {
       if (this.numNowList.indexOf(num) != -1) {
@@ -380,8 +382,8 @@ export default {
           slots: typeobj.data[i].slots,
           changer: typeobj.data[i].changer
         });
-        this.tape = array;
       }
+      this.tape = array;
     },
     // 介质服务器部分代码
     // 软件版本号转换
@@ -449,6 +451,7 @@ export default {
     },
     //接收添加成功的数据并附给磁盘表
     diskReturn(diskdatas) {
+      console.log('222',diskdatas)
       this.disk = diskdatas;
       util.restfullCall(
         "/rest-ful/v3.0/mediaservers",
@@ -485,16 +488,17 @@ export default {
     },
     // 接收添加成功的磁带库信息赋值给磁带库表
     libraryReturn(librardata) {
+      this.tape = librardata;
       util.restfullCall(
-        "/rest-ful/v3.0/devices?type=" + librardata.type,
+        "/rest-ful/v3.0/mediaservers",
         null,
         "get",
-        this.tapesdata
+        this.senddata
       );
     },
     // 选中点击的磁带库数据
     librayData: function(livrayRow) {
-      this.modalLibrary = livrayRow;
+      // this.modalLibrary = livrayRow;
     },
     // 删除磁带库成功之后的回调判断
     delLibrarys(librarys) {
@@ -504,6 +508,12 @@ export default {
           null,
           "get",
           this.tapesdata
+        );
+        util.restfullCall(
+          "/rest-ful/v3.0/mediaservers",
+          null,
+          "get",
+          this.senddata
         );
     },
     // 行内容
@@ -527,11 +537,19 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
 .media .btn {
-  margin-top: 15px;
+  margin-top: 10px;
 }
+/* .media .btn {
+  position: absolute;
+  right: 10px;
+  top: 0px;
+} */
+/* .media .btn .ivu-btn-info {
+  float: right;
+} */
 .ivu-table .error td {
-  background-color: rgb(201, 80, 50) !important;
+  background-color: rgb(201, 80, 50);
 }
 </style>

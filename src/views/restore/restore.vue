@@ -9,7 +9,7 @@
 	  background-color: #F3F3F3;
   }
   ._tree-box {
-    height: 630px;
+    height: 520px;
     border: 1px solid #ccc;
     position: relative;
   }
@@ -37,7 +37,7 @@
   }
   .details {
     /* border: 1px solid #ccc; */
-    height: 630px;
+    height: 520px;
   }
   .details-top {
     height: 60px;
@@ -110,7 +110,7 @@
           <div class="details-top">
             <p>已选择恢复的数据</p>
             <div class="tree-conten">
-              <Table border ref="selection" :columns="listPath" :data="pathConten" height="570"></Table>
+              <Table border ref="selection" :columns="listPath" :data="pathConten" height="460"></Table>
             </div>
           </div>
         </div>
@@ -160,7 +160,7 @@
           policytype: '',
           starttime: '',
           endtime: '',
-          RestoreTime: ''
+          RestoreTime: '',
         },
         setting: {
           check: {
@@ -255,7 +255,8 @@
       },
       // 点击查询
       onQuery() {
-        let url = '/rest-ful/v3.0/report/history?status=1&'
+        this.query.RestoreTime = '';
+        let url = '/rest-ful/v3.0/report/history?status=1&tasktype=1&'
         Object.keys(this.query).forEach(item => {
           if(this.query[item]) url += `${item}=${this.query[item]}&`
         })
@@ -287,7 +288,7 @@
       // 单击行数据发送请求展示树形数据
       listClick:function(row) {
         this.pathConten = [];
-        this.query.RestoreTime = row.endtime
+        this.query.RestoreTime = row.endtime;
         util.restfullCall('/rest-ful/v3.0/restore/resource/query?client='+this.query.client+'&type='+this.query.policytype+'&startime='+this.query.starttime+'&endtime='+row.endtime, null, 'get', this.callbackTree)
       },
       // 数型数据回调

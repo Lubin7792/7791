@@ -1,6 +1,6 @@
 <template>
     <div class="home-war">
-        <p class="war-tit">警告记录（最近一周）</p>
+        <p class="war-tit">告警记录（最近一周）</p>
         <Table  :columns="warning" :data="warnings" :show-header="false" @on-row-click="getRowData" height="250"></Table>
         <Modal  v-model="details" title="详情"  cancel-text class="popup">
           <popup :num="ceshi" ></popup>   

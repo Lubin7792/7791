@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal title="文件恢复选项" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="开始恢复" cancel-text="取消恢复" width="500" :mask-closable="false">
+    <Modal title="恢复选项" v-model="modal" class-name="vertical-center-modal" @on-ok="ok" @on-cancel="cancel" ok-text="开始恢复" cancel-text="取消恢复" width="500" :mask-closable="false">
 		  <!-- 重定向恢复 -->
       <div class="redirect">
         <span class="marquee-top"><Checkbox v-model="redirection">重定向恢复</Checkbox></span>

@@ -1,5 +1,5 @@
 .home-left,.home-middle{
-  width: 470px;
+  width: 30%;
   float: left;
 }
 .home-middle .home-content{
@@ -13,7 +13,7 @@
 }
 .home-right{
   display: inline-block;
-  width: 470px;
+  width: 30%;
 }
 
 .home-middle{
@@ -32,6 +32,10 @@
 }
 .home-fail:hover {
   margin-left: -10px; 
+}
+.home-content:hover {
+  /* position: absolute; */
+  margin: -5px 0 0 -5px
 }
 .home-success:hover {
   margin-left: -10px; 
@@ -84,14 +88,21 @@
   line-height: 30px;
   color: #2f3b4c;
 }
-
+.content {
+  width: 470px;
+  height: 370px;
+  margin-bottom: 20px;
+}
+.home-content:hover {
+  /* position: absolute; */
+  margin: -5px 0 0 -5px
+}
 .home-content {
   display: inline-block;
   width: 470px;
   height: 370px;
   border: 1px solid #e4e4e4;
   border-radius: 5px;
-  margin-bottom: 20px;
   box-shadow: 3px 3px 3px #e4e4e4;
 }
 .home-content .home-con-tit {

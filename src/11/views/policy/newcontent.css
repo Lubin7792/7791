@@ -1,0 +1,82 @@
+/* 新建策略 */
+.newconten .planoption {
+  float: left;
+  width: 50%;
+}
+.newconten .planinfo .ivu-form-item {
+  width: 250px;
+  display: inline-block;
+}
+
+.planweek .ivu-date-picker-focused {
+  position: fixed;
+  z-index: 1;
+}
+.planlist .ivu-table-wrapper {
+  z-index: 0;
+}
+.newconten #areaTree {
+  border: none;
+}
+.newconten .tree-box {
+  width: 60%;
+  float: left;
+  height: 300px;
+  overflow: auto;
+}
+.newconten .block250{
+  width: 250px;
+  display: inline-block;
+}
+.newconten .tree-conten {
+  width: 39%;
+  float: right;
+  height: 300px;
+  overflow: auto;
+}
+.newconten .planinfo .time .ivu-form-item {
+  width: 300px;
+}
+.newconten .file {
+  font-size: 16px;
+  padding: 0 10px;
+}
+.newconten .frame {
+  padding: 20px 10px 10px;
+  border: 1px solid #dddee1;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.newconten .frame .titles {
+  position: absolute;
+  left: 30px;
+  top: -11px;
+  background-color: #fff;
+  padding: 0 6px;
+  font-size: 14px;
+}
+.newconten .fail {
+  width: 50%;
+  float: left;
+}
+.newconten .oar {
+  width: 80%;
+}
+.newconten .list {
+  float: left;
+  padding: 10px 20px 10px;
+  width: 50%;
+}
+.newconten .blanks {
+  width: 100%;
+  padding: 5px 0;
+}
+.newconten .ivu-form-item{
+}
+.marleft48{
+  margin-left: -48px;
+}
+.newconten .h30{
+  height: 30px;
+}

@@ -123,14 +123,45 @@ export default {
     ok() {
       var libraryName = /^[a-zA-Z0-9_.\u4e00-\u9fa5]+$/
       if(libraryName.test(this.libraryItem.name)){
-        util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', null)
-        this.$emit('libraryReturn',this.libraryItem)
+        util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', this.callb)
         this.libraryItem.name = null
         this.libraryItem.server = null
         this.Mechanics = null
       }else{
         this.$Message.error("新建磁带库输入格式错误！")
       }
+    },
+    callb(obj) {
+      console.log(obj)
+      if(obj.data.code===0){
+        util.restfullCall(
+          "/rest-ful/v3.0/devices?type=1",
+          null,
+          "get",
+          this.tapesdata
+        );
+      }else {
+        this.$Message.error(obj.data.message)
+      }
+    },
+    tapesdata: function(typeobj) {
+      var array = new Array();
+      for (let i = 0; i < typeobj.data.length; i++) {
+        array.push({
+          name: typeobj.data[i].name,
+          id: typeobj.data[i].id,
+          server: typeobj.data[i].server,
+          servername: typeobj.data[i].servername,
+          vendor: typeobj.data[i].vendor,
+          productid: typeobj.data[i].productid,
+          status: typeobj.data[i].status,
+          serialno: typeobj.data[i].serialno,
+          drivers: typeobj.data[i].drivers,
+          slots: typeobj.data[i].slots,
+          changer: typeobj.data[i].changer
+        });      
+      }
+      this.$emit('libraryReturn',array)  
     },
     cancel() {
       // this.$Message.warning("操作已取消")

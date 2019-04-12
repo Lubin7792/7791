@@ -1,0 +1,181 @@
+.home-left,.home-middle{
+  width: 470px;
+  float: left;
+}
+.home-middle .home-content{
+  position: relative;
+}
+.home-middle .home-con-tit{
+  position: absolute;
+}
+.home-left{
+  margin-left: 10px;
+}
+.home-right{
+  display: inline-block;
+  width: 470px;
+}
+
+.home-middle{
+  margin: 0 60px;
+}
+.home-title {
+  position: relative;
+  display: inline-block;
+  padding: 10px 34px;
+  width: 470px;
+  height: 130px;
+  border: 1px solid #e4e4e4;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-shadow: 3px 3px 3px #e4e4e4;
+}
+.home-fail:hover {
+  margin-left: -10px; 
+}
+.home-success:hover {
+  margin-left: -10px; 
+}
+.task {
+  position: relative;
+  width: 470px;
+  height: 130px;
+  margin-bottom: 20px;
+}
+.home-task:hover,.home-fail:hover,.home-success:hover, {
+  position: absolute;
+  margin: -5px 0 0 -5px
+}
+.home-title p {
+  float: left;
+  display: inline-block;
+  width: 90px;
+  height: 90px;
+  margin-top: 10px;
+  background: #ff8863 url(../../images/hometask.png) no-repeat center center;
+  border-radius: 5px;
+  margin-right: 80px;
+}
+.home-middle .home-title p{
+  background-color: #ff9103;
+  background-image: url(../../images/homesuccess.png)
+}
+.home-right .home-title p{
+  background-color: #f9b0ac;
+  background-image: url(../../images/homeerror.png)
+}
+.home-title i {
+  font-style: normal;
+  display: inline-block;
+  width: 200px;
+  font-size: 16px;
+  font-weight: bolder;
+  color: #090909;
+  margin-bottom: 54px;
+}
+.home-title em {
+  position: absolute;
+  top: 50%;
+  right: 40%;
+  font-style: normal;
+  font-weight: bolder;
+  display: inline-block;
+  font-size: 30px;
+  line-height: 30px;
+  color: #2f3b4c;
+}
+
+.home-content {
+  display: inline-block;
+  width: 470px;
+  height: 370px;
+  border: 1px solid #e4e4e4;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-shadow: 3px 3px 3px #e4e4e4;
+}
+.home-content .home-con-tit {
+  padding: 10px 25px;
+  font-size: 20px;
+  color: #333333;
+}
+.home-details {
+  border-top: 1px solid #e4e4e4;
+  height: 80px;
+  float: left;
+}
+#myChart2 {
+  height: 294px !important;
+}
+.home-details span {
+  height: 100%;
+  font-size: 18px;
+  color: #333333;
+  width: 235px;
+  text-align: center;
+  display: inline-block;
+  font-size: 18px;
+  padding-top: 10px;
+}
+.home-capacity{
+    float: left;
+}
+.home-capacity p {
+  color: #818181;
+  font-size: 16px;
+}
+.home-details .home-range {
+  width: 233px;
+}
+.home-details .home-range p {
+  color: #818181;
+  font-size: 16px;
+}
+.home-right .home-details{
+  height: 116px;
+  width: 100%;
+}
+.home-right .home-title em{
+  color: #e0383a;
+}
+.home-state{
+  height: 200px;
+  font-size: 16px;
+  line-height: 36px;
+  padding: 15%  0  30px 36%;
+}
+.home-setup{
+ text-align: center;
+}
+.home-setup p{
+  text-align: left;
+  display: inline-block;
+  height: 42px;
+  width: 184px;
+  color: #ffffff;
+  font-size:20px;
+  line-height: 40px;
+  background: url(../../images/homesetup.png) no-repeat center center;
+  padding-left: 40px;
+  
+}
+.home-war {
+   box-shadow: 3px 3px 3px #e4e4e4;
+   padding: 10px;
+   border: 1px solid #e4e4e4;
+   margin: 0 10px
+}
+.home-war .ivu-btn-small{
+  background:#de7149 url(../../images/homesee.png) no-repeat center center;
+}
+.home-war .ivu-table-wrapper{
+  width: 1503px;
+}
+.home-war .war-tit{
+  font-size: 16px;
+  font-weight: 600;
+  color: #090909;
+  line-height: 36px;
+  padding-bottom:10px;
+  padding-left:5px;
+}

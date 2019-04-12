@@ -22,7 +22,7 @@
     top: -15px;
   }
   .ivu-table .wrning td {
-	  background-color: rgb(224, 222, 63) !important;
+	  background-color: rgb(224, 222, 63);
   }
   .ivu-table .error td {
     background-color: rgb(201, 80, 50);
@@ -32,7 +32,7 @@
 <template>
   <Tabs :animated="false" type="card"  v-model="tabsData">
     <!-- 运行记录报表 -->
-    <TabPane label="运行记录报表" name="运行记录报表" v-if="nowShow(getPower.seeRunReprot)" >
+    <TabPane label="运行记录报表"  name="运行记录报表" v-if="nowShow(getPower.seeRunReprot)">
         <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -113,7 +113,7 @@
     </TabPane>
 
     <!-- 介质报表 -->
-    <TabPane label="介质报表" name="介质报表" v-if="nowShow(getPower.seeMediaReprot)">
+    <TabPane label="介质报表" v-if="nowShow(getPower.seeMediaReprot)">
           <!-- 搜索条件 -->
       <div class="run-top">
         <h3>过滤查询</h3>
@@ -158,18 +158,18 @@ export default {
       tabsData:'运行记录报表',
       numNowList:[],
       runReport: [
-        { title: 'ID', key: 'id', width: 80, },
-        { title: '任务类型', key: 'type' },
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '任务类型', key: 'type', width: 100 },
         { title: '策略名称', key: 'policy' },
         { title: '策略类型', key: 'policytype' },
         { title: '调度类型', key: 'scheduletype' },
         { title: '开始时间', key: 'starttime' },
         { title: '结束时间', key: 'endtime' },
-        { title: '备份大小', key: 'bytes' },
-        { title: '速率', key: 'rate' },
-        { title: '设备', key: 'device' },
-        { title: '状态', key: 'result', width: 80, },
-        {title: '操作',key: 'operation',align: 'center',width: 80, 
+        { title: '备份大小', key: 'bytes', width: 120 },
+        { title: '速率', key: 'rate', width: 120 },
+        { title: '设备', key: 'device' , width: 120},
+        { title: '状态', key: 'result', width: 70, },
+        {title: '操作',key: 'operation',align: 'center',width: 70, 
           render: (h, params) => {
             return h('div', [
               h('Icon', {
@@ -189,7 +189,7 @@ export default {
       ],
       deviceReport: [
         { title: '设备名称', key: 'name' },
-        { title: '设备类型', key: 'devicetype' },
+        { title: '设备类型', key: 'devicetype'},
         { title: '设备路径', key: 'path' },
         { title: '最大任务数', key: 'maxtasks' },
         { title: '介质服务器', key: 'mediaserver' },
@@ -200,11 +200,11 @@ export default {
       mediumReport: [
         { title: '名称', key: 'name' },
         { title: '条形码', key: 'barcode' },
-        { title: '已使用容量', key: 'bytes' },
+        { title: '已使用容量', key: 'bytes', width: 120 },
         { title: '介质池', key: 'pool' },
-        { title: '介质状态', key: 'status' },
-        { title: '在线状态', key: 'online' },
-        { title: '镜像数量', key: 'images' },
+        { title: '介质状态', key: 'status' , width: 100 },
+        { title: '在线状态', key: 'online' , width: 100},
+        { title: '镜像数量', key: 'images' , width: 100},
         { title: '写入时间', key: 'lastwrtime' },
         { title: '最后回收时间', key: 'recycletime' },
       ],
@@ -222,7 +222,7 @@ export default {
       poolSelect:[],
       poolStatusSelect:[],
       query: {
-        client: "",
+        client: '',
         policytype: '',
         starttime: '',
         endtime: '',
@@ -235,8 +235,8 @@ export default {
         status: ""
       },
       poolQuery:{
-        pool: "",
-        status: "",
+        pool: '',
+        status: '',
       }
     }
   },
@@ -542,7 +542,7 @@ export default {
     },
     // 状态下拉框获取数据
     openPoolStatus:function(open) {
-      if(open == true) this.poolStatusSelect = [{code: "0", name: "正常"},{code: 1, name: "错误"},{code: 2,name: "已满"}]
+      if(open == true) this.poolStatusSelect = [{code: '0', name: "正常"},{code: '2', name: "错误"},{code: '1',name: "已满"}]
     },
     // 状态下拉框的id
     changesPoolStatus: function(datas) {

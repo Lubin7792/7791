@@ -10,19 +10,21 @@
       </div>
     </div>
     
-    <div class="home-content">
-      <p class="home-con-tit">服务器统计</p>
-      <div id="myChart2" :style="{width:'',height:'324px'}"></div> 
-        <div class=" home-details">
-          <span class="home-capacity">
-            <p>介质服务器数量</p>
-            {{content.MediaServers}}
-          </span>
-          <span class="home-range">
-           <p>客户端数量</p>
-            {{content.clients}}
-          </span>
-        </div>
+    <div class="content">
+      <div class="home-content">
+        <p class="home-con-tit">服务器统计</p>
+        <div id="myChart2" :style="{width:'',height:'324px'}"></div> 
+          <div class=" home-details">
+            <span class="home-capacity">
+              <p>介质服务器数量</p>
+              {{content.MediaServers}}
+            </span>
+            <span class="home-range">
+            <p>客户端数量</p>
+              {{content.clients}}
+            </span>
+          </div>
+      </div>
     </div>
   </div>
 </template>

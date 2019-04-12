@@ -473,7 +473,6 @@ export default {
         clientId: "",
         pathValue: "",
         pathConten: []
-
       }
     };
   },
@@ -518,9 +517,13 @@ export default {
         // this.pathContenList[i].path =
         //   machineList[i] + "_" + this.pathContenList[i].path;
 
-        this.resources.pathConten[i].name = (this.resources.pathConten[i].exclude == 0 ? "+" : "-") +machineList[i] +"_" + this.resources.pathConten[i].path;
-        
-        console.log(this.resources.pathConten[i])
+        this.resources.pathConten[i].name =
+          (this.resources.pathConten[i].exclude == 0 ? "+" : "-") +
+          machineList[i] +
+          "_" +
+          this.resources.pathConten[i].path;
+
+        console.log(this.resources.pathConten[i]);
       }
       util.restfullCall(
         "/rest-ful/v3.0/policy/backuptype/" + data.base.type,
@@ -721,24 +724,24 @@ export default {
         if (nowLevel == 2 && nowPath.path == "/") {
           nowPath.path = "";
         }
-        if ("-" + clientId + "_" + nowPath.path + names == findList[i].path) {
+        if ("-" + clientId + "_" + nowPath.path + names == findList[i].name) {
           return false;
         }
         if (
           "-" + clientId + "_" + nowPath.path + names ==
-          findList[i].path.substr(
+          findList[i].name.substr(
             0,
             (clientId + "_" + nowPath.path + names).length + 1
           )
         ) {
           return true;
         }
-        if ("+" + clientId + "_" + nowPath.path + names == findList[i].path) {
+        if ("+" + clientId + "_" + nowPath.path + names == findList[i].name) {
           return false;
         }
         if (
           "+" + clientId + "_" + nowPath.path + names ==
-          findList[i].path.substr(
+          findList[i].name.substr(
             0,
             (clientId + "_" + nowPath.path + names).length + 1
           )
@@ -781,22 +784,23 @@ export default {
                 parent.getCheckStatus().checked == true &&
                 parent.getCheckStatus().half == false
               ) {
-                // if (
-                //   treeNode.getCheckStatus().checked == true &&
-                //   treeNode.getCheckStatus().half == false
-                // ) {
-                  return true;
-                // }
+                return true;
+              }
+              if (
+                treeNode.getCheckStatus().checked == true &&
+                treeNode.getCheckStatus().half == false
+              ) {
+                return true;
               }
             }
           }
-          if ("-" + clientId + "_" + nowPath.path + names == findList[i].path) {
+          if ("-" + clientId + "_" + nowPath.path + names == findList[i].name) {
             return false;
           }
 
           if (
             "+" + clientId + "_" + this.tree_path(treeNode).path ==
-            findList[i].path
+            findList[i].name
           ) {
             return true;
           }
@@ -805,12 +809,12 @@ export default {
           //   return true
           // }
 
-          if ("+" + clientId + "_" + nowPath.path + names == findList[i].path) {
+          if ("+" + clientId + "_" + nowPath.path + names == findList[i].name) {
             return true;
           }
           if (
             "+" + clientId + "_" + nowPath.path + names ==
-            findList[i].path.substr(
+            findList[i].name.substr(
               0,
               (clientId + "_" + nowPath.path + names).length + 1
             )
@@ -994,7 +998,12 @@ export default {
       if (path.indexOf("//") == 0) {
         path = path.substr(1);
       }
-     return { client: cid, path: path, name: name ,namePath:name+"_"+path};
+      return {
+        client: cid,
+        path: path,
+        name: name,
+        namePath: name + "_" + path
+      };
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
@@ -1026,6 +1035,7 @@ export default {
       let objj = obj.data.resources;
       for (let i = 0; i < objj.length; i++) {
         arrays.push({
+          iconSkin: this.findIcon(objj[i].ResType),
           ResType: objj[i].ResType,
           name: objj[i].Name,
           nodetype: 1,
@@ -1037,12 +1047,24 @@ export default {
       ztreeobj.addNodes(treeNode, arrays);
       this.checkType = treeNode.ResType;
     },
+    findIcon: function(num) {
+      console.log(num);
+      if (num == 65537) {
+        return "disk";
+      }
+      if (num == 65538) {
+        return "catalog";
+      }
+      if (num == 65539) {
+        return "file";
+      }
+    },
     //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
       let path = this.tree_path(treeNode);
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
-        this.SelectNode(treeNode)
+        this.SelectNode(treeNode);
         // this.pathContenList.push({ path: pathList });
         // this.pathContens.push({
         //   path: path.path,
@@ -1051,7 +1073,7 @@ export default {
         //   exclude: 1
         // });
       } else {
-        this.DisSelectNode(treeNode)
+        this.DisSelectNode(treeNode);
         // function pathFilter(element) {
         //   return element.path !== pathList;
         // }
@@ -1061,75 +1083,103 @@ export default {
       this.ztreeTyep = treeNode.ResType;
       this.resources.pathValue = path.path;
     },
-            //操作展示列表
+    //操作展示列表
     DeleteItemFromArray(path, start) {
-           for (var index = 0; index < this.resources.pathConten.length; ) {
-             //删除相关的
-           if (this.resources.pathConten[index].name.substring(start, path.length + 1) == path) {
-              this.resources.pathConten.splice(index, 1);               
-          }
-          else if (this.resources.pathConten[index].name.substring(start) == path) {
-              this.resources.pathConten.splice(index, 1)   
-          } else {
-            ++index
-          }
-        }
-      },
-          // 取消选中状态下
-      DisSelectNode:function(treeNode) {
-        let parent = null ;
-        do{
-          parent =treeNode.getParentNode();
-          if(parent.level==0){
-            break
-          }
-          if((parent==null )||(parent.checked)){
-            break;
-          }else{
-            treeNode = parent;
-          }
-        }while(true)
-        this.DeleteItemFromArray(this.tree_path(treeNode).namePath,1)
- if ((parent != null) && (parent.checked)) {
-           this.resources.pathConten.unshift({ name : "-" +this.tree_path(treeNode).namePath,path:this.tree_path(treeNode).path, type: treeNode.ResType,client:this.tree_path(treeNode).client ,Exclude:1})
-        }
-      },
-       // 选中状态下
-      SelectNode:function(treeNode) {
-      let parent = null;
-      do{
-        parent =treeNode.getParentNode()
-        if(parent) {
-          // 删除-父节点
-          console.log(this.tree_path(parent).namePath)
-              this.DeleteItemFromArray("-" +this.tree_path(parent).namePath, 0);
-        }
-        if ((parent == null) || (parent.checked && parent.check_Child_State != 2)||parent.level==0) {
-            break;
-          }  else {
-            treeNode = parent;
-          }
-      }while(true)
-        this.DeleteItemFromArray(this.tree_path(treeNode).namePath, 1);
-    //排查兄弟节点
-       let bNeedInsert = true;
-        let tempNode = treeNode;
-        if (parent) {
-          do  {
-              for (var index = 0; index < this.resources.pathConten.length; index++) {
-                if (this.resources.pathConten[index].name.substring(1) == this.tree_path(tempNode).namePath) {
-                    bNeedInsert = false;
-                    break
-                }
-              }
-              tempNode = tempNode.getParentNode();
-          }while(tempNode)
-        }
-        if (bNeedInsert == true) {
-            this.resources.pathConten.unshift({ name : "+" +this.tree_path(treeNode).namePath, path:this.tree_path(treeNode).path,type: treeNode.ResType,client:this.tree_path(treeNode).client,Exclude:0 })
+      for (var index = 0; index < this.resources.pathConten.length; ) {
+        //删除相关的
+        if (
+          this.resources.pathConten[index].name.substring(
+            start,
+            path.length + 1
+          ) == path
+        ) {
+          this.resources.pathConten.splice(index, 1);
+        } else if (
+          this.resources.pathConten[index].name.substring(start) == path
+        ) {
+          this.resources.pathConten.splice(index, 1);
+        } else {
+          ++index;
         }
       }
-
+    },
+    // 取消选中状态下
+    DisSelectNode: function(treeNode) {
+      let parent = null;
+      do {
+        parent = treeNode.getParentNode();
+        if (parent.level == 0) {
+          break;
+        }
+        if (parent == null || parent.checked) {
+          break;
+        } else {
+          treeNode = parent;
+        }
+      } while (true);
+      this.DeleteItemFromArray(this.tree_path(treeNode).namePath, 1);
+      if (parent != null && parent.checked) {
+        this.resources.pathConten.unshift({
+          name: "-" + this.tree_path(treeNode).namePath,
+          path: this.tree_path(treeNode).path,
+          type: treeNode.ResType,
+          client: this.tree_path(treeNode).client,
+          Exclude: 1
+        });
+      }
+    },
+    // 选中状态下
+    SelectNode: function(treeNode) {
+      let parent = null;
+      do {
+        parent = treeNode.getParentNode();
+        if (parent) {
+          // 删除-父节点
+          console.log(this.tree_path(parent).namePath);
+          this.DeleteItemFromArray("-" + this.tree_path(parent).namePath, 0);
+        }
+        if (
+          parent == null ||
+          (parent.checked && parent.check_Child_State != 2) ||
+          parent.level == 0
+        ) {
+          break;
+        } else {
+          treeNode = parent;
+        }
+      } while (true);
+      this.DeleteItemFromArray(this.tree_path(treeNode).namePath, 1);
+      //排查兄弟节点
+      let bNeedInsert = true;
+      let tempNode = treeNode;
+      if (parent) {
+        do {
+          for (
+            var index = 0;
+            index < this.resources.pathConten.length;
+            index++
+          ) {
+            if (
+              this.resources.pathConten[index].name.substring(1) ==
+              this.tree_path(tempNode).namePath
+            ) {
+              bNeedInsert = false;
+              break;
+            }
+          }
+          tempNode = tempNode.getParentNode();
+        } while (tempNode);
+      }
+      if (bNeedInsert == true) {
+        this.resources.pathConten.unshift({
+          name: "+" + this.tree_path(treeNode).namePath,
+          path: this.tree_path(treeNode).path,
+          type: treeNode.ResType,
+          client: this.tree_path(treeNode).client,
+          Exclude: 0
+        });
+      }
+    }
   }
 };
 </script>
