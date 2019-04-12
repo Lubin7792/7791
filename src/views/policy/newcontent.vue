@@ -487,8 +487,7 @@ export default {
         // 展示列表
         pathConten: [],
         // 发送列表
-        checkPath:'',
-     pathContens: [],
+     pathContens: []
       },
       columns12: [
         {
@@ -835,7 +834,6 @@ export default {
     //选中节点
     zTreeOnCheck: function(event, treeId, treeNode) {
       let path = this.tree_path(treeNode);
-      console.log("this.path",path.path)
       this.resources.treeNode=path.path
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
@@ -915,6 +913,7 @@ export default {
         parent =treeNode.getParentNode()
         if(parent) {
           // 删除-父节点
+          console.log(this.tree_path(parent).namePath)
               this.DeleteItemFromArray("-" +this.tree_path(parent).namePath, 0);
         }
         if ((parent == null) || (parent.checked && parent.check_Child_State != 2)||parent.level==0) {

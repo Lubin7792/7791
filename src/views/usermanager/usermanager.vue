@@ -175,21 +175,21 @@ export default {
                     }
                   }
                 }),
-                h("Icon", {
-                  props: {
-                    type: "upload",
-                    size: 20
-                  },
-                  style: {
-                    marginLeft: "15px"
-                  },
-                  nativeOn: {
-                    click: () => {
-                      let str = "rest-ful/v3.0/user/unlock/" + this.unlockId;
-                      util.restfullCall(str, null, "get", this.unlock);
-                    }
-                  }
-                }),
+                // h("Icon", {
+                //   props: {
+                //     type: "upload",
+                //     size: 20
+                //   },
+                //   style: {
+                //     marginLeft: "15px"
+                //   },
+                //   nativeOn: {
+                //     click: () => {
+                //       let str = "rest-ful/v3.0/user/unlock/" + this.unlockId;
+                //       util.restfullCall(str, null, "get", this.unlock);
+                //     }
+                //   }
+                // }),
                 this.nowShow(this.getPower.editUser)?h("Icon", {
                   props: {
                     type: "edit",

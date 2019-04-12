@@ -78,7 +78,7 @@
           </div>
         </div>
         <div class="tree-conten">
-          <Table border ref="selection" :columns="columns4" :data="pathContenList"></Table>
+          <Table border ref="selection" :columns="columns4" :data="resources.pathConten"></Table>
         </div>
       </div>
     </div>
@@ -290,7 +290,7 @@ export default {
       columns4: [
         {
           title: "已选地址",
-          key: "path"
+          key: "name"
         }
       ],
       treedata: [
@@ -471,7 +471,9 @@ export default {
       resources: {
         equipment: "",
         clientId: "",
-        pathValue: ""
+        pathValue: "",
+        pathConten: []
+
       }
     };
   },
@@ -501,8 +503,7 @@ export default {
       this.basic = data.base;
       this.basictype = data.base.type;
       this.temporary.planList = data.schedule;
-      this.pathContenList = JSON.parse(JSON.stringify(data.resource));
-      this.pathContens = JSON.parse(JSON.stringify(data.resource));
+      this.resources.pathConten = JSON.parse(JSON.stringify(data.resource));
       for (let i = 0; i < data.resource.length; i++) {
         let _index = data.resource[i].client;
         findMachine(_index);
@@ -516,7 +517,10 @@ export default {
         //拼接路径列表
         // this.pathContenList[i].path =
         //   machineList[i] + "_" + this.pathContenList[i].path;
-        this.pathContenList[i].path =(this.pathContenList[i].exclude==0?"+":"-")+machineList[i] + "_" + this.pathContenList[i].path;
+
+        this.resources.pathConten[i].name = (this.resources.pathConten[i].exclude == 0 ? "+" : "-") +machineList[i] +"_" + this.resources.pathConten[i].path;
+        
+        console.log(this.resources.pathConten[i])
       }
       util.restfullCall(
         "/rest-ful/v3.0/policy/backuptype/" + data.base.type,
@@ -695,7 +699,7 @@ export default {
     },
     findHalfCheck(name, treeNode) {
       //已选列表信息
-      let findList = this.pathContenList;
+      let findList = this.resources.pathConten;
       // 当前节点
       let nowNode = this.treeNodeA;
       // 当前路径
@@ -717,17 +721,26 @@ export default {
         if (nowLevel == 2 && nowPath.path == "/") {
           nowPath.path = "";
         }
-        if ("-"+clientId + "_" + nowPath.path + names == findList[i].path) {
-            return false;
-          }
-        if ("+"+clientId + "_" + nowPath.path + names == findList[i].path) {
+        if ("-" + clientId + "_" + nowPath.path + names == findList[i].path) {
           return false;
         }
         if (
-         "+"+ clientId + "_" + nowPath.path + names ==
+          "-" + clientId + "_" + nowPath.path + names ==
           findList[i].path.substr(
             0,
-            (clientId + "_" + nowPath.path + names).length+1
+            (clientId + "_" + nowPath.path + names).length + 1
+          )
+        ) {
+          return true;
+        }
+        if ("+" + clientId + "_" + nowPath.path + names == findList[i].path) {
+          return false;
+        }
+        if (
+          "+" + clientId + "_" + nowPath.path + names ==
+          findList[i].path.substr(
+            0,
+            (clientId + "_" + nowPath.path + names).length + 1
           )
         ) {
           return true;
@@ -737,7 +750,7 @@ export default {
     // 根据name与路径比对是否包含
     findCheckout(name, treeNode) {
       //已选列表信息
-      let findList = this.pathContenList;
+      let findList = this.resources.pathConten;
       // 当前节点
       let nowNode = this.treeNodeA;
       // 当前路径
@@ -748,7 +761,6 @@ export default {
       let nowLevel = nowNode.level + 1;
       let names = "";
       if (true) {
-       
         for (let i = 0; i < findList.length; i++) {
           if (nowLevel != 1) {
             names = "/" + name;
@@ -761,37 +773,51 @@ export default {
           if (nowLevel == 2 && nowPath.path == "/") {
             nowPath.path = "";
           }
+          let parent = treeNode.getParentNode();
 
+          if (parent) {
+            if (parent.getCheckStatus() != null) {
+              if (
+                parent.getCheckStatus().checked == true &&
+                parent.getCheckStatus().half == false
+              ) {
+                // if (
+                //   treeNode.getCheckStatus().checked == true &&
+                //   treeNode.getCheckStatus().half == false
+                // ) {
+                  return true;
+                // }
+              }
+            }
+          }
+          if ("-" + clientId + "_" + nowPath.path + names == findList[i].path) {
+            return false;
+          }
 
-
-
-  if ("+"+clientId + "_" + this.tree_path(treeNode).path  == findList[i].path) {
+          if (
+            "+" + clientId + "_" + this.tree_path(treeNode).path ==
+            findList[i].path
+          ) {
             return true;
           }
 
+          // if(treeNode,treeNode.checked==true&&treeNode.halfCheck==false){
+          //   return true
+          // }
 
-           if ("-"+clientId + "_" + nowPath.path + names == findList[i].path) {
-            return false;
-          }
-          
-
-
-
-              if ("+"+clientId + "_" + nowPath.path + names == findList[i].path) {
+          if ("+" + clientId + "_" + nowPath.path + names == findList[i].path) {
             return true;
           }
           if (
-           "+"+ clientId + "_" + nowPath.path + names ==
+            "+" + clientId + "_" + nowPath.path + names ==
             findList[i].path.substr(
               0,
-              (clientId + "_" + nowPath.path + names).length+1
+              (clientId + "_" + nowPath.path + names).length + 1
             )
           ) {
             return true;
           }
 
-
-          
           // if (
           //   clientId + "_" + nowPath.path + names ==
           //   findList[i].path
@@ -896,7 +922,7 @@ export default {
             savedays: parseInt(this.basic.savedays ? this.basic.savedays : 0),
             maxtasks: parseInt(this.basic.maxtasks ? this.basic.maxtasks : 0)
           },
-          resource: this.pathContens,
+          resource: this.resources.pathConten,
           option: this.$refs.backupOption.showOption(),
           schedule: this.temporary.planList
         };
@@ -968,7 +994,7 @@ export default {
       if (path.indexOf("//") == 0) {
         path = path.substr(1);
       }
-      return { client: cid, path: path, name: name };
+     return { client: cid, path: path, name: name ,namePath:name+"_"+path};
     },
     //获取子节点发送请求
     zTreeOnClick: function(event, treeId, treeNode) {
@@ -1016,24 +1042,94 @@ export default {
       let path = this.tree_path(treeNode);
       var pathList = path.name + "_" + path.path;
       if (treeNode.checked) {
-        this.pathContenList.push({ path: pathList });
-
-        this.pathContens.push({
-          path: path.path,
-          client: parseInt(path.client),
-          type: treeNode.ResType,
-          exclude: 1
-        });
+        this.SelectNode(treeNode)
+        // this.pathContenList.push({ path: pathList });
+        // this.pathContens.push({
+        //   path: path.path,
+        //   client: parseInt(path.client),
+        //   type: treeNode.ResType,
+        //   exclude: 1
+        // });
       } else {
-        function pathFilter(element) {
-          return element.path !== pathList;
-        }
-        this.pathContenList = this.pathContenList.filter(pathFilter);
+        this.DisSelectNode(treeNode)
+        // function pathFilter(element) {
+        //   return element.path !== pathList;
+        // }
+        // this.pathContenList = this.pathContenList.filter(pathFilter);
       }
       this.resources.clientId = path.client;
       this.ztreeTyep = treeNode.ResType;
       this.resources.pathValue = path.path;
-    }
+    },
+            //操作展示列表
+    DeleteItemFromArray(path, start) {
+           for (var index = 0; index < this.resources.pathConten.length; ) {
+             //删除相关的
+           if (this.resources.pathConten[index].name.substring(start, path.length + 1) == path) {
+              this.resources.pathConten.splice(index, 1);               
+          }
+          else if (this.resources.pathConten[index].name.substring(start) == path) {
+              this.resources.pathConten.splice(index, 1)   
+          } else {
+            ++index
+          }
+        }
+      },
+          // 取消选中状态下
+      DisSelectNode:function(treeNode) {
+        let parent = null ;
+        do{
+          parent =treeNode.getParentNode();
+          if(parent.level==0){
+            break
+          }
+          if((parent==null )||(parent.checked)){
+            break;
+          }else{
+            treeNode = parent;
+          }
+        }while(true)
+        this.DeleteItemFromArray(this.tree_path(treeNode).namePath,1)
+ if ((parent != null) && (parent.checked)) {
+           this.resources.pathConten.unshift({ name : "-" +this.tree_path(treeNode).namePath,path:this.tree_path(treeNode).path, type: treeNode.ResType,client:this.tree_path(treeNode).client ,Exclude:1})
+        }
+      },
+       // 选中状态下
+      SelectNode:function(treeNode) {
+      let parent = null;
+      do{
+        parent =treeNode.getParentNode()
+        if(parent) {
+          // 删除-父节点
+          console.log(this.tree_path(parent).namePath)
+              this.DeleteItemFromArray("-" +this.tree_path(parent).namePath, 0);
+        }
+        if ((parent == null) || (parent.checked && parent.check_Child_State != 2)||parent.level==0) {
+            break;
+          }  else {
+            treeNode = parent;
+          }
+      }while(true)
+        this.DeleteItemFromArray(this.tree_path(treeNode).namePath, 1);
+    //排查兄弟节点
+       let bNeedInsert = true;
+        let tempNode = treeNode;
+        if (parent) {
+          do  {
+              for (var index = 0; index < this.resources.pathConten.length; index++) {
+                if (this.resources.pathConten[index].name.substring(1) == this.tree_path(tempNode).namePath) {
+                    bNeedInsert = false;
+                    break
+                }
+              }
+              tempNode = tempNode.getParentNode();
+          }while(tempNode)
+        }
+        if (bNeedInsert == true) {
+            this.resources.pathConten.unshift({ name : "+" +this.tree_path(treeNode).namePath, path:this.tree_path(treeNode).path,type: treeNode.ResType,client:this.tree_path(treeNode).client,Exclude:0 })
+        }
+      }
+
   }
 };
 </script>
