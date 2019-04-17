@@ -27,7 +27,6 @@
                 <Input v-model="sqlserver.password" class="sqlserver-password" type="password" :disabled="disableds"></Input>
             </FormItem>
             </Col>
-          
         </Row>
         <Row>
             <Col span="12">
@@ -35,8 +34,8 @@
                 <InputNumber :max="300" :min="10" v-model="sqlserver.timeout"></InputNumber>
             </FormItem>
             </Col>
-           
         </Row>
+    <loading  v-show="loadingShow"></loading>
         <Row class="sqlserver-btn">
             <Button type="info" @click="updateSqlserver">保存修改</Button>
             <Button type="info" @click="newSqlserver">添加实例</Button>
@@ -49,7 +48,6 @@
         <Row class="sqlserver-table">
             <Table :columns="columns" :data="data" @on-row-click="click" class="instanceTable"></Table>
         </Row>
-
     </Form>
 </template>
 <script>
@@ -81,6 +79,7 @@ export default {
       }
     };
     return {
+      loadingShow:false,
           ruleServer: {
         server: [
           {
@@ -281,6 +280,7 @@ if(!/^[a-zA-Z0-9_]{1,84}$/.test(this.sqlserver.server)){
       }
     },
     test: function() {
+      this.loadingShow=true;
       let message = {}
       message.server = this.sqlserver.server
       message.user = this.sqlserver.user
@@ -298,11 +298,12 @@ if(!/^[a-zA-Z0-9_]{1,84}$/.test(this.sqlserver.server)){
         postData,
         'post',
         obj => {
+          this.loadingShow=false;
           if (obj.data.code == 0) {
-            alert('测试连接成功')
+           this.$Message.success('测试连接成功');
           }
    else {
-            alert(obj.data.message)
+            this.$Message.warning('测试连接失败');
           }
           
         }

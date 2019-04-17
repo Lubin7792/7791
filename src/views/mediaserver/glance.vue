@@ -112,6 +112,7 @@ export default {
           for (let i = 0; i < objj.length; i++) {
             arrays.push({
               name: objj[i],
+              iconSkin:"catalog",
               nodetype: 1
             });
           }

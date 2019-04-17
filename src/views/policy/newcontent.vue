@@ -4,6 +4,7 @@
 
 <template>
   <div class="newconten">
+     <loading v-if="loadingShow" key="1"></loading>
     <div v-show="show === '基本信息'" class="basicinfo">
       <Form ref="basic" :model="basic" :label-width="120" :rules="ruleMode">
         <FormItem label="策略名称" prop="name">
@@ -214,7 +215,7 @@
           <Input v-model="schedule.intervalTime" placeholder="输入时间" style="width: 100px"></Input>
           <span>{{ schedule.freqval }}</span>
         </FormItem>
-        <div class="button">
+        <div class="buttonList">
           <Button type="warning" @click="addPlan">添加计划</Button>
           <Button type="warning" @click="revisePlan">保存修改</Button>
           <Button type="warning" @click="deletePlan">删除计划</Button>
@@ -277,6 +278,7 @@ export default {
           : new Date().getSeconds();
 
     return {
+      loadingShow:false,
       ztreeArray:[],
       ruleMode: {
         name: [
@@ -789,6 +791,7 @@ export default {
     zTreeOnClick: function(event, treeId, treeNode) {
       if (typeof this.basic.type == "number") {
         if (!treeNode.hasOwnProperty("children")) {
+      this.loadingShow=true;
           this.treeNodeA = treeNode;
           this.treeId = treeId;
           let typeId = treeNode.ResType ? treeNode.ResType : this.basic.type;
@@ -806,6 +809,7 @@ export default {
       }
     },
     callData: function(obj) {
+          this.loadingShow=false;
       let treeNode = this.treeNodeA;
       let treeId = this.treeId;
       //返回数据处理
@@ -833,7 +837,6 @@ export default {
       }
     },
        findIcon:function(num){
-         console.log(num)
       if(num==65537){
         return "disk"
       }

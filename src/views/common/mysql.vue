@@ -30,6 +30,7 @@
         </FormItem>
       </Col>
     </Row>
+    <loading  v-show="loadingShow"></loading>
     <Row class="mysql-btn">
       <Button type="info" @click="updateInstance">保存修改</Button>
       <Button type="info" @click="newInstance">添加实例</Button>
@@ -56,6 +57,7 @@ import util from "../../libs/util.js";
 export default {
   data() {
     return {
+      loadingShow:false,
       mysql: {
         host: "",
         userName: "",
@@ -118,6 +120,7 @@ export default {
   },
   methods: {
     test: function() {
+      this.loadingShow=true;
       let message = {
         host: this.mysql.host,
         user: this.mysql.userName,
@@ -131,17 +134,16 @@ export default {
       postData.conf = conf;
       postData.id = this.mysql.id;
       postData.type = parseInt(this.$store.state.index.clientTitle);
-      console.log(postData);
       util.restfullCall(
         "rest-ful/v3.0/client/agent/instance/test",
         postData,
         "post",
         obj => {
+          this.loadingShow=false;
           if (obj.data.code == 0) {
-            alert("测试连接成功");
-          }
-          if (obj.data.code == 1) {
-            alert("测试连接失败");
+             this.$Message.success('测试连接成功');
+          }else {
+             this.$Message.warning('测试连接失败');
           }
         }
       );

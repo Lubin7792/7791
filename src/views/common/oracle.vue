@@ -33,6 +33,7 @@
 				<Option v-for="item in catalogList" :value="item.value" :key="item.value"></Option>
 			</Select>
 		</Row>
+    <loading  v-show="loadingShow"></loading>
 		<Row class="row-btn">
 			<Button type="info" @click="updateInstance">保存修改</Button>
 			<Button type="info" @click="newInstance">添加实例</Button>
@@ -93,13 +94,14 @@ export default {
   },
   data() {
     return {
+      loadingShow:false,
       oracle: [],
       modalDelete: false,
       formItem: {
         instanceName: '',
         userName: '',
         password: '',
-        time: '30'
+        time: 30
       },
       columns: [
         {
@@ -197,7 +199,6 @@ export default {
           }
         }
       )
-      console.log(postData,this.clientList)
     },
     changeOption: function(value) {
       this.catalog = value
@@ -244,6 +245,7 @@ export default {
       })
     },
     test: function() {
+      this.loadingShow=true;
       let message = {}
       message.name = this.formItem.instanceName
       message.user = this.formItem.userName
@@ -261,10 +263,11 @@ export default {
         postData,
         'post',
         obj => {
+          this.loadingShow=false;
           if (obj.data.code == 0) {
-            alert('测试连接成功')
+         this.$Message.success('测试连接成功');
           }else {
-            alert('测试连接失败')
+            this.$Message.warning('测试连接失败');
           }
         }
       )

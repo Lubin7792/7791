@@ -6,6 +6,7 @@ import "../src/static/ztree/js/jquery-3.2.1.min";
 import "../src/static/ztree/js/jquery.ztree.core.js";
 import "../src/static/ztree/js/jquery.ztree.excheck";
 import "../src/static/ztree/css/zTreeStyle/zTreeStyle.css";
+import loading from '../src/views/common/lading.vue'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import Routers from './router/router.js';
@@ -22,6 +23,7 @@ Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(Table);
 Vue.use(TableColumn);
+Vue.component('loading', loading)
 // The routing configuration
 const RouterConfig = {
     // 使用 HTML5 的 History 路由模式

@@ -29,6 +29,7 @@
 			</FormItem>
 			</Col>
 		</Row>
+    <loading  v-show="loadingShow"></loading>
 		<Row class="vmware-btn">
 			<Button type="info" @click="updateVmware">保存修改</Button>
 			<Button type="info" @click="newvmware">添加实例</Button>
@@ -48,6 +49,7 @@ import util from '../../libs/util.js'
 export default {
   data() {
     return {
+      loadingShow:false,
       vmware: {
         host: '',
         user: '',
@@ -72,6 +74,7 @@ export default {
       modalDelete: false
     }
   },
+
   computed: {
     clientList() {
       return this.$store.state.index.clientList
@@ -172,6 +175,7 @@ export default {
       this.vmware = item
     },
     test: function() {
+      this.loadingShow=true;
       let message = this.vmware
       let conf = JSON.stringify(message)
       let postData = {}
@@ -184,10 +188,11 @@ export default {
         postData,
         'post',
         obj => {
+          this.loadingShow=false;
           if (obj.data.code == 0) {
-            alert('测试连接成功')
+             this.$Message.success('测试连接成功');
           }else {
-            alert('测试连接失败')
+            this.$Message.warning('测试连接失败');
           }
         }
       )

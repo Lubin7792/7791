@@ -34,6 +34,12 @@
   height: 300px;
   overflow: auto;
 }
+.newconten .planinfo .buttonList{
+  margin-bottom: 5px;
+}
+.newconten .planinfo .ivu-form-item{
+  margin-bottom: 12px;
+}
 .newconten .planinfo .time .ivu-form-item {
   width: 300px;
 }
