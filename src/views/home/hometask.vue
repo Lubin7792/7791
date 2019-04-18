@@ -60,7 +60,7 @@ export default {
   methods: {
     drawLine(data) {
       var array = new Array;
-      if(data.classsum.length == 0) {
+      if(data.classsum == null) {
           array.push({
             value:1,
             name:"暂无数据"

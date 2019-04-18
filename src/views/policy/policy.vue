@@ -4,7 +4,7 @@
 
 <template>
   <div class="policy">
-    <div class="buttonC">
+    <div class="buttonPolice">
       <Button type="error"  @click="newPolicy" v-if="nowShow(getPower.newPolicy)">新建策略</Button>
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>

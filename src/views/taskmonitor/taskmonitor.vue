@@ -38,7 +38,7 @@ export default {
               // 任务监控详情
               h('Icon', {
                   props: {
-                      type: 'gear-b',
+                      type: 'ios-chatboxes',
                       size: '20'
                   },
                   style: {

@@ -3,15 +3,15 @@
 </style>
 <template>
     <div>
-        <Button type="warning" @click="refresh" class="refreshButton">
+        <Button type="error"  @click="refresh" class="refreshButton buttonC">
             <Icon type="person-add" :size='16'></Icon>
             刷新
         </Button>
-        <Button type="error" @click="deleteData()" class="deleteButton" v-if="nowShow(getPower.deleteUser)">
+        <Button type="error"  @click="deleteData()" class="deleteButton buttonB" v-if="nowShow(getPower.deleteUser)">
             <Icon type="person-add" :size='16'></Icon>
             删除用户
         </Button>
-        <Button type="info" @click="modal1 = true" class="newButton" v-if="nowShow(getPower.newUser)">
+        <Button type="error" @click="modal1 = true" class="newButton" v-if="nowShow(getPower.newUser)">
             <Icon type="person-add" :size='16'></Icon>
             新建用户
         </Button>

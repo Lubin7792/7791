@@ -10,11 +10,11 @@
   }
   ._tree-box {
     height: 520px;
-    border: 1px solid #ccc;
+    border: 1px solid #f9eeea;
     position: relative;
   }
   .tree-top {
-    background-color: #ccc;
+    background-color: #f9eeea;
     height: 60px;
     /* border: 1px solid blue; */
   }
@@ -82,7 +82,7 @@
           <DatePicker type="datetime" placeholder="请选择结束日期" style="width: 200px" @on-change="endTime"></DatePicker>
         </Col>
         <Col span="4">
-          <Button type="warning" @click="onQuery">查询</Button>
+          <Button type="primary" @click="onQuery">查询</Button>
         </Col>
       </Row>
     </div>

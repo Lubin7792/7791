@@ -5,7 +5,7 @@
 <template>
     <div class="sys-content">
         <div class="row">
-            <Table highlight-row :data="pageData" :columns="tableColumns1" :row-class-name="rowClassName" @on-row-click="onClick" height="619"></Table>
+            <Table  :data="pageData" :columns="tableColumns1" :row-class-name="rowClassName" @on-row-click="onClick" height="619"></Table>
         </div>
         <!-- 分页器 -->
         <div class="sys-page">

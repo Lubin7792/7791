@@ -47,7 +47,7 @@
         <Form :label-width="550">
           <FormItem>
             <Button style="margin-right: 8px" @click="Reset">重 置</Button>
-            <Button type="primary" @click="confirm">确认修改</Button>
+            <Button type="primary" class="buttonA"   @click="confirm">确认修改</Button>
           </FormItem>
         </Form>
       </div>
@@ -75,7 +75,7 @@
             <InputNumber :max="30" :min="7" v-model="parameter.log"></InputNumber>（ 单位/天 ）
           </FormItem>
         </Form>
-        <Button @click="onSystem" type="success"  :disabled ="!nowShow(getPower.setsysset)">保存</Button>
+        <Button class="buttonA" @click="onSystem" type="success"  :disabled ="!nowShow(getPower.setsysset)">保存</Button>
       </div>
     </Panel>
 
@@ -107,7 +107,7 @@
               <Input v-model="mailbox.port" placeholder="重新输入SMTP服务器端口号" style="width: 70%"></Input>
             </FormItem>
           </Form>
-          <Button class="email-but" @click="onMailbox" type="success" :disabled ="!nowShow(getPower.setEmail)">&nbsp;保 存&nbsp;</Button>
+          <Button class="email-but buttonA" @click="onMailbox" type="success" :disabled ="!nowShow(getPower.setEmail)">&nbsp;保 存&nbsp;</Button>
           <!-- </div> -->
         </Col>
         <!-- 右侧 -->
@@ -124,9 +124,9 @@
             </FormItem>
           </Form>
           <div class="_button">
-            <Button type="success" @click="addEmail" :disabled ="!nowShow(getPower.setEmail)">添加</Button>
-            <Button type="warning" @click="preservation" :disabled ="!nowShow(getPower.setEmail)">保存</Button>
-            <Button type="error" @click="deleteEmail" :disabled ="!nowShow(getPower.setEmail)">删除</Button>
+            <Button type="error" @click="addEmail"   :disabled ="!nowShow(getPower.setEmail)">添加</Button>
+            <Button type="warning"  class="buttonA"  @click="preservation" :disabled ="!nowShow(getPower.setEmail)">保存</Button>
+            <Button type="error" @click="deleteEmail" class="buttonB"  :disabled ="!nowShow(getPower.setEmail)">删除</Button>
           </div>
           <Table
             class="_tabs"

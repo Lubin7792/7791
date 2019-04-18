@@ -88,6 +88,50 @@
   border-right: 0px;
   border-left: 4px solid #b81d23;
 }
+
+.ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-tab-active{
+  color: #b4021d;
+}
+.ivu-tabs-nav-container:focus .ivu-tabs-tab-focused{
+  border-color: #b4021d !important;
+}
+.ivu-tabs-nav .ivu-tabs-tab:hover{
+  color: #b4021d;
+
+
+}
+.ivu-btn-primary{
+  background-color: #fd7549;
+  border-color: #fd7549;
+}
+.ivu-btn-primary:hover{
+    background-color: #fd7549;
+  border-color: #fd7549;
+}
+.ivu-switch-checked{
+   background-color: #e07a56;
+  border-color: #e07a56;
+}
+.ivu-btn-error{
+   background-color: #e07a56;
+  border-color: #e07a56;
+}
+.ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td, .ivu-table-stripe .ivu-table-fixed-body tr.ivu-table-row-hover td, tr.ivu-table-row-hover td{
+background-color: #f9eeea ;
+}
+.buttonA , .buttonA:hover{
+background-color: #faaf5a;
+border-color: #faaf5a;
+}
+.buttonB , .buttonB:hover{
+background-color: #dd5659;
+border-color: #dd5659;
+}
+.buttonC , .buttonC:hover{
+background-color: #d39051;
+border-color: #d39051;
+}
+
 /* .ivu-layout-sider-children {
   border-right: 1px solid #eee;
   width: 282px;

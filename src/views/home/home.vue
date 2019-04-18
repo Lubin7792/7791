@@ -7,9 +7,11 @@
   <div>
       <!-- <button value="2121" type="button" @click="clickHandler">asdsad</button> -->
 
-    <hometask :left="datalist"></hometask> 
+   <div class="Abox"> 
+      <hometask :left="datalist"></hometask> 
     <homesuccess :content="datalist"></homesuccess>
     <homefail :right="datalist"></homefail>
+   </div>
     <homewarning></homewarning>
   </div>
 
