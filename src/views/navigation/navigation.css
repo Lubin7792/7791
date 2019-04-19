@@ -25,7 +25,7 @@
   float: left;
   position: relative;
   left: 15px;
-  background: url("../../images/logos.png");
+  background: url("../../images/logos.png") no-repeat center center;
 }
 .title {
   font-family: "微软雅黑";
@@ -100,6 +100,37 @@
 
 
 }
+.volumeA{
+background: url("../../images/volumeA.png") no-repeat center center;
+}
+.volumeB{
+background: url("../../images/volumeB.png") no-repeat center center;
+}
+.volumeC{
+background: url("../../images/volumeC.png") no-repeat center center;
+}
+.policyA{
+background: url("../../images/policyA.png") no-repeat center center;
+}
+.renderIcon{
+  height: 16px;
+  width: 16px;
+display: inline-block;
+  background-size: contain;
+}
+
+
+
+.buttonDiv{
+  display: flex;
+}
+.buttonIcon{
+  margin-right: 2px;
+      width: 14px;
+    height: 14px;
+    display: flex;
+    align-self: center;
+}
 .ivu-btn-primary{
   background-color: #fd7549;
   border-color: #fd7549;
@@ -112,7 +143,7 @@
    background-color: #e07a56;
   border-color: #e07a56;
 }
-.ivu-btn-error{
+.ivu-btn-error , .ivu-btn-error:hover{
    background-color: #e07a56;
   border-color: #e07a56;
 }

@@ -5,7 +5,7 @@
       <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
 
       <div class="_btn">
-        <Button type="info" @click="newPool" v-if="nowShow(getPower.newValume)">新建介质池</Button>
+        <Button type="primary" @click="newPool" v-if="nowShow(getPower.newValume)">新建介质池</Button>
         <!-- <Button type="info" @click="delPool">删除介质池</Button> -->
         <!-- <Button type="info" @click="alterPool">修改介介质池</Button> -->
         <poolModal ref="poolModal" @Return="Return"></poolModal>
@@ -91,7 +91,7 @@
                 // 删除介质
                this.nowShow(this.getPower.editValume)? h('Icon', {
                   props: {
-                      type: 'ios-close',
+                      type: 'trash-a',
                       size: '20',
                   },
                   on: {
@@ -117,14 +117,17 @@
           { title: '最后写入时间', key: 'LastWrtime' },
           { title: '介质状态', key: 'state', width: 100 },
           { title: '在线状态', key: 'online', width: 100 },
-          {title: '操作',key: 'operation',align: 'center', width: 120,
+          {title: '操作',key: 'operation',align: 'center', width: 160,
             render: (h, params) => {
               return h('div', [
                 // 绑定介质弹框
-                this.nowShow(this.getPower.binValume)?h('Icon', {
+                this.nowShow(this.getPower.binValume)?h('Div', {
                   props: {
-                      type: 'ios-shuffle',
-                      size: '20'
+                    
+                  },
+                   class:{
+                    renderIcon:true,
+                    volumeA:true
                   },
                   style: {
                       marginRight: '8px',
@@ -139,7 +142,7 @@
                 // 删除介质
                 this.nowShow(this.getPower.deleteValume)?h('Icon', {
                   props: {
-                      type: 'ios-close',
+                      type: 'trash-a',
                       size: '20',
                   },
                   style: {
@@ -153,13 +156,16 @@
                   }
                 },):"",
                 // 重命名弹框
-               this.nowShow(this.getPower.reviseMedium)? h('Icon', {
+               this.nowShow(this.getPower.reviseMedium)? h('Div', {
                   props: {
-                      type: 'ios-chatboxes',
-                      size: '20',
+                   
                   },
                   style: {
                       marginRight: '8px',
+                  },
+                     class:{
+                    renderIcon:true,
+                    volumeB:true
                   },
                   on: {
                       click: () => {
@@ -169,10 +175,13 @@
                   }
                 },):'',
                 // 回收介质弹框
-              this.nowShow(this.getPower.recoveryMedium)?   h('Icon', {
+              this.nowShow(this.getPower.recoveryMedium)?   h('Div', {
                   props: {
-                      type: 'ios-undo',
-                      size: '20'
+                   
+                  },
+                    class:{
+                    renderIcon:true,
+                    volumeC:true
                   },
                   on: {
                       click: () => {

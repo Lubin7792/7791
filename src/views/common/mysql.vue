@@ -32,10 +32,10 @@
     </Row>
     <loading  v-show="loadingShow"></loading>
     <Row class="mysql-btn">
-      <Button type="info" @click="updateInstance">保存修改</Button>
-      <Button type="info" @click="newInstance">添加实例</Button>
-      <Button type="info" @click="test">测试连接</Button>
-      <Button type="info" @click="modalDelete = true">删除</Button>
+      <Button type="warning" @click="updateInstance">保存修改</Button>
+      <Button type="warning" @click="newInstance">添加实例</Button>
+      <Button type="warning" @click="test">测试连接</Button>
+      <Button type="warning" @click="modalDelete = true">删除</Button>
       <Modal
         v-model="modalDelete"
         @on-ok="ok"

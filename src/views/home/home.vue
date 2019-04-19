@@ -12,7 +12,7 @@
     <homesuccess :content="datalist"></homesuccess>
     <homefail :right="datalist"></homefail>
    </div>
-    <homewarning></homewarning>
+    <homewarning class="Bbox"></homewarning>
   </div>
 
 </template>

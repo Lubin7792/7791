@@ -4,16 +4,22 @@
 <template>
     <div>
         <Button type="error"  @click="refresh" class="refreshButton buttonC">
-            <Icon type="person-add" :size='16'></Icon>
+           <div class="buttonDiv">
+              <img  class="buttonIcon" src="../../images/refresh.png" style="width:14px;" alt="">
             刷新
+           </div>
         </Button>
         <Button type="error"  @click="deleteData()" class="deleteButton buttonB" v-if="nowShow(getPower.deleteUser)">
-            <Icon type="person-add" :size='16'></Icon>
+           <div class="buttonDiv">
+              <img  class="buttonIcon" src="../../images/delUser.png" style="width:14px;" alt="">
             删除用户
+           </div>
         </Button>
         <Button type="error" @click="modal1 = true" class="newButton" v-if="nowShow(getPower.newUser)">
-            <Icon type="person-add" :size='16'></Icon>
-            新建用户
+           <div class="buttonDiv">
+              <img class="buttonIcon" src="../../images/newUser.png" >
+           新建用户
+           </div>
         </Button>
         <Modal v-model="modal1" ok-text="保存" class-name="vertical-center-modal" title="新建用户" @on-ok="ok('formValidate')">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80" label-position='left'>

@@ -117,7 +117,9 @@ export default {
                     },
                     on: {
                       "on-change": value => {
-                        util.restfullCall(
+                        console.log(params,params.row.id > 3,params.row.id);
+                       if(params.row.id > 3){
+                          util.restfullCall(
                           "/rest-ful/v3.0/user/" +
                             params.row.id +
                             "/role?role=" +
@@ -126,6 +128,16 @@ export default {
                           "put",
                           this.userBack
                         );
+                       }else{
+                           
+                          this.$Message.warning('不允许修改权限');
+                          util.restfullCall("rest-ful/v3.0/users", null, "get", this.senddata);
+                      //  return false;
+                      //     this.$nextTick(()=>{
+                      //       console.log(params.row.roleid)
+                      //          this.tableData1[params.index].roleid=params.row.roleid;
+                      //     })
+                       }
                       }
                     }
                   },
@@ -239,6 +251,7 @@ export default {
       }
     },
     userBack: function(data) {
+
       console.log(data.data.code)
       if(data.data.code==0){
         this.$Message.success("操作成功");

@@ -37,10 +37,10 @@
         </Row>
     <loading  v-show="loadingShow"></loading>
         <Row class="sqlserver-btn">
-            <Button type="info" @click="updateSqlserver">保存修改</Button>
-            <Button type="info" @click="newSqlserver">添加实例</Button>
-            <Button type="info" @click="test">测试连接</Button>
-            <Button type="info" @click="modalDelete = true">删除</Button>
+            <Button type="warning" @click="updateSqlserver">保存修改</Button>
+            <Button type="warning" @click="newSqlserver">添加实例</Button>
+            <Button type="warning" @click="test">测试连接</Button>
+            <Button type="warning" @click="modalDelete = true">删除</Button>
             <Modal v-model="modalDelete" @on-ok="ok" @on-cancel="cancel" ok-text="确认删除" cancel-text="取消" class-name="vertical-center-modal">
                 <p style="color:#f60;text-align:center;font-size:19px;">确认是否删除{{this.sqlserver.server}}实例，如果确认删除请点击删除，否认点击取消。</p>
             </Modal>

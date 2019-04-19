@@ -82,7 +82,7 @@
           <DatePicker type="datetime" placeholder="请选择结束日期" style="width: 200px" @on-change="endTime"></DatePicker>
         </Col>
         <Col span="4">
-          <Button type="primary" @click="onQuery">查询</Button>
+          <Button type="primary" icon="ios-search" @click="onQuery">查询</Button>
         </Col>
       </Row>
     </div>
@@ -94,7 +94,7 @@
       <!-- 树形图部分 -->
       <Col span="12">    
         <div class="_tree-box">
-          <Button class="btn" @click="onRecovery" type="primary">恢复</Button>
+          <Button class="btn" @click="onRecovery" icon="ios-search" type="primary">恢复</Button>
           <div class="tree-top">
             <p>选择需要恢复的数据</p>
             <!-- <span class="btn"><Button class="btn" @click="onRecovery" type="primary">恢复</Button></span> -->

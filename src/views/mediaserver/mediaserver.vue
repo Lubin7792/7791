@@ -12,7 +12,7 @@
         height="720"
       ></Table>
       <div class="btn">
-        <Button type="info" @click="newServer"   v-if="nowShow(getPower.addMediaServer)" >新建介质服务器</Button>
+        <Button type="primary" @click="newServer"   v-if="nowShow(getPower.addMediaServer)" >新建介质服务器</Button>
         <!-- <Button type="info" @click="providerServer">修改介质服务器</Button> -->
         <serverModal :selServiceList="selServiceList" ref="serverModal" @Return="Return"></serverModal>
         <updateServer ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
@@ -30,7 +30,7 @@
         height="720"
       ></Table>
       <div class="btn">
-        <Button type="info" @click="newDisk"  v-if="nowShowTow(getPower.newDiskDevice)">新建磁盘</Button>
+        <Button type="primary" @click="newDisk"  v-if="nowShowTow(getPower.newDiskDevice)">新建磁盘</Button>
         <!-- <Button type="info" @click="modifyDisk">修改磁盘</Button> -->
         <diskModal ref="diskModal" @diskReturn="diskReturn"></diskModal>
         <updateDisk ref="updateDisk" @listModify="listModify" ></updateDisk>
@@ -48,7 +48,7 @@
         height="720"
       ></Table>
       <div class="btn">
-        <Button type="info" @click="newLibrary">新建磁带库</Button>
+        <Button type="primary" @click="newLibrary">新建磁带库</Button>
         <!-- <Button type="info" @click="modifyLibrary">修改磁带库</Button> -->
         <libraryModal ref="libraryModal" @libraryReturn="libraryReturn"></libraryModal>
         <!-- <updateLibrary :modalLibrary="modalLibrary" ref="updateLibrary"></updateLibrary> -->
@@ -123,7 +123,7 @@ export default {
               // 删除介质服务器
               this.nowShow(this.getPower.deleteMediaserver)?h("Icon", {
                 props: {
-                  type: "ios-close",
+                  type: "trash-a",
                   size: "20"
                 },
                 on: {
@@ -173,7 +173,7 @@ export default {
               // 删除磁盘弹框
              this.nowShowTow(this.getPower.deleteDiskDevice)? h("Icon", {
                 props: {
-                  type: "ios-close",
+                  type: "trash-a",
                   size: "20"
                 },
                 on: {
@@ -224,7 +224,7 @@ export default {
               // 删除磁带库弹框
               h("Icon", {
                 props: {
-                  type: "ios-close",
+                  type: "trash-a",
                   size: "20"
                 },
                 on: {

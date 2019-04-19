@@ -4,7 +4,12 @@
 <template>
   <div>
     <div style="with:100%;text-align:right">
-      <Button style="margin-bottom:10px;" type="primary" @click="newRole" v-if="nowShow(getPower.newRole)">新建角色</Button>
+      <Button style="margin-bottom:10px;" type="primary" @click="newRole" v-if="nowShow(getPower.newRole)">
+        <div class="buttonDiv">
+              <img class="buttonIcon" src="../../images/newUser.png" >
+           新建角色
+           </div>
+        </Button>
     </div>
     <Table border :columns="roleList" :data="roleData"></Table>
     <newRole :show="newShow" @close="closeNew" @post="backPost"></newRole>

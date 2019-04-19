@@ -5,7 +5,12 @@
 <template>
   <div class="policy">
     <div class="buttonPolice">
-      <Button type="error"  @click="newPolicy" v-if="nowShow(getPower.newPolicy)">新建策略</Button>
+      <Button type="primary"  @click="newPolicy" v-if="nowShow(getPower.newPolicy)">
+      <div class="buttonDiv">
+              <img  class="buttonIcon" src="../../images/newPolicy.png" style="width:14px;" alt="">
+            新建策略
+           </div>
+        </Button>
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="newPolicyData" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
@@ -190,7 +195,7 @@ export default {
                       {
                         props: {
                           type: "settings",
-                          size: "25"
+                          size: "22"
                         },
                         on: {
                           click: () => {
@@ -235,12 +240,15 @@ export default {
                   ]
                 ):'',
                this.nowShow(this.getPower.editPolicy)? h(
-                  "Icon",
+                  "Div",
                   {
                     props: {
-                      type: "edit",
-                      size: "25"
+              
                     },
+                     class:{
+                    renderIcon:true,
+                    policyA:true
+                  },
                     style: {
                       marginRight: "15px"
                     },
@@ -256,7 +264,7 @@ export default {
                       }
                     }
                   },
-                  "修改策略"
+                  ""
                 ):"",
 
                this.nowShow(this.getPower.deletePolicy)? h(
@@ -264,7 +272,7 @@ export default {
                   {
                     props: {
                       type: "trash-a",
-                      size: "25"
+                      size: "22"
                     },
                     on: {
                       click: () => {

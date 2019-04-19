@@ -35,7 +35,7 @@
               <DatePicker type="date" placeholder="请选择结束日期" style="width: 170px" @on-change="endTime"></DatePicker>
             </Col>
             <col span="2" class="lr">
-              <Button type="warning" @click="onRefresh">查询</Button>
+              <Button type="primary"  icon="ios-search" @click="onRefresh">查询</Button>
             </col>
         </Row>
       </div>
@@ -67,7 +67,7 @@
               <DatePicker type="date" placeholder="请选择结束日期" style="width: 170px" @on-change="endEvent"></DatePicker>
             </Col>
             <col span="2" class="lr">
-              <Button type="warning" @click="onEvent">查询</Button>
+              <Button type="primary"  icon="ios-search" @click="onEvent">查询</Button>
             </col>
         </Row>
       </div>
