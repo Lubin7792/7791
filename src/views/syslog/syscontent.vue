@@ -9,7 +9,7 @@
         </div>
         <!-- 分页器 -->
         <div class="sys-page">
-          <Page :total="number" show-total :page-size="pageSize" @on-change="changePage"></Page>
+          <Page  :total="number" show-total :page-size="pageSize" @on-change="changePage"></Page>
         </div>
         <!-- 详情弹框 -->
         <Modal v-model="modal1" title="日志详情" class="sysmodal" cancel-text>
@@ -63,11 +63,14 @@ export default {
           render: (h, params) => {
             return h("div", [
               h(
-                "Icon",
+                "Div",
                 {
                   props: {
-                    type: 'ios-chatboxes',
-                    size: '20',
+                   
+                  },
+                    class:{
+                    renderIcon:true,
+                    policyA:true
                   },
                   on: {
                     click: () => {

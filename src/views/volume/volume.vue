@@ -5,7 +5,12 @@
       <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
 
       <div class="_btn">
-        <Button type="primary" @click="newPool" v-if="nowShow(getPower.newValume)">新建介质池</Button>
+        <Button type="primary" @click="newPool" v-if="nowShow(getPower.newValume)">
+          <div class="buttonDiv">
+              <img class="buttonIcon" src="../../images/volumeD.png" >
+           新建介质池
+           </div>
+        </Button>
         <!-- <Button type="info" @click="delPool">删除介质池</Button> -->
         <!-- <Button type="info" @click="alterPool">修改介介质池</Button> -->
         <poolModal ref="poolModal" @Return="Return"></poolModal>

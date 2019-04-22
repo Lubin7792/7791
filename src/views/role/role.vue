@@ -64,10 +64,14 @@ export default {
                 }
               },
               [
-                this.nowShow(this.getPower.editRole)?h("Icon", {
-                  props: { type: "edit", size: 25 },
+                this.nowShow(this.getPower.editRole)?h("Div", {
+                  props: { },
                   style: {
                     marginRight: "15px"
+                  },
+                  class:{
+                    renderIcon:true,
+                    policyA:true
                   },
                   on: {
                     click: () => {
@@ -77,7 +81,7 @@ export default {
                   }
                 }):'',
                this.nowShow(this.getPower.setPower)? h("Icon", {
-                  props: { type: "gear-b", size: 25 },
+                  props: { type: "gear-b", size: 22 },
                   style: {
                     marginRight: "15px"
                   },
@@ -96,7 +100,7 @@ export default {
                   }
                 }):'',
                this.nowShow(this.getPower.deleteRole)? h("Icon", {
-                  props: { type: "trash-a", size: 25 },
+                  props: { type: "trash-a", size: 22 },
                   on: {
                     click: () => {
                       this.rowId = params.row.id;

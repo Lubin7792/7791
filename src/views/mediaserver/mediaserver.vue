@@ -12,7 +12,12 @@
         height="720"
       ></Table>
       <div class="btn">
-        <Button type="primary" @click="newServer"   v-if="nowShow(getPower.addMediaServer)" >新建介质服务器</Button>
+        <Button type="primary" @click="newServer"   v-if="nowShow(getPower.addMediaServer)" >
+           <div class="buttonDiv">
+              <img class="buttonIcon" src="../../images/mediaserverA.png" >
+          新建介质服务器
+           </div>
+          </Button>
         <!-- <Button type="info" @click="providerServer">修改介质服务器</Button> -->
         <serverModal :selServiceList="selServiceList" ref="serverModal" @Return="Return"></serverModal>
         <updateServer ref="updateServer" @toogleMedium="toogleMedium"></updateServer>
@@ -30,7 +35,12 @@
         height="720"
       ></Table>
       <div class="btn">
-        <Button type="primary" @click="newDisk"  v-if="nowShowTow(getPower.newDiskDevice)">新建磁盘</Button>
+        <Button type="primary" @click="newDisk"  v-if="nowShowTow(getPower.newDiskDevice)">
+           <div class="buttonDiv">
+              <img class="buttonIcon" src="../../images/mediaserverB.png" >
+          新建磁盘
+           </div>
+          </Button>
         <!-- <Button type="info" @click="modifyDisk">修改磁盘</Button> -->
         <diskModal ref="diskModal" @diskReturn="diskReturn"></diskModal>
         <updateDisk ref="updateDisk" @listModify="listModify" ></updateDisk>
@@ -48,7 +58,12 @@
         height="720"
       ></Table>
       <div class="btn">
-        <Button type="primary" @click="newLibrary">新建磁带库</Button>
+        <Button type="primary" @click="newLibrary">
+            <div class="buttonDiv">
+              <img class="buttonIcon" src="../../images/mediaserverC.png" >
+          新建磁带库
+           </div>
+        </Button>
         <!-- <Button type="info" @click="modifyLibrary">修改磁带库</Button> -->
         <libraryModal ref="libraryModal" @libraryReturn="libraryReturn"></libraryModal>
         <!-- <updateLibrary :modalLibrary="modalLibrary" ref="updateLibrary"></updateLibrary> -->

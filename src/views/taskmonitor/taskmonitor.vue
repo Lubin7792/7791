@@ -36,13 +36,16 @@ export default {
           render: (h, params) => {
             return h('div', [
               // 任务监控详情
-              h('Icon', {
+              h('Div', {
                   props: {
-                      type: 'ios-chatboxes',
-                      size: '20'
+                     
                   },
                   style: {
                       marginRight: '8px',
+                  },
+                   class:{
+                    renderIcon:true,
+                    policyA:true
                   },
                   on: {
                       click: () => {
@@ -53,7 +56,7 @@ export default {
               // 任务监控撤销接口
              this.nowShow(this.getPower.cancleTask)? h('Icon', {
                   props: {
-                      type: 'ios-close',
+                      type: 'trash-a',
                       size: '20',
                   },
                   on: {
