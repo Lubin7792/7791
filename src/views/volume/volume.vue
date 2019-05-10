@@ -75,13 +75,13 @@
             render: (h, params) => {
               return h('div', [
                 // 修改介质池弹框
-                this.nowShow(this.getPower.editValume)?h('Icon', {
-                  props: {
-                      type: 'ios-chatboxes',
-                      size: '20',
-                  },
+                this.nowShow(this.getPower.editValume)?h('Div', {
                   style: {
-                      marginRight: '10px',
+                    marginRight: "15px"
+                  },
+                  class:{
+                    renderIcon:true,
+                    policyA:true
                   },
                   on: {
                       click: () => {

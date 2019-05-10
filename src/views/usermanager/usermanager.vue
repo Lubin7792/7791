@@ -213,7 +213,6 @@ export default {
                   on: {},
                   nativeOn: {
                     click: () => {
-                      this.modal1 = false;
                       this.modal1 = true;
                     }
                   }

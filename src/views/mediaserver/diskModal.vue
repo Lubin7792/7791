@@ -42,11 +42,11 @@
         </Row>
         <Row type="flex" justify="space-around">
           <Col span="6">
-            <Checkbox v-model="single">定制介质文件</Checkbox>
+            <Checkbox v-model="diskItem.single">定制介质文件</Checkbox>
           </Col>
           <Col span="12">
             <FormItem label="介质文件容量" >
-              <InputNumber :max="100" :min="1" v-model="diskItem.filesize" :disabled="!single"></InputNumber> (M)
+              <InputNumber :max="100" :min="1" v-model="diskItem.filesize" :disabled="!diskItem.single"></InputNumber> (M)
             </FormItem>
           </Col>
         </Row>	
@@ -67,11 +67,12 @@ export default {
         // name:[{required: true, message: '介质服务器名称不能为空', trigger: 'blur'},{min:1}]
       },
       modal: false,
-      single: false,
+   
       selectType:[],
       cityList:[],
       device: [],
       diskItem: {
+           single: false,
         name: '',
         path: '',
         maxtasks: 5,
@@ -123,12 +124,15 @@ export default {
     },
     // 选中下拉内容获取选中数据id传给后台，并返回回调地址
     changes: function(datas) {
-      var ar = []
+      console.log(datas)
+    if(datas){
+        var ar = []
         ar.push({
           name: datas.label,
           id: datas.value
         })
       this.device = ar
+    }
     },
     // 点击浏览弹出浏览框
     browse: function() {
@@ -137,6 +141,8 @@ export default {
     // 接收父组件
     newDisks: function() {
       this.modal = true
+    util.restfullCall('/rest-ful/v3.0/devicetype', null, 'get', this.selType)
+      Object.assign(this.$data.diskItem, this.$options.data().diskItem)
     },
     // 点击确认按钮，把信息传给后台
     ok() {
@@ -178,7 +184,7 @@ export default {
         this.diskItem.maxtasks = null
         this.diskItem.lowlimit = null
         this.diskItem.filesize = null
-        this.single = false
+        this.diskItem.single = false
     },
     // 接收选中的path路径
     glanceReturn(pathReturn){
@@ -186,6 +192,12 @@ export default {
     },
     cancel() {
       // this.$Message.warning("操作已取消")
+
+      // this.diskItem.name = null
+      //   this.diskItem.path = null
+      //   this.diskItem.maxtasks = null
+      //   this.diskItem.lowlimit = null
+      //   this.diskItem.filesize = null
     },
     glance: function() {
       this.modal = false

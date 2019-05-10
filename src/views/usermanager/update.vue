@@ -2,7 +2,7 @@
     @import './newuser.css';
 </style>
 <template>
-    <Modal v-model="modal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" class-name="vertical-center-modal" title="修改用户" :updateId="updateId">
+    <Modal v-model="InfoModal" @on-ok="ok" @on-cancel="cancel" ok-text="保存" class-name="vertical-center-modal" title="修改用户" :updateId="updateId">
         <Form ref="formdata" :model="formdata" :rules="ruleValidate" :label-width="80" label-position='left'>
         <FormItem label="用户名" prop="name">
             <Input v-model="formdata.name" placeholder="请在此输入用户名" :disabled="true"></Input>
@@ -25,32 +25,9 @@
 import axios from 'axios';
 import util from '../../libs/util.js'; 
     export default {
-        name:'Update',
-        props:{
-            modal:{
-                type:Boolean,
-                default:false
-            },
-            updateId:{
-                type:Number
-            }
-        },
-        mounted:function(){
-            util.restfullCall('rest-ful/v3.0/users',null,'get',this.callUsers);
-        },
-        updated:function(){
-            for(let j=0;j<this.form.length;j++){
-                if(this.form[j].id==this.updateId){
-                    this.formdata=this.form[j];
-                }
-            }
-            if(this.updateId!=''){
-                let url="rest-ful/v3.0/userclient/"+this.updateId;
-                util.restfullCall(url,null,'get',this.aquiescent);
-            }
-        },
-        data(){
+            data(){
             return{
+                 InfoModal: this.modal,
                 formdata: {
                     name: '',
                     ip: '',
@@ -87,10 +64,33 @@ import util from '../../libs/util.js';
                 dataClient:this.mockClient(),
             }
         },
+        name:'Update',
+        props:{
+            modal:{
+                type:Boolean,
+            },
+            updateId:{
+                type:Number
+            }
+        },
+        mounted:function(){
+            util.restfullCall('rest-ful/v3.0/users',null,'get',this.callUsers);
+        },
+        updated:function(){
+            for(let j=0;j<this.form.length;j++){
+                if(this.form[j].id==this.updateId){
+                    this.formdata=this.form[j];
+                }
+            }
+            if(this.updateId!=''){
+                let url="rest-ful/v3.0/userclient/"+this.updateId;
+                util.restfullCall(url,null,'get',this.aquiescent);
+            }
+        },
+    
         methods: {
             ok () {
-                this.modal=false;
-                this.$emit('change',this.modal);
+                this.$emit('change',false);
                 let string='rest-ful/v3.0/user/:'+this.updateId;
                 let array={};
                 let arr=[];
@@ -109,15 +109,13 @@ import util from '../../libs/util.js';
                 array.id=this.updateId;
 
                 util.restfullCall(string,array,'put',this.render);
-                console.log(array)
 
             },
             render:function(obj){
                 this.$emit('changeUser',this.formdata);
             },
             cancel () {
-                this.modal=false;
-                this.$emit('change',this.modal);
+                this.$emit('change',false);
             },
             changeClient:function(selection){
                this.selectedClients=selection;
@@ -163,6 +161,11 @@ import util from '../../libs/util.js';
                 }
                 this.dataClient=array;
             }
-        }
+        },
+         watch: {
+    modal(modal) {
+      this.InfoModal = modal;
+    }
+         }
     }
 </script>

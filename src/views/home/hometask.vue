@@ -96,8 +96,10 @@ export default {
               emphasis: {
                 show: true,
                 textStyle: {
-                  fontSize: "30",
-                  fontWeight: "bold"
+                  color:"#2f3b4c",
+                  fontSize: "22",
+                  fontWeight: "bold",
+                  
                 }
               }
             },

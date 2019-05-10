@@ -25,11 +25,14 @@ export default {
           render: (h, params) => {
             return h("div", [
               h(
-                "Icon",
+                "Div",
                 {
-                  props: {
-                    type: 'ios-chatboxes',
-                    size: '20',
+                style: {
+                    marginRight: "15px"
+                  },
+                  class:{
+                    renderIcon:true,
+                    policyA:true
                   },
                   on: {
                     click: () => {

@@ -39,6 +39,7 @@
   line-height: 49px;
   position: absolute;
   right: 0px;
+  top: 0;
 }
 .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item-active,
 .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover,
@@ -136,6 +137,9 @@ background: url("../../images/volumeC.png") no-repeat center center;
 }
 .policyA{
 background: url("../../images/policyA.png") no-repeat center center;
+}
+.policyB{
+background: url("../../images/policyB.png") no-repeat center center;
 }
 .renderIcon{
   height: 16px;

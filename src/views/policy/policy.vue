@@ -14,7 +14,7 @@
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="newPolicyData" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
-    <updatePolicy :upmodal="modal" @close="revise"></updatePolicy>
+    <updatePolicy  ref="updatePolicyData" :upmodal="modal" @close="revise"></updatePolicy>
     <Modal
       v-model="modalDelete"
       @on-ok="ok"
@@ -191,22 +191,22 @@ export default {
                   },
                   [
                     h(
-                      "Icon",
+                      "Div",
                       {
-                        props: {
-                          type: "settings",
-                          size: "22"
-                        },
+                         style: {
+                    marginRight: "15px"
+                  },
+                  class:{
+                    renderIcon:true,
+                    policyB:true
+                  },
                         on: {
                           click: () => {
                             this.buttonPost(params);
                           }
                         },
-                        style: {
-                          marginRight: "15px"
-                        }
                       },
-                      "立即调度"
+                      ""
                     ),
                     h(
                       "DropdownMenu",
@@ -255,6 +255,8 @@ export default {
                     on: {
                       click: () => {
                         this.modal = true;
+                         this.$refs.updatePolicyData.tabNames="基本信息";
+                         this.$refs.updatePolicyData.show="基本信息";
                         util.restfullCall(
                           "/rest-ful/v3.0/policy/detail/" + params.row.id,
                           null,
@@ -410,6 +412,8 @@ export default {
     },
     newPolicy: function() {
       this.modalss = true;
+        this.$refs.newPolicyData.show="基本信息";
+        this.$refs.newPolicyData.tabValue="基本信息";
         // this.$refs.newPolicy.basic.type="65536";
 this.$refs.newPolicyData.$refs.newConten.callBackFun() ;
 // console.log(this.$refs.newPolicyData.$refs.newConten.callBackFun)

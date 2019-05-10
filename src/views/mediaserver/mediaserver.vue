@@ -5,7 +5,6 @@
       
       <Table
         stripe
-        highlight-row
         :row-class-name="rowMedium"
         :data="medium"
         :columns="mediums"  
@@ -28,7 +27,6 @@
       
       <Table
         stripe
-        highlight-row
         :data="disk"
         :row-class-name="rowDisks"
         :columns="disks"
@@ -42,7 +40,7 @@
            </div>
           </Button>
         <!-- <Button type="info" @click="modifyDisk">修改磁盘</Button> -->
-        <diskModal ref="diskModal" @diskReturn="diskReturn"></diskModal>
+        <diskModal  ref="diskModal" @diskReturn="diskReturn"></diskModal>
         <updateDisk ref="updateDisk" @listModify="listModify" ></updateDisk>
       </div>
     </TabPane>
@@ -50,7 +48,6 @@
     <TabPane label="磁带库设备" name="磁带库设备" :key="Math.random()">
       <Table
         stripe
-        highlight-row
         :data="tape"
         :row-class-name="rowTape"
         :columns="tapes"
@@ -121,14 +118,14 @@ export default {
           render: (h, params) => {
             return h("div", [
               // 修改介质服务器弹框
-              h("Icon", {
-                props: {
-                  type: "ios-chatboxes",
-                  size: "20"
-                },
-                style: {
-                  marginRight: "10px"
-                },
+              h("Div", {
+              style: {
+                    marginRight: "15px"
+                  },
+                  class:{
+                    renderIcon:true,
+                    policyA:true
+                  },
                 on: {
                   click: () => {
                     this.$refs.updateServer.showMoad2(params.row);
@@ -171,14 +168,14 @@ export default {
           render: (h, params) => {
             return h("div", [
               // 修改磁盘弹框
-              this.nowShowTow(this.getPower.editDiskDevice)? h("Icon", {
-                props: {
-                  type: "ios-chatboxes",
-                  size: "20"
-                },
-                style: {
-                  marginRight: "10px"
-                },
+              this.nowShowTow(this.getPower.editDiskDevice)? h("Div", {
+               style: {
+                    marginRight: "15px"
+                  },
+                  class:{
+                    renderIcon:true,
+                    policyA:true
+                  },
                 on: {
                   click: () => {
                     this.$refs.updateDisk.showModify(params.row);

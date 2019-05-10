@@ -138,7 +138,7 @@
               format="dd"
               show-week-numbers
               placement="bottom-end"
-              placeholder="Select date"
+              placeholder="选择日期"
               @on-change="startDate"
             ></DatePicker>
           </FormItem>
@@ -148,7 +148,7 @@
           <TimePicker
             :value="schedule.starttime"
             format="HH:mm:ss"
-            placeholder="Select time"
+            placeholder="选择时间"
             style="width: 168px"
             @on-change="startTime"
           ></TimePicker>
@@ -184,7 +184,7 @@
               format="dd"
               show-week-numbers
               placement="bottom-end"
-              placeholder="Select date"
+              placeholder="选择日期"
               @on-change="endDate"
             ></DatePicker>
           </FormItem>
@@ -194,7 +194,7 @@
             :value="schedule.endtime"
             format="HH:mm:ss"
             @on-change="endTime"
-            placeholder="Select time"
+            placeholder="选择时间"
             style="width: 168px"
           ></TimePicker>
         </FormItem>
@@ -327,17 +327,26 @@ export default {
           title: "备份类型",
           key: "backupCh"
         },
-        {
+          {
+          title: "开始日期",
+          key: "startdayType"
+        },
+         {
           title: "开始时间",
           key: "starttime"
         },
+          {
+          title: "结束日期",
+          key: "enddayType"
+        },
+       
         {
           title: "结束时间",
           key: "endtime"
         },
         {
           title: "间隔时间",
-          key: "freqval"
+          key: "freqvalCh"
         }
       ],
 
@@ -545,7 +554,6 @@ export default {
   },
   watch: {
     policyTyep: function(data) {
-      // console.log(data)
       // this.basic.type = data[0].key;
     },
     devicesList: function(data) {
@@ -576,44 +584,72 @@ export default {
       this.schedule.backuptlevel = value.backuptype;
       this.schedule.freqtypelevel = value.freqtype;
       this.schedule.intervalTime = value.freqval;
-      this.$nextTick(() => {
-        this.schedule.startday = value.startday;
-        this.schedule.endday = value.endday;
-      });
+      // this.$nextTick(() => {
+        if( value.scheduletype==2){
+              this.schedule.startday =("'"+value.startday+"'")|| value.startday;
+              this.schedule.endday = ("'"+value.endday+"'")||value.endday;
+        }else{
+          this.schedule.startday = value.startday;
+          this.schedule.endday = value.endday;
+        }
+      // });
       this.schedule.starttime = value.starttime;
       this.schedule.endtime = value.endtime;
     },
     addList: function() {
+      this.schedule.addLists={};
+
       let typelevelNum = parseInt(
         this.schedule.typelevel 
       );
       let backupNum = parseInt(
         this.schedule.backuptlevel
       );
+      let  freqtype=parseInt(this.schedule.freqtypelevel ? this.schedule.freqtypelevel : 0);
+         let freqval= parseInt(this.schedule.intervalTime ? this.schedule.intervalTime : 0);
       let addList = {
         backuptype: backupNum,
         scheduletype: typelevelNum,
-        freqtype: parseInt(
-          this.schedule.freqtypelevel ? this.schedule.freqtypelevel : 0
-        ),
-        freqval: parseInt(
-          this.schedule.intervalTime ? this.schedule.intervalTime : 0
-        ),
-        // startday: parseInt(this.schedule.startday.replace(/'/g, "")),
-        startday: parseInt(this.schedule.startday),
+         freqtype:freqtype,
+        freqval:freqval,
+        startday:parseInt(this.schedule.startday)|| parseInt(this.schedule.startday.replace(/'/g, "")),
+        // startday: parseInt(this.schedule.startday),
         starttime: this.schedule.starttime,
-        endday: parseInt(this.schedule.endday),
+        endday: parseInt(this.schedule.endday)|| parseInt(this.schedule.endday.replace(/'/g, "")),
         endtime: this.schedule.endtime,
         typelevelCh:
           typelevelNum == 0 ? "日期" : typelevelNum == 1 ? "周" : "间隔时间",
         backupCh:this.backupChn(backupNum),
-        duration: 0
+        startdayType:this.startdayTypeN(typelevelNum,this.schedule.startday),
+        enddayType:this.startdayTypeN(typelevelNum,this.schedule.endday),
+        duration: 0,
+         freqvalCh:freqval+(freqtype==0?"小时":"分钟")
       };
+      if(!addList.backuptype||!addList.startday||(addList.starttime=='')||!addList.endday||(addList.endtime=='')){
+        this.$Message.error('选项不可为空');
+        return false
+      }
       this.schedule.addLists = addList;
     },
     addPlan: function() {
       this.addList();
-      this.schedule.planList.push(this.schedule.addLists);
+    if(Object.keys(this.schedule.addLists).length!=0){
+  this.schedule.planList.push(this.schedule.addLists);
+     }
+    },
+    startdayTypeN:function (type,num) {
+      if(type==1){
+      let week;
+      this.schedule.weekList.map(item =>{
+        if(item.value==num){
+          week= item.name;
+        }
+      })
+      return week
+      }else{
+       let dayNum=parseInt(num)|| parseInt(num.replace(/'/g, ""));
+        return ""+dayNum+"号"
+      }
     },
     backupChn:function(num){
       let text='';
@@ -625,11 +661,12 @@ export default {
     },
     revisePlan: function() {
       this.addList();
+    if(Object.keys(this.schedule.addLists).length!=0){
       this.schedule.planList.splice(
         this.schedule.planListIndex,
         1,
         this.schedule.addLists
-      );
+      );}
     },
     deletePlan: function() {
       // let array =  this.schedule.planList
@@ -644,7 +681,6 @@ export default {
       this.schedule.starttime = value;
     },
     endDate: function(value) {
-      console.log(value)
       this.schedule.endday = value;
     },
     endTime: function(value) {
@@ -734,7 +770,6 @@ export default {
         new Date().getMinutes() < 10
           ? "0" + new Date().getSeconds()
           : new Date().getSeconds();
-     
       this.schedule.starttime = hh + ":" + mm + ":" + ss;
       this.schedule.endtime = hh + ":" + mm + ":" + ss;
       week==0?week=7:week=week
@@ -747,8 +782,8 @@ export default {
          this.schedule.endday =  week ;
       }
        if(this.show3=="2"){
-         this.schedule.startday =  "'"+date +"'" ;
-         this.schedule.endday =  "'"+date +"'" ;
+         this.schedule.startday =String(date)
+         this.schedule.endday =  String(date)
       }
     },
     onplantype: function(value) {
@@ -916,7 +951,6 @@ export default {
         parent =treeNode.getParentNode()
         if(parent) {
           // 删除-父节点
-          console.log(this.tree_path(parent).namePath)
               this.DeleteItemFromArray("-" +this.tree_path(parent).namePath, 0);
         }
         if ((parent == null) || (parent.checked && parent.check_Child_State != 2)||parent.level==0) {
@@ -950,12 +984,11 @@ export default {
         callBackFun() {
           // this.basic.type=65536;
        this.show3="0";
+       this.policyTypekey="65536"
       this.hackReset = false;
       Object.assign(this.$data.basic, this.$options.data().basic)
       Object.assign(this.$data.schedule, this.$options.data().schedule)
       Object.assign(this.$data.resources, this.$options.data().resources)
-
-      // console.log(this.$options.data().basic)
      this.$nextTick(()=>{
       this.basic.deviceval = this.devicesList[0].id;
         this.hackReset = true;

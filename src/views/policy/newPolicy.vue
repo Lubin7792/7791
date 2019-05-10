@@ -18,7 +18,7 @@
     ok-text="确定"
     class-name="vertical-center-modal"
   >
-    <Tabs type="card" :animated="false" @on-click="click" >
+    <Tabs type="card" :animated="false" @on-click="click" v-model="tabValue" >
       <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index" ></TabPane>
     </Tabs>
     <NewContent :show="show" ref="newConten"></NewContent>
@@ -29,6 +29,7 @@ import NewContent from "./newcontent.vue";
 export default {
   data() {
     return {
+      tabValue:'',
       InfoModal: this.modals,
       tabList: [
         {

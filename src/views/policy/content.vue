@@ -138,7 +138,7 @@
               format="dd"
               show-week-numbers
               placement="bottom-end"
-              placeholder="Select date"
+              placeholder="选择日期"
               @on-change="startDate"
             ></DatePicker>
           </FormItem>
@@ -148,7 +148,7 @@
           <TimePicker
             :value="schedule.starttime"
             format="HH:mm:ss"
-            placeholder="Select time"
+            placeholder="选择时间"
             style="width: 168px"
             @on-change="startTime"
           ></TimePicker>
@@ -184,7 +184,7 @@
               format="dd"
               show-week-numbers
               placement="bottom-end"
-              placeholder="Select date"
+              placeholder="选择日期"
               @on-change="endDate"
             ></DatePicker>
           </FormItem>
@@ -194,7 +194,7 @@
             :value="schedule.endtime"
             format="HH:mm:ss"
             @on-change="endTime"
-            placeholder="Select time"
+            placeholder="选择时间"
             style="width: 168px"
           ></TimePicker>
         </FormItem>
@@ -314,16 +314,25 @@ export default {
           key: "backupCh"
         },
         {
+          title: "开始日期",
+          key: "startdayType"
+        },
+         {
           title: "开始时间",
           key: "starttime"
         },
+          {
+          title: "结束日期",
+          key: "enddayType"
+        },
+       
         {
           title: "结束时间",
           key: "endtime"
         },
         {
           title: "间隔时间",
-          key: "freqval"
+          key: "freqvalCh"
         }
       ],
       policylist: {
@@ -505,6 +514,7 @@ export default {
       this.basictype = data.base.type;
       this.temporary.planList = data.schedule;
       this.resources.pathConten = JSON.parse(JSON.stringify(data.resource));
+      // ztree数据
       for (let i = 0; i < data.resource.length; i++) {
         let _index = data.resource[i].client;
         findMachine(_index);
@@ -518,15 +528,15 @@ export default {
         //拼接路径列表
         // this.pathContenList[i].path =
         //   machineList[i] + "_" + this.pathContenList[i].path;
-
         this.resources.pathConten[i].name =
           (this.resources.pathConten[i].exclude == 0 ? "+" : "-") +
           machineList[i] +
           "_" +
           this.resources.pathConten[i].path;
-
-        console.log(this.resources.pathConten[i]);
       }
+      // 调度计划
+      this.show3="0";
+      Object.assign(this.$data.schedule, this.$options.data().schedule)
       util.restfullCall(
         "/rest-ful/v3.0/policy/backuptype/" + data.base.type,
         null,
@@ -534,14 +544,18 @@ export default {
         this.callType
       );
       for (let i = 0; i < data.schedule.length; i++) {
+
         this.temporary.planList[i].typelevelCh =
           data.schedule[i].scheduletype == 0
             ? "日期"
             : data.schedule[i].scheduletype == 1
             ? "周"
             : "间隔时间";
+             this.temporary.planList[i].startdayType =this.startdayTypeN(data.schedule[i].scheduletype,data.schedule[i].startday);
+             this.temporary.planList[i].enddayType =this.startdayTypeN(data.schedule[i].scheduletype,data.schedule[i].endday);
+             this.temporary.planList[i].freqvalCh=data.schedule[i].freqval+(data.schedule[i].freqtype==0?"小时":"分钟")
       }
-
+  // 备份选项数据
       this.$nextTick(() => {
         let source = this.$refs.backupOption;
         source.options = data.option;
@@ -667,6 +681,23 @@ export default {
   },
   destroyed() {},
   methods: {
+    startdayTypeN:function (type,num) {
+      if(!num){
+        return false;
+      }
+if(type==1){
+      let week;
+      this.policylist.weekList.map(item =>{
+        if(parseInt(item.value)==num){
+          week= item.name;
+        }
+      })
+      return week
+      }else{
+       let dayNum=parseInt(num)|| parseInt(num.replace(/'/g, ""));
+        return ""+dayNum+"号"
+      }
+    },
     callType: function(obj) {
       this.policylist.backuptype = obj.data;
       for (let i = 0; i < this.temporary.planList.length; i++) {
@@ -855,40 +886,54 @@ export default {
       this.schedule.endtime = value.endtime;
     },
     addList: function() {
+      this.temporary.addLists={};
       let typelevelNum = parseInt(
-        this.schedule.scheduletype ? this.schedule.scheduletype : 0
+        this.schedule.scheduletype
       );
       let backupNum = parseInt(
-        this.schedule.backupType ? this.schedule.backupType : 0
+        this.schedule.backupType
       );
+      let  freqtype=parseInt(this.schedule.freqtype ? this.schedule.freqtype : 0);
+         let   freqval= parseInt(this.schedule.freqval ? this.schedule.freqval : 0);
+     
       let addList = {
         backupType: backupNum,
         scheduletype: typelevelNum,
-        freqtype: parseInt(this.schedule.freqtype ? this.schedule.freqtype : 0),
-        freqval: parseInt(this.schedule.freqval ? this.schedule.freqval : 0),
+       freqtype:freqtype,
+        freqval:freqval,
         // startday: parseInt(this.schedule.startday.replace(/'/g, "")),
         startday: parseInt(this.schedule.startday),
         starttime: this.schedule.starttime,
         endday: parseInt(this.schedule.endday),
+         startdayType:this.startdayTypeN(typelevelNum,this.schedule.startday),
+        enddayType:this.startdayTypeN(typelevelNum,this.schedule.endday),
         endtime: this.schedule.endtime,
         typelevelCh:
           typelevelNum == 0 ? "日期" : typelevelNum == 1 ? "周" : "间隔时间",
         backupCh: this.backupChn(backupNum),
-        duration: 0
+        duration: 0,
+        freqvalCh:freqval+(freqtype==0?"小时":"分钟")
       };
+      if(!addList.backupType||!addList.startday||(addList.starttime=='')||!addList.endday||(addList.endtime=='')){
+        this.$Message.error('选项不可为空');
+        return false
+      }
       this.temporary.addLists = addList;
     },
     addPlan: function() {
       this.addList();
+      if(Object.keys(this.temporary.addLists).length!=0){
       this.temporary.planList.push(this.temporary.addLists);
+      }
     },
     revisePlan: function() {
       this.addList();
+      if(Object.keys(this.temporary.addLists).length!=0){
       this.temporary.planList.splice(
         this.temporary.planListIndex,
         1,
         this.temporary.addLists
-      );
+      );}
     },
     deletePlan: function() {
       // let array =  this.temporary.planList
@@ -909,7 +954,9 @@ export default {
       this.schedule.endtime = value;
     },
     planShow: function(value) {
-      this.temporary.freqval = value.label;
+      if(value){
+        this.temporary.freqval = value.label;
+      }
     },
     showNow: function() {},
     showNows: function(value) {},
@@ -948,6 +995,7 @@ export default {
       this.policyTypekey = String(value.value);
     },
     timeFormate: function() {
+      let week =new Date().getDay();
       let date = new Date().getDate();
       let hh =
         new Date().getHours() < 10
@@ -961,16 +1009,29 @@ export default {
         new Date().getMinutes() < 10
           ? "0" + new Date().getSeconds()
           : new Date().getSeconds();
-      this.schedule.startday = "'" + date + "'";
-      this.schedule.starttime = hh + ":" + mm + ":" + ss;
+       this.schedule.starttime = hh + ":" + mm + ":" + ss;
+      this.schedule.endtime = hh + ":" + mm + ":" + ss;
+       week==0?week=7:week=week;
+      if(this.show3=="0"){
+         this.schedule.startday = String(date)
+         this.schedule.endday =  String(date)
+      }
+       if(this.show3=="1"){
+         this.schedule.startday =  String(week);
+         this.schedule.endday = String(week);
+      }
+       if(this.show3=="2"){
+         this.schedule.startday =String(date)
+         this.schedule.endday =String(date)
+      }
     },
     onplantype: function(value) {
       this.show3 = value;
       this.$nextTick(() => {
-        this.schedule.startday = "";
-        this.schedule.endday = "";
+        // this.schedule.startday = "";
+        // this.schedule.endday = "";
       });
-      // this.timeFormate();
+      this.timeFormate();
     },
     tree_path: function(treeNode) {
       //获取路径
@@ -1138,7 +1199,6 @@ export default {
         parent = treeNode.getParentNode();
         if (parent) {
           // 删除-父节点
-          console.log(this.tree_path(parent).namePath);
           this.DeleteItemFromArray("-" + this.tree_path(parent).namePath, 0);
         }
         if (

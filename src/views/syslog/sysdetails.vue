@@ -5,7 +5,7 @@
 <template>
   <div class="sys-content">
     <div class="row">
-      <Table highlight-row :data="pageData" :columns="tableColumns1" :row-class-name="rowClassName" @on-row-click="onClick" height="619"></Table>
+      <Table :data="pageData" :columns="tableColumns1" :row-class-name="rowClassName" @on-row-click="onClick" height="619"></Table>
     </div>
       <div class="sys-page" >
       <!-- 分页器 -->
@@ -57,11 +57,13 @@ export default {
           render: (h, params) => {
             return h("div", [
               h(
-                "Icon",
+                "Div",
                 {
-                  props: {
-                    type: 'ios-chatboxes',
-                    size: '20',
+                  style: {
+                  },
+                  class:{
+                    renderIcon:true,
+                    policyA:true
                   },
                   on: {
                     click: () => {

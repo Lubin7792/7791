@@ -16,7 +16,7 @@
         </Col>
         <Col span="12">
           <FormItem label="机械肩">
-            <Select v-model="Mechanics" placeholder="请选择选择机械臂" @on-change="changes">
+            <Select v-model="libraryItem.Mechanics" placeholder="请选择选择机械臂" @on-change="changes">
               <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
 			    </FormItem>
@@ -42,8 +42,8 @@ export default {
       driver:[],
       slot:[],
       modal: false,
-      Mechanics:"",
       libraryItem: {
+      Mechanics:"",
         name: '',
         path: '',
         maxjobs: '',
@@ -68,9 +68,9 @@ export default {
       single: false
     }
   },
-  // created() {
-  //   util.restfullCall('/rest-ful/v3.0/mediumchanges?server='+16, null, 'get', this.senddata)
-  // },
+  created() {
+    // util.restfullCall('/rest-ful/v3.0/mediumchanges?server='+16, null, 'get', this.senddata)
+  },
   methods: {
     // 点击下拉框获取介质服务器信息
     serverDisk:function(openServer) {
@@ -106,6 +106,7 @@ export default {
     // 获取选中机械臂的id传给后台
     changes: function(datas) {
       util.restfullCall('/rest-ful/v3.0/mediumchanger/' + datas, null, 'get', this.address)
+      
     },
     // 机械臂传id返回的数据
     address:function(changer) {
@@ -117,7 +118,11 @@ export default {
     },
     // 接收父组件
     newLibrarys:function(){
-      this.modal = true
+      this.modal = true;
+      Object.assign(this.$data.libraryItem, this.$options.data().libraryItem)
+       this.driver=[];
+       this.slot=[];
+
     },
     // 点击确认按钮，把信息传给后台
     ok() {
@@ -126,13 +131,12 @@ export default {
         util.restfullCall('/rest-ful/v3.0/device', JSON.stringify(this.libraryItem), 'post', this.callb)
         this.libraryItem.name = null
         this.libraryItem.server = null
-        this.Mechanics = null
+        this.libraryItem.Mechanics = null
       }else{
         this.$Message.error("新建磁带库输入格式错误！")
       }
     },
     callb(obj) {
-      console.log(obj)
       if(obj.data.code===0){
         util.restfullCall(
           "/rest-ful/v3.0/devices?type=1",

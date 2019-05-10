@@ -3,6 +3,7 @@ import axios from 'axios';
 // const login = () => import('../views/login/login.vue')
 
 axios.defaults.baseURL = "http://192.168.1.233:8080";
+// axios.defaults.baseURL = "http://192.168.1.198:8080";
 // axios.defaults.baseURL = 'http://192.168.0.109:8080';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 if (window.localStorage.getItem('token')) {
@@ -26,7 +27,8 @@ export default {
 		}
       })
       .catch(error => {
-        // console.log(error);
+				// console.log(error);
+				window.location = "/#/login"
       });
   },
   restfullCalls: function (url, body, method, dataFormat, parameter) {
