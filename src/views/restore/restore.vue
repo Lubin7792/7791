@@ -88,7 +88,7 @@
     </div>
 
     <!-- 表格部分 -->
-    <Table class="tab" @on-row-click="listClick" highlight-row :columns="regain" :data="regainData" height="235"></Table>
+    <Table class="tab" @on-row-click="listClick"  :columns="regain" :data="regainData" height="235"></Table>
     <!-- 树形图部分 -->
     <Row  :gutter="16">
       <!-- 树形图部分 -->
@@ -187,7 +187,7 @@
       // 客户端下拉框数据
       util.restfullCall('/rest-ful/v3.0/clients', null, 'get', this.clientslData)
       // 策略类型下拉框数据
-      util.restfullCall('/rest-ful/v3.0/policytype', null, 'get', this.typelData)
+      util.restfullCall('/rest-ful/v3.0/policytype?mode=R', null, 'get', this.typelData)
     },
     computed: {
       data3() {
@@ -208,6 +208,17 @@
       // openClient: function(open) {
       //   if(open == true) util.restfullCall('/rest-ful/v3.0/clients', null, 'get', this.clientslData)
       // },
+    //清空选取
+    clearUp:function(){
+      $.fn.zTree.init($("#treeDemo"), this.setting, null);
+      this.pathConten=[];
+      this.regainData=[];
+//       this.$nextTick(()=>{
+//  Object.assign(this.$data.pathConten, this.$options.data().pathConten)
+//            Object.assign(this.$data.regainData, this.$options.data().regainData)
+//       })
+          
+    },
       // 客户端下拉框回调
       clientslData: function(obj) {
         var array = new Array
@@ -223,6 +234,7 @@
       },
       // 选中的客户端id
       changesClient: function(id) {
+        this.clearUp()
         this.query.client = id
       },
       // // 策略类型下拉框获取数据
@@ -243,14 +255,18 @@
       },
       // 选中的策略类型type
       changesType: function(type) {
+        this.clearUp()
         this.query.policytype = type
+
       },
       // 开始时间
       startTime: function(start) {
+        this.clearUp()
         this.query.starttime = start
       },
       // 结束时间
       endTime: function(end) {
+        this.clearUp()
         this.query.endtime = end
       },
       // 点击查询
@@ -265,22 +281,22 @@
       // 点击查询的回调
       callbackRegain: function(obj){
         var array = new Array()
-        for (let i = 0; i < obj.data.length; i++) {
+        for (let i = 0; i < obj.data.report.length; i++) {
           array.push({
-            bytes: obj.data[i].bytes,
-            client: obj.data[i].client,
-            device: obj.data[i].device,
-            endtime: obj.data[i].endtime,
-            files: obj.data[i].files,
-            id: obj.data[i].id,
-            policy: obj.data[i].policy,
-            policytype: obj.data[i].policytype,
-            pool: obj.data[i].pool,
-            rate: obj.data[i].rate,
-            result: obj.data[i].result,
-            scheduletype: obj.data[i].scheduletype,
-            starttime: obj.data[i].starttime,
-            type: obj.data[i].type
+            bytes: obj.data.report[i].bytes,
+            client: obj.data.report[i].client,
+            device: obj.data.report[i].device,
+            endtime: obj.data.report[i].endtime,
+            files: obj.data.report[i].files,
+            id: obj.data.report[i].id,
+            policy: obj.data.report[i].policy,
+            policytype: obj.data.report[i].policytype,
+            pool: obj.data.report[i].pool,
+            rate: obj.data.report[i].rate,
+            result: obj.data.report[i].result,
+            scheduletype: obj.data.report[i].scheduletype,
+            starttime: obj.data.report[i].starttime,
+            type: obj.data.report[i].type
           })
         }
         this.regainData = array

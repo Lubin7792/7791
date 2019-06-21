@@ -28,6 +28,14 @@
   width: 250px;
   display: inline-block;
 }
+.newconten .checkPosition{
+  position: relative;
+}
+.newconten .checkPosition .ivu-checkbox-wrapper{
+  position: absolute;
+  top: 0;
+  left: -85px;
+}
 .newconten .tree-conten {
   width: 39%;
   float: right;
@@ -36,14 +44,20 @@
 }
 .newconten .planinfo .buttonList{
   margin-bottom: 5px;
+  width: 50%;
+  display: inline-block;
 }
 .newconten .planinfo .ivu-form-item{
-  margin-bottom: 12px;
+  margin-bottom: 4px;
 }
 .newconten .planinfo .time .ivu-form-item {
   width: 300px;
 }
 .newconten .file {
+  font-size: 16px;
+  padding: 0 10px;
+}
+.newconten .DB2 {
   font-size: 16px;
   padding: 0 10px;
 }
@@ -61,6 +75,10 @@
   background-color: #fff;
   padding: 0 6px;
   font-size: 14px;
+}
+.newconten .DB {
+  width: 51%;
+  float: left;
 }
 .newconten .fail {
   width: 50%;
@@ -86,3 +104,7 @@
 .newconten .h30{
   height: 30px;
 }
+
+ .newconten .planlist .ivu-table td, .ivu-table th{
+   height: 36px;
+ }

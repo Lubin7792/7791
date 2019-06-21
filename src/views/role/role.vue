@@ -75,8 +75,13 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.editShow = true;
-                      (this.editData = params.row), console.log(this.editData);
+                      console.log();
+                      if(params.row.id>3){
+                           this.editShow = true;
+                      (this.editData = params.row);
+                      }
+                      
+                   
                     }
                   }
                 }):'',
@@ -87,15 +92,16 @@ export default {
                   },
                   on: {
                     click: () => {
+                      if(params.row.id>3){
                       this.prowerShow = true;
                       this.backId = params.row.id;
-
                       util.restfullCall(
                         "/rest-ful/v3.0/role/" + params.row.id + "/privilege",
                         null,
                         "get",
                         this.rolePost
                       );
+                      }
                     }
                   }
                 }):'',
@@ -103,8 +109,10 @@ export default {
                   props: { type: "trash-a", size: 22 },
                   on: {
                     click: () => {
+                      if(params.row.id>3){
                       this.rowId = params.row.id;
                       this.modalDelete = true;
+                    }
                     }
                   },
                   style: {}

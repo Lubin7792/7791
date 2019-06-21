@@ -177,11 +177,44 @@
             ></Option>
           </Select>
         </div>
-        <div v-if="show2 === '393216'">
-        <Form ref="basic" :model="basic" :label-width="120">
+        <div v-if="show2 === '393216'" >
+          <Form ref="basic" :model="basic" :label-width="120">
             <FormItem label="系统备份">
               <Input v-model="valueA"></Input>
             </FormItem>
+          </Form>
+        </div>
+        <div v-if="show2 === '524288'" class="DB2">
+          <Form ref="basic" :model="basic" :label-width="100">
+            <FormItem label="DB2系统用户名">
+              <Input v-model="valueA"   @on-blur="checkValue(true,38,valueA)"  style="width: 282px"></Input>
+            </FormItem>
+              <div class="frame DB">
+                <p class="titles"> 是否为在线备份</p>
+                <RadioGroup v-model="valueG" @on-change="radioType(39,parseInt(valueG))">
+                  <Radio label="1">在线备份</Radio>
+                  <p class="blanks"></p>
+                  <Radio label="0">离线备份</Radio>
+                </RadioGroup>
+              </div>
+                <p class="blanks"></p>
+              <div class="frame DB">
+                <p class="titles"> 备份时是否包含日志</p>
+                <RadioGroup v-model="valueH" @on-change="radioType(40,parseInt(valueH))">
+                  <Radio label="1">备份日志</Radio>
+                  <p class="blanks"></p>
+                  <Radio label="0">不备份日志</Radio>
+                </RadioGroup>
+              </div>
+             <div class="DB">
+                <Checkbox v-model="showc" @on-change="checkType(showc,41,valueD)">指定脚本备份</Checkbox>
+                <Input
+                  v-model="valueD"
+                  :disabled="!showc"
+                  @on-blur="checkValue(showc,41,valueD)"
+                  style="width: 279px"
+                />
+             </div>
           </Form>
         </div>
       </div>
@@ -218,9 +251,9 @@ export default {
       valueC: "",
       valueD: "",
       valueE: "",
-      valueF: "0",
-      valueG: "",
-      valueH: "",
+      valueF: "",
+      valueG: "1",
+      valueH: "1",
       valueI: "",
       valueN: "",
       valueM: "",
@@ -349,28 +382,49 @@ export default {
       }
       this.adds(num, conten);
     },
+    
     filterValue(num, conten) {
       if (this.valueA == num) {
         this.deletes(num);
         this.adds(num, conten);
       }
     },
+    confirm(){
+       this.$Modal.confirm({
+          content: '<p>是否确认在备份备份后删除源文件？</p>',
+          onOk: () => {
+            this.adds(8, undefined);
+          },
+          onCancel: () => {
+            this.showd= false;
+              this.deletes(8);
+              this.$Message.info('取消勾选');
+          }
+      });
+    },
+    radioType( num, conten){
+        this.deletes(num);
+        this.adds(num, conten);
+    },
     //多选
     checkType(state, num, conten) {
       if (state) {
+        if(num ==8){
+         this.confirm();
+        }else{
         this.adds(num, conten);
+        }
       } else {
         this.deletes(num);
       }
     },
-    //添加内数据
+    //添加内数据 
     adds(num, conten) {
       if (conten == undefined) {
         this.options.push({ type: num });
       } else {
         this.options.push({ type: num, value: conten.toString() });
       }
-      // console.log(this.options);
     },
     //删除数据
     deletes(num) {
@@ -378,7 +432,6 @@ export default {
         return element.type !== num;
       }
       this.options = this.options.filter(filters);
-      // console.log(this.options);
     },
     //输入框添加数据
     checkValue(state, num, conten) {

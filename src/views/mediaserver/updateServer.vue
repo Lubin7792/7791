@@ -1,6 +1,6 @@
 <template>
     <!-- 介质服务器修改介质弹框 -->
-    <Modal v-model="modal1" title="修改介质服务器" @on-ok="ok" @on-cancel="cancel" ok-text="保存" class-name="vertical-center-modal">
+    <Modal v-model="modal1" title="设备属性" @on-ok="ok" @on-cancel="cancel" ok-text="保存" class-name="vertical-center-modal">
         <Form :label-width="130" :model="putDatas" ref="putDatas" :rules="rulePut">
             <FormItem label="介质服务器名称" prop="name">
                 <Input placeholder="请输入介质服务器名称" v-model="putDatas.name"></Input>

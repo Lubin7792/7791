@@ -3,7 +3,7 @@
     <Modal v-model="modal" title="绑定介质池" @on-ok="ok" @on-cancel="cancel" ok-text="保存">
         <Form :label-width="140">
             <FormItem label="选择绑定的介质池">
-              <Select placeholder="请选择存储服务器" v-model="storage" @on-open-change="openDisk" @on-change="optionId">
+              <Select placeholder="请选择介质池" v-model="storage" @on-open-change="openDisk" @on-change="optionId">
                 <Option v-for="item in selServiceList" :value="item.id" :key="item.id">{{ item.name }}</Option>
               </Select>
             </FormItem>

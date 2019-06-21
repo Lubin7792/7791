@@ -5,6 +5,7 @@
 <template>
   <div class="policy">
     <div class="buttonPolice">
+      <Button type="primary" @click="exportData"><Icon type="ios-download-outline"></Icon> 导出报表数据</Button>
       <Button type="primary"  @click="newPolicy" v-if="nowShow(getPower.newPolicy)">
       <div class="buttonDiv">
               <img  class="buttonIcon" src="../../images/newPolicy.png" style="width:14px;" alt="">
@@ -14,7 +15,7 @@
     </div>
     <Table border :columns="policyColumns" :data="policiesData" ref="exp"></Table>
     <newPolicy ref="newPolicyData" :modals="modalss" @closePolicy="closePolicy"></newPolicy>
-    <updatePolicy  ref="updatePolicyData" :upmodal="modal" @close="revise"></updatePolicy>
+    <updatePolicy  ref="updatePolicyData" :upmodal="modal" @closeUpPolicy="closeUpPolicy"></updatePolicy>
     <Modal
       v-model="modalDelete"
       @on-ok="ok"
@@ -72,20 +73,23 @@ export default {
       policyColumns: [
         {
           title: "ID",
-          width: 80,
+          width: 70,
           key: "id",
           sortable: true
         },
         {
           title: "名称",
           key: "name"
+
         },
         {
           title: "策略类型",
+          width: 140,
           key: "type"
         },
         {
           title: "优先级",
+          width: 100,
           key: "privilege"
         },
         {
@@ -98,6 +102,7 @@ export default {
         },
         {
           title: "保留天数",
+          width: 100,
           key: "savedays"
         },
         {
@@ -106,6 +111,7 @@ export default {
         },
         {
           title: "状态",
+          width: 110,
           key: "enable",
           render: (h, params) => {
             return h(
@@ -165,7 +171,7 @@ export default {
         },
         {
           title: "操作栏",
-          width: 400,
+          width: 120,
           key: "operation",
           render: (h, params) => {
             var data = this.policiesData[params.index];
@@ -319,6 +325,11 @@ export default {
     }
   },
   methods: {
+    exportData(){
+      this.$refs.exp.exportCsv({
+            filename: "策略数据"
+        });
+    },
        nowShow(num){
       if(this.numNowList.indexOf(num)!=-1){
         return true
@@ -404,26 +415,22 @@ export default {
     },
     enableCall(obj) {
       if(obj.data.code==0){
-        console.log(obj.data.message);
       }
     },
-    close: function(modal) {
-      this.modal = modal;
-    },
+    // close: function(modal) {
+    //   this.modal = modal;
+    // },
     newPolicy: function() {
       this.modalss = true;
         this.$refs.newPolicyData.show="基本信息";
         this.$refs.newPolicyData.tabValue="基本信息";
-        // this.$refs.newPolicy.basic.type="65536";
-this.$refs.newPolicyData.$refs.newConten.callBackFun() ;
-// console.log(this.$refs.newPolicyData.$refs.newConten.callBackFun)
-// this.$refs.newPolicyData.$refs.newConten.basic.type="65536" 
+        this.$refs.newPolicyData.$refs.newConten.callBackFun() ;
 
     },
     closePolicy: function(modalss) {
       this.modalss = modalss;
     },
-    revise: function(show) {
+        closeUpPolicy: function(show) {
       this.modal = show;
     },
     //启动

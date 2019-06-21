@@ -8,12 +8,25 @@
         top: 0;
     }
   }
-  .base > div {
-    width: 40%;
+    .upRebase{
+      border: 1px solid #dddee1; 
+    border-bottom:none; 
+    border-right:none; 
+    line-height: 40px;
+    }
+    .upRebase .line{
+      width: 60px;
+      display: inline-block;
+      margin-right: 5px;
+      border-right: 1px solid #dddee1; 
+      padding-right: 5px;
+    }
+  .upRebase > div {
+ width: 50%;
     display: inline-block;
-    margin: left;
-    margin-left: 4%;
-    margin-bottom: 5px;
+    padding: 0 10px;
+    border-bottom: 1px solid #dddee1; 
+    border-right: 1px solid #dddee1; 
   }
   .ivu-table .wrning td {
 	  background-color: rgb(224, 222, 63);
@@ -29,11 +42,13 @@
         <Form :label-width="130">
           <Tabs type="card">
               <TabPane label="基本信息">
-                <div class="base" style="margin-bottom:20px">
-                  <div v-for="(value,key) in baseData" :key="key" v-if="(typeof(value) !== 'object') && (key !== 'id')">{{ralations[key]}}: {{value}}</div>
+                <div class="upRebase" style="margin-bottom:20px">
+                  <!-- <div v-for="(value,key) in baseData" :key="key" v-if="(typeof(value) !== 'object') && (key !== 'id')"><div class="line">{{ralations[key]}}</div> {{value}}!!{{key}}</div> -->
+                  <div v-if="baseData==null" >无数据</div>
+                  <div v-else v-for="(value,key) in ralations" :key="key"><div class="line">{{value}}</div> {{baseData[key]}}</div>
                 </div>
               </TabPane>
-              <TabPane label="历史日志">
+              <TabPane label="任务日志">
                 <Table :row-class-name="rowDesc" :data="log" :columns="historyLog" height="300"></Table>
               </TabPane>
           </Tabs>
@@ -52,18 +67,20 @@ export default {
         historyLog: [
           { title: '级别', key: 'level', width: 100 },
           { title: '时间', key: 'time' },
-          { title: '模块', key: 'module' },
+          { title: '来源', key: 'module' },
           { title: '描述', key: 'desc' }
         ],
         log:[],
-        baseData: {},
+        baseData: null,
         ralations : {
           type: '类型',
           client: '客户机',
           policy: '策略',
+          policytype:"策略类型",
           starttime: '开始时间',
           endtime: '结束时间',
-          scheduletype: '计划备份',
+          times: '耗时',
+          scheduletype: '备份类型',
           files: '文件',
           bytes: '字节',
           device: '设备',
@@ -105,6 +122,7 @@ export default {
       },
       callbackBase: function (baseObj) {
         this.baseData = baseObj.data.data
+        console.log(this.baseData )
       },
       rowDesc(row) {
         if(row.level === '警告'){

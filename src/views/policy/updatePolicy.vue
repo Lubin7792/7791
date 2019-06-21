@@ -14,16 +14,20 @@
     title="修改配置"
     v-model="InfoModal"
     class-name="vertical-center-modal"
-    @on-ok="ok"
     @on-cancel="cancel"
-    ok-text="确认修改"
     class="policyModal"
   >
     <Tabs type="card" :animated="false" @on-click="click" v-model="tabNames">
       <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index" > 
              </TabPane>
     </Tabs>
-     <Content :show="show" ref="conten"></Content> 
+     <Content :show="show" ref="conten">
+     
+       </Content> 
+         <div slot="footer">
+      <Button type="text" size="large" @click="cancel">取消</Button>
+      <Button type="primary" size="large" @click="ok">确定</Button>
+   </div>
   </Modal>
 </template>
 <script>
@@ -73,11 +77,13 @@ export default {
       }
     },
     ok: function() {
-      this.$emit("close", false);
        this.$refs.conten.policypost();
     },
+        closeOpen:function (state) {
+      this.$emit("closeUpPolicy", state);
+    },
     cancel: function() {
-      this.$emit("close", false);
+      this.$emit("closeUpPolicy", false);
     },
     click: function(name) {
       this.show = name;

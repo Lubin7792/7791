@@ -13,6 +13,8 @@ import Routers from './router/router.js';
 import 'babel-polyfill';
 import Vuex from 'vuex';
 import store from './store/store.js';
+import clipboard from 'clipboard';
+
 import {
     Table,
     TableColumn
@@ -23,7 +25,9 @@ Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(Table);
 Vue.use(TableColumn);
-Vue.component('loading', loading)
+Vue.component('loading', loading);
+Vue.prototype.clipboard = clipboard;
+
 // The routing configuration
 const RouterConfig = {
     // 使用 HTML5 的 History 路由模式

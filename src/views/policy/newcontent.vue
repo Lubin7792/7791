@@ -49,15 +49,23 @@
           <!-- <Input v-model="basic.maxtasks"></Input> -->
           <InputNumber :max="5" :min="1" v-model="basic.maxtasks"></InputNumber>
         </FormItem>
-        <FormItem label="启用压缩" class="h30">
-          <CheckboxGroup v-model="basic.compress">
-            <Checkbox label></Checkbox>
-          </CheckboxGroup>
+        <FormItem label="压缩级别" class="h30 checkPosition">
+             <Select
+              v-model="basic.compressValue"
+              style="width:160px"
+              :label-in-value="true"
+              placeholder="请选择"
+            >
+              <Option
+                v-for="item in basic.compressList"
+                :label="item.name"
+                :value="item.key"
+                :key="item.key"
+              ></Option>
+            </Select>
         </FormItem>
         <FormItem label="启用加密" class="h30">
-          <CheckboxGroup v-model="basic.encryption">
-            <Checkbox label></Checkbox>
-          </CheckboxGroup>
+            <Checkbox  v-model="basic.encryption" ></Checkbox>
         </FormItem>
         <!-- <FormItem label="加密算法">
           <Input v-model="basic.algorithm"></Input>
@@ -84,7 +92,7 @@
       </div>
     </div>
     <div v-show="show === '备份选项'">
-      <backupoption :show2="policyTypekey" v-if="hackReset" ref="backupOption"></backupoption>
+      <backupoption :show2="policyTypekey" v-if="hackReset" ref="backupOption" ></backupoption>
     </div>
     <div v-show="show === '调度计划'" class="planinfo">
       <Form ref="schedule" :model="schedule" :label-width="80">
@@ -198,7 +206,7 @@
             style="width: 168px"
           ></TimePicker>
         </FormItem>
-        <FormItem label="间隔类型" style="width:100%">
+        <FormItem label="间隔类型" style="width:46%">
           <Select
             style="width:150px"
             :label-in-value="true"
@@ -356,36 +364,7 @@ export default {
         name: "",
         deviceval: "",
         poolval: 2,
-        pool: [
-          {
-            id: 1,
-            name: "空白介质池",
-            type: 0,
-            Cover: 0,
-            Protected: 0
-          },
-          {
-            id: 2,
-            name: "默认介质池",
-            type: 1,
-            Cover: 30,
-            Protected: 30
-          },
-          {
-            id: 3,
-            name: "归档介质池",
-            type: 4,
-            Cover: 0,
-            Protected: 0
-          },
-          {
-            id: 4,
-            name: "CATALOG介质池",
-            type: 4,
-            Cover: 90,
-            Protected: 90
-          }
-        ],
+        pool: [],
         privilegekey: 1,
         privilege: [
           {
@@ -401,9 +380,27 @@ export default {
             Name: "高优先级"
           }
         ],
+         compressList: [
+          {
+            key: 0,
+            name: "不压缩"
+          },
+          {
+            key: 6,
+            name: "高"
+          },
+          {
+            key: 3,
+            name: "中"
+          },
+          {
+            key: 1,
+            name: "低"
+          }
+        ],
+        compressValue:0,
         maxtasks: 5,
-        compress: [],
-        encryption: [],
+        encryption: false,
         algorithm: "",
         savedays: 30
       },
@@ -560,13 +557,18 @@ export default {
       // this.basic.deviceval = data[0].id;
     },
     hackOne: function(type) {
+      this.$refs.backupOption.callBack();
       if (type == 131072) {
         this.$refs.backupOption.setOptins(14, 0);
       }
-      this.hackReset = false;
-      this.$nextTick(() => {
-        this.hackReset = true;
-      });
+       if (type == 524288) {
+         this.$refs.backupOption.setOptins(39, 1);
+        this.$refs.backupOption.setOptins(40, 1);
+       }
+      // this.hackReset = false;
+      // this.$nextTick(() => {
+      //   this.hackReset = true;
+      // });
       if (type == 196608) {
         this.$parent.$parent.delTabList();
       } else {
@@ -695,7 +697,27 @@ export default {
     showNow: function() {},
     showNows: function(value) {},
     policypost: function() {
-    if(/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,128}$/.test(this.basic.name) ){
+        if(!(/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,128}$/.test(this.basic.name) )){
+           this.$parent.$parent.closeOpen(true);
+       this.$Message.error("输入策略名称格式错误！新建失败");
+       return false;
+        }
+      if(this.resources.pathConten.length==0){
+         this.$parent.$parent.closeOpen(true);
+       this.$Message.error("备份资源列表未选择！新建失败");
+       return false;
+      }
+  if(this.basic.type===524288){
+    var optionData=this.$refs.backupOption.showOption();
+   var options= optionData.find((element)=>{
+      return element.type==38;
+    })
+     if(options==undefined||options.value==""){
+         this.$parent.$parent.closeOpen(true);
+       this.$Message.error("DB2系统用户名不可为空！新建失败");
+       return false;
+      }
+  }
         let tests = {
         base: {
           name: this.basic.name,
@@ -710,12 +732,15 @@ export default {
         },
         resource: this.resources.pathConten,
         option: this.$refs.backupOption.showOption(),
-        schedule: this.schedule.planList
+        schedule: this.schedule.planList,
       };
-      util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
-    }else{
-       this.$Message.error("输入策略名称格式错误！新建失败");
+      if(this.basic.encryption){
+      this.$refs.backupOption.adds(0,1);
     }
+      this.$refs.backupOption.adds(1,this.basic.compressValue);
+      this.$parent.$parent.closeOpen(false);
+      util.restfullCall("/rest-ful/v3.0/policy", tests, "post", this.senddata);
+
     },
     senddata: function(value) {
       if (value.data.code === 0) {
@@ -744,6 +769,7 @@ export default {
       }
       this.ztreeArray=array
       $.fn.zTree.init($("#treeDemoA"), this.setting, array);
+      this.resources.pathConten=[];
         util.restfullCall(
         "/rest-ful/v3.0/policy/backuptype/" + this.basic.type,
         null,
@@ -1018,7 +1044,17 @@ export default {
          this.schedule.backuptype=obj.data
         }
       );
+
       this.schedule.backuptlevel=1;
+       util.restfullCall(
+        "/rest-ful/v3.0/volpools",
+        null,
+        "get",
+        obj=>{
+         this.basic.pool=obj.data
+        }
+      );
+
      })
     }
   }

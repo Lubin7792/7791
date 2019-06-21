@@ -18,13 +18,27 @@
 
 .parent {
 	border: 1px solid #ccc;
-    height: 120px;
-    padding: 10px;
+	   border-bottom:none; 
+    border-right:none; 
 }
 .parent div {
-	width: 49%;
-	float: left;
+ width: 50%;
+ line-height: 30px;
+    display: inline-block;
+    margin: left;
+    padding: 0 5px;
+    border-bottom: 1px solid #dddee1; 
+    border-right: 1px solid #dddee1; 
 }
 .titl {
 	font-weight: 700;
 }
+   .parent .line{
+      width: 90px;
+      height: 30px;
+      display: inline-block;
+      margin-right: 5px;
+      border-right: 1px solid #dddee1; 
+	  padding-right: 5px;
+	  border-bottom: none;
+    }

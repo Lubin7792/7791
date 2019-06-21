@@ -44,7 +44,7 @@
             ></Input>
           </FormItem>
         </Form>
-        <Form :label-width="550">
+        <Form :label-width="50">
           <FormItem>
             <Button style="margin-right: 8px" @click="Reset">重 置</Button>
             <Button type="primary" class="buttonA"   @click="confirm">确认修改</Button>
@@ -140,11 +140,87 @@
         </Col>
       </Row>
     </Panel>
+   <Panel name="4"  class="license">
+     <span class="xt">授权信息</span>
+      <Row slot="content" >
+        <Col span="20">
+        <Tabs value="name1" type="card" :animated="false">
+          <TabPane label="基本信息" name="name1">
+              <div class="frame">
+                <p class="titles">授权方式</p> 
+                <RadioGroup v-model="Base.LicenseType" >
+                <div >
+                    <Radio v-model="modelA" disabled label="0">功能授权</Radio>
+                    <p class="mr10">按功能模块进行授权,当相应模块未授权或者超过授权数量时,对应的模块或超过数量部分将不能够被使用。备份的总存储容量不受限制</p>
+                </div>
+                  <p class="blanks"></p>
+                  <div >
+                    <Radio v-model="modelA" disabled label="1">容量授权</Radio>
+                  <p class="mr10">按备份的存储容量进行授权,功能模块不受限制,当备份保留的总数据量超过授权容量时,将会备份失败。</p>
+                  </div>
+              </RadioGroup>
+              </div>
+               <div class="frame">
+                <p class="titles">选择授权类型</p>  
+                <RadioGroup v-model="Base.LicenseMode" >
+                <Radio disabled label="0">测试授权</Radio>
+                  <p class="mr10">用于测试使用,测试授权固定只有30天的使用期限</p>
+                <p class="blanks"></p>
+                <Radio disabled label="1">商用授权 </Radio>
+                <p class="mr10">商用授权为销售授权,没有使用时限的限制</p>
+              </RadioGroup>
+             </div>
+                <p class="blanks"></p>
+             <Form  :label-width="90" >
+              <FormItem label="系统注册码:" >
+                <Input id="copyValue" readonly="readonly" v-model="syssetCode" style="width: 70%"></Input>
+                 <button ref="copy" @click="copyValues(syssetCode)"  data-clipboard-action="copy" data-clipboard-target="#copyValue" class="ivu-btn ivu-btn-warning" >复制注册码</button>
+              </FormItem>
+              <div class="frame" v-if="Base.LicenseType=='0' ">
+            <div  style="width: 49%;display:inline-block">
+                <Checkbox disabled label="备份前运行脚本" v-model="Base.VssBackup" >打开文件备份</Checkbox>
+             <p class="mr10">此授权用于控制高级文件备份功能</p>
+            </div>
+             <div  style="width: 49%;display:inline-block">
+                <Checkbox disabled v-model="Base.Dedump">重复数据删除</Checkbox>
+             <p class="mr10">此授权用于控制重复数据删除功能</p>
+             </div>
+            </div>
+            </Form>
+              <Form  :label-width="90"  >
+              <FormItem label="授权容量:" >
+                <Input readonly="readonly" v-model="Base.Capacity" style="width: 30%"></Input>&nbsp G
+              </FormItem>
+            </Form>
+              </div>
+          </TabPane>
+            <TabPane  v-if="Base.LicenseType=='0' " label="存储服务授权" name="name2">
+              <Table  highlight-row  border :columns="clientList" :data="Client"></Table>
+          </TabPane>
+          <TabPane  v-if="Base.LicenseType=='0' " label="客户端授权" name="name3">
+             <Table   highlight-row  border :columns="storageList" :data="Storage"></Table>
+          </TabPane>
+          <TabPane  v-if="Base.LicenseType=='0' " label="备份代理授权" name="name4">
+             <Table  highlight-row  border :columns="agentList" :data="Agent"></Table>
+          </TabPane>
+       </Tabs>
+     <div>
+       <span style="width: 87px; display: inline-block;">选择授权文件:</span>
+       <Input   style="width: 30%"></Input>
+       <Upload action="/rest-ful/v3.0/system/license/import" with-credentials:true :on-success="upLoad" :on-error="upLoad"  :on-format-error="upLoad">
+        <Button type="warning" >浏览</Button>
+    </Upload>
+      <Button type="warning">导入</Button>
+     </div>
+        </Col>
+      </Row>
+
+    </Panel>
+
   </Collapse>
 </template>
 <script>
 import util from "../../libs/util.js";
-
 export default {
   data() {
     const validatePass = (rule, value, callback) => {
@@ -157,6 +233,8 @@ export default {
     const validatePassCheck = (rule, value, callback) => {
       if (this.formItem.password != "" && value === "") {
         callback(new Error("确认密码不能为空"));
+
+
       } else if (this.formItem.password != value) {
         callback(new Error("新密码和确认密码应相同"));
       } else {
@@ -164,6 +242,23 @@ export default {
       }
     };
     return {
+      copyBtn:null,
+      Base:{
+        LicenseType:'1',
+        LicenseMode:'1',
+        VssBackup:false,
+        Dedump:false,
+        Capacity:'0'
+      },
+      clientList:  [{ title: "操作系统类型", key: "OS", align: "center" }, {title: "授权数量", key: "Value", align: "center" }],
+      storageList:[{ title: "操作系统类型", key: "OS", align: "center" }, {title: "授权数量", key: "Value", align: "center" }],
+      agentList: [{ title: "代理类型", key: "Agent", align: "center" }, {title: "系统类型", key: "OS", align: "center" }, {title: "授权数量", key: "Value", align: "center" }],
+      Client:[],
+      Storage:[],
+      Agent:[],
+      syssetCode:'',
+      valueA:"1",
+      modelA:true,
       numNowList:[],
       // 重复密码验证
       ruleValidate: {
@@ -259,8 +354,25 @@ export default {
       "get",
       this.systemList
     );
+    util.restfullCall(
+      "/rest-ful/v3.0/system/license",
+      null,
+      "get",
+      this.licenseList
+    );
+      util.restfullCall(
+      "/rest-ful/v3.0/system/registcode",
+      null,
+      "get",
+      this.registcodeValue
+    );
+
+  },
+  mounted() {
+    this.copyBtn = new this.clipboard(this.$refs.copy);
   },
   computed: {
+    
     getPrivilege() {
       return this.$store.state.index.privilegeData;
     },
@@ -274,6 +386,48 @@ export default {
     }
   },
   methods: {
+    upLoad(a,b,c){
+      console.log(a,b,c)
+    },
+    copyValues(value){
+      let _this = this;
+    let clipboard = _this.copyBtn;
+      var oInput = document.createElement('input');
+        oInput.value = value;
+        document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令 
+        this.$Message.success("复制成功")
+      // 废弃的
+      // clipboard.on("success",function (e) {
+      //   _this.$Message.success("复制成功")
+      // clipboard.destroy()
+      // })
+      //  clipboard.on("error",function (e) {
+      //   _this.$Message.warning("复制失败,请手动复制")
+      // clipboard.destroy()
+      // })
+    },
+    registcodeValue(obj){
+       if(obj.data.code==0){
+         this.syssetCode=obj.data.registcode.toString()
+       }
+    },
+    licenseList(obj){
+      if(obj.data.code==0){
+          this.Base.LicenseType=obj.data.license.Base.LicenseType.toString();
+          this.Base.LicenseMode=obj.data.license.Base.LicenseMode.toString();
+          this.Base.VssBackup=obj.data.license.Base.VssBackup==0?false:true;
+          this.Base.Dedump=obj.data.license.Base.Dedump==0?false:true;
+          this.Base.Capacity=obj.data.license.Base.Capacity.toString();
+          this.Client=obj.data.license.Client;
+          this.Storage=obj.data.license.Storage;
+          this.Agent=obj.data.license.Agent;
+      }else{
+          this.$Message.warning('license连接失败');
+      }
+
+    },
     nowShow(num) {
       if (this.numNowList.indexOf(num) != -1) {
         return true;
@@ -543,6 +697,41 @@ export default {
 </script>
 
 <style>
+.license .ivu-upload{
+  display: inline-block;
+}
+.license .mr10{
+  margin-left:20px; 
+}
+.license .ivu-table-body{
+  height: 420px;
+  overflow: auto;
+}
+.license .ivu-table td, .ivu-table th{
+  height: 30px;
+}
+.license .ivu-tabs{
+  height: 520px;
+}
+.license .blanks {
+  width: 100%;
+  padding: 5px 0;
+}
+.license .frame {
+  padding: 20px 10px 10px;
+  border: 1px solid #dddee1;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.license .frame .titles {
+  position: absolute;
+  left: 30px;
+  top: -11px;
+  background-color: #fff;
+  padding: 0 6px;
+  font-size: 14px;
+}
 .xt {
   font-weight: 600;
   margin-left: 10px;

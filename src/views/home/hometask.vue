@@ -16,7 +16,7 @@
     <div class="content">
       <div class="home-content">
           <p class="home-con-tit">备份数据量</p>
-          <div id="myChart1"  :style="{width:'470px',height:'244px'}" ></div>
+          <div id="myChart1"  :style="{width:'',height:'244px'}" ></div>
           <div class="home-details">
             <span class="home-capacity">
               <p> 累计完成备份数据量</p>

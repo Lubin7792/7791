@@ -22,17 +22,17 @@ export default {
       columns4: [
         // { type: 'selection', width: 60, align: 'center' },
         { title: '任务ID', width: 80, key: 'id' },
-        { title: '策略', width: 160, key: 'policy' },
-        { title: '客户端', width: 160, key: 'client' },
+        { title: '策略', key: 'policy' },
+        { title: '客户端', key: 'client' },
         { title: '介质服务器', key: 'mediaserver' },
-        { title: '设备', width: 80, key: 'device'  },
+        { title: '设备',  key: 'device'  },
         { title: '开始时间', key: 'starttime' },
         { title: '耗时', key: 'usedtime'  },
         { title: '备份数据量', key: 'bytes'  },
         { title: '速率', key: 'rate'  },
-        { title: '介质', key: 'pool'  },
-        { title: '状态', width: 80, key: 'state' },
-        {title: '操作',key: 'operation',align: 'center',
+        { title: '介质', width: 120, key: 'pool'  },
+        { title: '状态', key: 'state' },
+        {title: '操作' ,width: 100,key: 'operation',align: 'center',
           render: (h, params) => {
             return h('div', [
               // 任务监控详情

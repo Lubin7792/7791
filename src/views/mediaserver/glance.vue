@@ -28,6 +28,8 @@ export default {
       setting: {
         check: {
           enable: true,
+          chkStyle: "radio",
+          radioType: "all",
         },
         view: {
           selectedMulti: false

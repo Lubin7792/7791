@@ -303,8 +303,12 @@
         this.example=[];
         this.list=[];
       },
-      calbackClients:function(obj) {
-        // console.log("VMWARE备份",obj)
+      calbackClients:function(data) {
+        if(data.data.code==0){
+           this.$Message.success('提交恢复任务成功，转到任务监控可以查看任务详细信息');
+        }else{
+           this.$Message.error('提交任务失败'+data.data.message);
+        }
       },
       cancel() {
         this.list=[];

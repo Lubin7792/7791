@@ -83,7 +83,6 @@ export default {
           now
       })
         .then(res => {
-          console.log(res)
           if (res.data.code == 0) {
             this.$router.push('/home')
             var obj = {"uid":res.data.uid}

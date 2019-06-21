@@ -13,15 +13,17 @@
     class="policyModal"
     v-model="InfoModal"
     title="新建策略"
-    @on-ok="ok"
     @on-cancel="cancel"
-    ok-text="确定"
     class-name="vertical-center-modal"
   >
     <Tabs type="card" :animated="false" @on-click="click" v-model="tabValue" >
       <TabPane v-for="(tab,index) in tabList" :label="tab.title" :name="tab.title" :key="index" ></TabPane>
     </Tabs>
-    <NewContent :show="show" ref="newConten"></NewContent>
+    <NewContent :show="show" ref="newConten"  ></NewContent>
+     <div slot="footer">
+      <Button type="text" size="large" @click="cancel">取消</Button>
+      <Button type="primary" size="large" @click="ok">确定</Button>
+   </div>
   </Modal>
 </template>
 <script>
@@ -70,8 +72,10 @@ export default {
         this.tabList.splice(2, 0, { title: "备份选项" });
       }
     },
+    closeOpen:function (state) {
+      this.$emit("closePolicy", state);
+    },
     ok: function() {
-      this.$emit("closePolicy", false);
       this.$refs.newConten.policypost();
     },
     cancel: function() {

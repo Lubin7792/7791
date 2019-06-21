@@ -36,7 +36,7 @@
           <!-- <Layout> -->
             <!-- 左侧导航区 -->
             <Sider class="nev-lef" ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
-              <Menu active-name="1-2" :style="{ background: '#4a4949', height: '100%' }" theme="dark" width="auto" :class="menuitemClasses" :open-names="['1']" @on-select="changeUrl">
+              <Menu  :active-name=selectName :style="{ background: '#4a4949', height: '100%' }" theme="dark" width="auto" :class="menuitemClasses" :open-names="['1']" @on-select="changeUrl">
                 
                 <Header :style="{padding: 0}" class="lef-head">
                   <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="drag" size="24"></Icon>
@@ -148,7 +148,9 @@ export default {
   data(){
     return {
       nowLists:[],
-      isCollapsed: false
+      isCollapsed: false,
+       selectName:''
+
     }
   },
   name: "navigation",
@@ -243,6 +245,7 @@ export default {
     },
   },
   created() {
+    this.selectName=this.$route.name;
     let uId=JSON.parse(localStorage.userInfo).uid;
     util.restfullCall(
       "/rest-ful/v3.0/policytype",

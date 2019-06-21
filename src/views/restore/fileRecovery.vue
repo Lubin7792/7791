@@ -167,7 +167,6 @@
       aimlData:function(obj) {
         var array = new Array()
         for (let i = 0; i < obj.data.length; i++) {
-          if(this.Client !== obj.data[i].id )
             array.push({
             id: obj.data[i].id,
             machine: obj.data[i].machine,
@@ -215,6 +214,13 @@
         this.aimSelect=[];
         this.list=[];
 
+      },
+      clientslData(data){
+        if(data.data.code==0){
+           this.$Message.success('提交恢复任务成功，转到任务监控可以查看任务详细信息');
+        }else{
+           this.$Message.error('提交任务失败'+data.data.message);
+        }
       },
       cancel() {
         this.list=[];

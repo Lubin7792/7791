@@ -49,15 +49,23 @@
         <FormItem label="策略最大调度任务">
           <InputNumber :max="5" :min="1" v-model="basic.maxtasks"></InputNumber>
         </FormItem>
-        <FormItem label="启用压缩" class="h30">
-          <CheckboxGroup v-model="temporary.compress">
-            <Checkbox label></Checkbox>
-          </CheckboxGroup>
+      <FormItem label="压缩级别" class="h30 checkPosition">
+             <Select
+              v-model="basic.compressValue"
+              style="width:160px"
+              :label-in-value="true"
+              placeholder="请选择"
+            >
+              <Option
+                v-for="item in policylist.compressList"
+                :label="item.name"
+                :value="item.key"
+                :key="item.key"
+              ></Option>
+            </Select>
         </FormItem>
-        <FormItem label="启用加密" class="h30">
-          <CheckboxGroup v-model="temporary.encryption">
-            <Checkbox label></Checkbox>
-          </CheckboxGroup>
+         <FormItem label="启用加密" class="h30">
+            <Checkbox  v-model="basic.encryption" ></Checkbox>
         </FormItem>
         <!-- <FormItem label="加密算法">
           <Input v-model="temporary.algorithm"></Input>
@@ -198,7 +206,7 @@
             style="width: 168px"
           ></TimePicker>
         </FormItem>
-        <FormItem label="间隔类型" style="width:100%">
+        <FormItem label="间隔类型" style="width:46%">
           <Select
             style="width:150px"
             :label-in-value="true"
@@ -336,6 +344,24 @@ export default {
         }
       ],
       policylist: {
+         compressList: [
+          {
+            key: 0,
+            name: "不压缩"
+          },
+          {
+            key: 6,
+            name: "高"
+          },
+          {
+            key: 3,
+            name: "中"
+          },
+          {
+            key: 1,
+            name: "低"
+          }
+        ],
         pool: [
           {
             id: 1,
@@ -467,7 +493,9 @@ export default {
         pool: "",
         device: "",
         maxtasks: 0,
-        savedays: 0
+        savedays: 0,
+        compressValue:1,
+        encryption:false
       },
       schedule: {
         scheduletype: 0,
@@ -559,22 +587,37 @@ export default {
       this.$nextTick(() => {
         let source = this.$refs.backupOption;
         source.options = data.option;
-        if (data.base.type == 65536) {
           let num = data.option.length;
 
           for (let i = 0; i < num; i++) {
+         if (data.option[i].type == 0) {
+            this.basic.encryption= true;
+         }
+          if (data.option[i].type == 1) {
+            this.basic.compressValue=Number(data.option[i].value)
+         }
+          }
+        if (data.base.type == 65536) {
+          let num = data.option.length;
+       var checkState = data.option.find(item=>{
+            item.type==9
+          })
+         if(!checkState){
             source.valueF = "0";
+         }
+          for (let i = 0; i < num; i++) {
             if (data.option[i].type == 6) {
               source.valueA = "6";
               source.valueB = data.option[i].value;
             }
             if (data.option[i].type == 7) {
-              source.valueA = 7;
+              source.valueA ="7";
               source.valueC = data.option[i].value;
             }
             if (data.option[i].type == 9) {
               source.valueF = "9";
             }
+           
             if (data.option[i].type == 5) {
               source.showc = true;
             }
@@ -648,6 +691,25 @@ export default {
             }
             if (data.option[i].type == 28) {
               source.valueA = String(data.option[i].value);
+            }
+          }
+        }
+          if (data.base.type == 524288) {
+          for (let i = 0; i < data.option.length; i++) {
+            source.valueG='1';
+            source.valueH='1';
+            if (data.option[i].type == 39) {
+             source.valueG = String(data.option[i].value);
+            }
+            if (data.option[i].type == 40) {
+              source.valueH = String(data.option[i].value);
+            }
+            if (data.option[i].type == 38) {
+              source.valueA = String(data.option[i].value);
+            }
+             if (data.option[i].type == 41) {
+                source.showc = true;
+              source.valueD = String(data.option[i].value);
             }
           }
         }
@@ -961,7 +1023,37 @@ if(type==1){
     showNow: function() {},
     showNows: function(value) {},
     policypost: function() {
-      if (/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,128}$/.test(this.basic.name)) {
+       if(!(/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,128}$/.test(this.basic.name) )){
+           this.$parent.$parent.closeOpen(true);
+       this.$Message.error("输入策略名称格式错误！修改失败");
+       return false;
+        }
+      if(this.resources.pathConten.length==0){
+         this.$parent.$parent.closeOpen(true);
+       this.$Message.error("备份资源列表未选择！修改失败");
+       return false;
+      }
+  if(this.basic.type===524288){
+    var optionData=this.$refs.backupOption.showOption();
+   var options= optionData.find((element)=>{
+      return element.type==38;
+    })
+      if(options==undefined||options.value==""){
+         this.$parent.$parent.closeOpen(true);
+       this.$Message.error("DB2系统用户名不可为空！修改失败");
+       return false;
+      }
+  } 
+        if(this.basic.encryption){
+          this.$refs.backupOption.deletes(0)
+              this.$refs.backupOption.adds(0,1);
+            }else{
+              this.$refs.backupOption.deletes(0)
+            }
+              this.$refs.backupOption.deletes(1)
+              this.$refs.backupOption.adds(1,this.basic.compressValue);
+          
+
         let tests = {
           base: {
             name: this.basic.name,
@@ -979,10 +1071,11 @@ if(type==1){
           option: this.$refs.backupOption.showOption(),
           schedule: this.temporary.planList
         };
+            
+      this.$parent.$parent.closeOpen(false);
+
         util.restfullCall("/rest-ful/v3.0/policy", tests, "put", this.senddata);
-      } else {
-        this.$Message.error("修改策略名称格式错误！添加失败");
-      }
+      
     },
     senddata: function(value) {
       if (value.data.code === 0) {

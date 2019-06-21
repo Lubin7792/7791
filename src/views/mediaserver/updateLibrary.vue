@@ -1,11 +1,12 @@
 <style>
+
 @import './libraryModal.css';
 </style>
 <template>
-	<Modal footer-hide title="磁带库设备管理页面" v-model="modal" class-name="vertical-center-modal" width="640">
+	<Modal footer-hide title="设备属性" v-model="modal" class-name="vertical-center-modal" width="640">
       <P class="titl">基本信息</P>
       <div class="parent" style="margin-bottom:20px">
-        <div v-for="(value,key) in changer" :key="key" v-if="(typeof(value) !== 'object') && (key !== 'id')">{{ralations[key]}}: {{value}}</div>
+        <div v-for="(value,key) in changer" :key="key" v-if="(typeof(value) !== 'object') && (key !== 'id')"><div class="line">{{ralations[key]}}</div> {{value}}</div>
       </div>
       <P class="titl">驱动器信息</P>
 			<Table :columns="driverColumns" :data="driver" style="margin-bottom:20px" height="200"></Table>

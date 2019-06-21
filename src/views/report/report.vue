@@ -27,6 +27,16 @@
   .ivu-table .error td {
     background-color: rgb(201, 80, 50);
   }
+  .pageBox{
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .pageBox .button {
+    position: absolute;
+    left: 10px;;
+  }
 </style>
 
 <template>
@@ -75,7 +85,11 @@
         </Row>
       </div>
 
-        <Table :row-class-name="rowRun" :data="run" :columns="runReport" height="650"></Table>
+        <Table :row-class-name="rowRun" :data="run" :columns="runReport" height="521"  ref="exp"></Table>
+       <div class="pageBox">
+         <Button  class="button" type="primary" @click="exportData"><Icon type="ios-download-outline"></Icon> 导出报表数据</Button>
+          <Page :total="runPage" :current="curentPage" @on-change="changePage"></Page>
+       </div>
         <updataReport ref="updataReport"></updataReport>
     </TabPane>
 
@@ -161,12 +175,13 @@ export default {
         { title: 'ID', key: 'id', width: 80 },
         { title: '任务类型', key: 'type', width: 100 },
         { title: '策略名称', key: 'policy' },
+        { title: '客户端', key: 'client' },
         { title: '策略类型', key: 'policytype' },
         { title: '调度类型', key: 'scheduletype' },
         { title: '开始时间', key: 'starttime' },
         { title: '结束时间', key: 'endtime' },
         { title: '备份大小', key: 'bytes', width: 120 },
-        { title: '速率', key: 'rate', width: 120 },
+        { title: '速率', key: 'rate', width: 100 },
         { title: '设备', key: 'device' , width: 120},
         { title: '状态', key: 'result', width: 70, },
         {title: '操作',key: 'operation',align: 'center',width: 70, 
@@ -195,7 +210,7 @@ export default {
         { title: '介质服务器', key: 'mediaserver' },
         { title: '状态', key: 'status' },
         { title: '备份任务数', key: 'tasks' },
-        { title: '总备份数量', key: 'bytes' },
+        { title: '总备份数据量', key: 'bytes' },
       ],
       mediumReport: [
         { title: '名称', key: 'name' },
@@ -205,9 +220,12 @@ export default {
         { title: '介质状态', key: 'status' , width: 100 },
         { title: '在线状态', key: 'online' , width: 100},
         { title: '镜像数量', key: 'images' , width: 100},
-        { title: '写入时间', key: 'lastwrtime' },
-        { title: '最后回收时间', key: 'recycletime' },
+        { title: '最后写入时间', key: 'lastwrtime' },
+        { title: '最后回收时间', key: 'RecycleTime' },
       ],
+      curentPage:1,
+      indexPage:1,
+      runPage:100,
       run: [],
       device: [],
       medium: [],
@@ -246,6 +264,7 @@ export default {
     util.restfullCall('/rest-ful/v3.0/report/device', null, 'get', this.callbackDevice)
     // 查询介质报表
     util.restfullCall('/rest-ful/v3.0/report/volume', null, 'get', this.callbackMedium)
+    this.generate();
   },
        computed: {
     getPrivilege(){
@@ -270,6 +289,21 @@ export default {
     }
   },
   methods: {
+     exportData(){
+      this.$refs.exp.exportCsv({
+                        filename: "报表数据"
+                    });
+    },
+    changePage(index){
+      this.indexPage=index
+      index = index-1
+let url = '/rest-ful/v3.0/report/history?'
+       Object.keys(this.query).forEach(item => {
+        if(this.query[item]) url += `${item}=${this.query[item]}&`
+      })
+      url =url+"pageno="+index+"&nums=10";
+      util.restfullCall(url, null, 'get', this.callbackQuery)
+    },
            nowShow(num){
       if(this.numNowList.indexOf(num)!=-1){
         return true
@@ -307,7 +341,7 @@ export default {
           online: mediumObj.data[i].online,
           pool: mediumObj.data[i].pool,
           images: mediumObj.data[i].images,
-          recycletime: mediumObj.data[i].recycletime
+          RecycleTime: mediumObj.data[i].RecycleTime
         })
       }
       this.medium = array
@@ -317,33 +351,39 @@ export default {
     // 点击生成按钮生成运行记录报表
     generate() {
       let url = '/rest-ful/v3.0/report/history?'
-      Object.keys(this.query).forEach(item => {
+       Object.keys(this.query).forEach(item => {
         if(this.query[item]) url += `${item}=${this.query[item]}&`
       })
+      this.indexPage=1;
+      url =url+"pageno=0&nums=10";
       util.restfullCall(url, null, 'get', this.callbackQuery)
     },
     // 生成的运行记录列表的返回数据
     callbackQuery: function(queryObj) {
       var array = new Array()
-      for (let i = 0; i < queryObj.data.length; i++) {
+      for (let i = 0; i < queryObj.data.report.length; i++) {
         array.push({
-          bytes: queryObj.data[i].bytes,
-          client: queryObj.data[i].client,
-          device: queryObj.data[i].device,
-          endtime: queryObj.data[i].endtime,
-          files: queryObj.data[i].files,
-          id: queryObj.data[i].id,
-          policy: queryObj.data[i].policy,
-          policytype: queryObj.data[i].policytype,
-          pool: queryObj.data[i].pool,
-          rate: queryObj.data[i].rate,
-          result: queryObj.data[i].result,
-          scheduletype: queryObj.data[i].scheduletype,
-          starttime: queryObj.data[i].starttime,
-          type: queryObj.data[i].type
+
+          bytes: queryObj.data.report[i].bytes,
+          client: queryObj.data.report[i].client,
+          device: queryObj.data.report[i].device,
+          endtime: queryObj.data.report[i].endtime,
+          files: queryObj.data.report[i].files,
+          id: queryObj.data.report[i].id,
+          policy: queryObj.data.report[i].policy,
+          policytype: queryObj.data.report[i].policytype,
+          pool: queryObj.data.report[i].pool,
+          rate: queryObj.data.report[i].rate,
+          result: queryObj.data.report[i].result,
+          scheduletype: queryObj.data.report[i].scheduletype,
+          starttime: queryObj.data.report[i].starttime,
+          type: queryObj.data.report[i].type
         })
       }
-        this.run = array
+        this.runPage=queryObj.data.Nums;
+        this.run = array;
+        this.curentPage=this.indexPage;
+      
     },
     // 点击生成按钮生成设备报表
     generateDevice() {
@@ -391,7 +431,7 @@ export default {
           online: obj.data[i].online,
           pool: obj.data[i].pool,
           images: obj.data[i].images,
-          recycletime: obj.data[i].recycletime
+          RecycleTime: obj.data[i].RecycleTime
         })
       }
       this.medium = array

@@ -8,12 +8,26 @@
         top: 0;
     }
   }
-  .base > div {
-    width: 40%;
+    .upDase{
+      border: 1px solid #dddee1; 
+    border-bottom:none; 
+    border-right:none; 
+    line-height: 40px;
+    }
+    .upDase .line{
+      width: 60px;
+      height: 40px;
+      display: inline-block;
+      margin-right: 5px;
+      border-right: 1px solid #dddee1; 
+      padding-right: 5px;
+    }
+  .upDase > div {
+    width: 50%;
     display: inline-block;
-    margin: left;
-    margin-left: 4%;
-    margin-bottom: 5px;
+    padding: 0 10px;
+    border-bottom: 1px solid #dddee1; 
+    border-right: 1px solid #dddee1; 
   }
   .ivu-table .wrning td {
 	background-color: rgb(224, 222, 63) !important;
@@ -29,8 +43,8 @@
         <Form :label-width="130">
           <Tabs type="card">
               <TabPane label="基本信息">
-                <div class="base" style="margin-bottom:20px">
-                  <div v-for="(value,key) in baseData" :key="key" v-if="(typeof(value) !== 'object') && (key !== 'id')">{{ralations[key]}}: {{value}}</div>
+                <div class="upDase" style="margin-bottom:20px">
+                  <div v-for="(value,key) in baseData" :key="key" v-if="(typeof(value) !== 'object') && (key !== 'id')"><div class="line">{{ralations[key]}}</div>  {{value}}</div>
                 </div>
               </TabPane>
               <TabPane label="任务日志">
@@ -63,7 +77,7 @@ export default {
           mediaserver: '服务器',
           device: '设备',
           starttime: '开始时间',
-          usedtime: '使用时间',
+          usedtime: '耗时',
           files: '文件',
           bytes: '字节',
           rate: '速率',

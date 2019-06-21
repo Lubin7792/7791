@@ -2,7 +2,7 @@
   <Tabs :animated="false" type="card" class="volum" >
     <!-- 介质池 -->
     <TabPane label="介质池" :key="Math.random()"  v-if="nowShow(getPower.seeValume)">
-      <Table stripe highlight-row :data="volpool" :columns="mediumPools" height="720"></Table>
+      <Table stripe :data="volpool" :columns="mediumPools" height="720"></Table>
 
       <div class="_btn">
         <Button type="primary" @click="newPool" v-if="nowShow(getPower.newValume)">
@@ -18,13 +18,12 @@
       </div>
     </TabPane>
     <!-- 介质 -->
-    <TabPane label="介质" :key="Math.random()"  v-if="nowShow(getPower.seeMedium)">
+    <TabPane label="介质" :key="Math.random()"  v-if="nowShow(getPower.seeMedium)" >
       <Table
         :data="volume"
         :row-class-name="rowClassName"
         :columns="mediums"
         stripe
-        highlight-row
         height="800"
       ></Table>
 
@@ -69,6 +68,8 @@
         mediumPools: [
           { title: 'ID', key: 'id', sortable: true, width: 80},
           { title: '介质名称', key: 'name', sortable: true},
+          { title: '总介质数', key: 'Volumes', sortable: true},
+          { title: '当前可用介质数', key: 'UsableVols', sortable: true},
           { title: '保留周期', key: 'Protected', sortable: true},
           { title: '覆盖周期', key: 'Cover', sortable: true},
           {title: '操作',key: 'operation',align: 'center', width: 100,
@@ -118,10 +119,66 @@
           { title: 'Barcode', key: 'barcode' },
           { title: '介质名称', key: 'name' },
           { title: '介质池', key: 'pool' },
-          { title: '已用容量', key: 'used', width: 100 },
+          { title: '已用容量', key: 'used', width: 180 },
           { title: '最后写入时间', key: 'LastWrtime' },
           { title: '介质状态', key: 'state', width: 100 },
           { title: '在线状态', key: 'online', width: 100 },
+          {title:"状态",
+          render:(h,params) =>{
+                return h(
+              "div",
+              {
+                class: {
+                  lubin: true
+                },
+                data() {
+                  return {
+                    status: true
+                  };
+                }
+              },
+              [
+                 h(
+                  "i-switch",
+                  {
+                    props: {
+                      type: "primary",
+                      value:
+                       params.row.enable===1? true:false
+                        
+                    },
+                    style: {
+                      marginLeft: "5px",
+                      marginRight: "5px",
+                      width: "60px"
+                    },
+                    on: {
+                      "on-change": value => {
+                        this.switch(params, value);
+                      }
+                    }
+                  },
+                  [
+                    h(
+                      "span",
+                      {
+                        slot: "open"
+                      },
+                      "启用"
+                    ),
+                    h(
+                      "span",
+                      {
+                        slot: "close"
+                      },
+                      "禁用"
+                    )
+                  ]
+                )
+              ]
+            );
+          }
+          },
           {title: '操作',key: 'operation',align: 'center', width: 160,
             render: (h, params) => {
               return h('div', [
@@ -227,12 +284,29 @@
     }
   },
     methods:{
+      switch(params,value){
+        var state
+        if(value===true){
+          state="1";
+        }else{
+          state= "0";
+        }
+         util.restfullCall('/rest-ful/v3.0/volume/enable/' + params.row.id +"/"+state, null, 'put', obj=>{
+        util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.callbackMedium)
+         })
+      },
+      refreshData(){
+      util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.callbackMedium)
+      },
             nowShow(num){
       if(this.numNowList.indexOf(num)!=-1){
         return true
       }else{
         return false
       }
+    },
+    callbackEnable(obj){
+      console.log(obj)
     },
       // 查询介质池列表
       callbackPool: function(poolObj) {
@@ -245,6 +319,8 @@
           Cover: poolObj.data[i].Cover,
           Protected: poolObj.data[i].Protected,
           type: poolObj.data[i].type,
+          Volumes: poolObj.data[i].Volumes,
+          UsableVols: poolObj.data[i].UsableVols,
           })
         }
         this.volpool = array
@@ -256,6 +332,7 @@
         var array = new Array()
         for (let i = 0; i < mediumObj.data.length; i++) {
           array.push({
+            enable:mediumObj.data[i].enable,
           id: mediumObj.data[i].id,
           barcode: mediumObj.data[i].barcode,
           name: mediumObj.data[i].name,
@@ -302,7 +379,9 @@
       },
       // 回收介质成功之后的数据渲染
       recoveryData(data) {
-        if(data.code == 0) util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.callbackMedium)
+        if(data.data.code == 0){
+           util.restfullCall('/rest-ful/v3.0/volumes', null, 'get', this.callbackMedium)
+           }
       },
       // 介质行内容
       rowClassName(row, index) {
@@ -313,11 +392,13 @@
         }
       },
     }
-  
   }
 </script>
 
 <style>
+.volum .ivu-switch-checked:after{
+  left: 37px;
+}
 .volum ._btn {
 margin-top: 10px;
 }

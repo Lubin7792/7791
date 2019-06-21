@@ -70,6 +70,8 @@ export default {
       '&type=' +
      this.$store.state.index.clientTitle
     util.restfullCall(url, null, 'get', obj => {
+      if (obj.data==null) 
+        return false
       let data = []
       for (let i = 0; i < obj.data.length; i++) {
         let object = JSON.parse(obj.data[i].conf)
