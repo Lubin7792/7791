@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "area-data": "^1.0.0",
-    "axios": "^0.17.1",
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.1.1",
     "chokidar": "^2.0.3",
